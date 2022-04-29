@@ -1,4 +1,4 @@
-# workers-payroll
+# Workers Payroll
 ## Distinctiveness and Complexity
 Applications for support payroll management in event/rental company. App is spilited for modules:
 * Users - managing users / workers
