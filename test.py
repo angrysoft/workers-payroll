@@ -1,4 +1,5 @@
-from payroll.models import Event, EventWorker
+from payroll.models import Event, EventWorker, FunctionRate
+from workers.models import User
 from django.core.serializers import serialize
 
 
@@ -51,3 +52,6 @@ work = serialize(
     indent=2,
 )
 print(f"work from month {work}")
+worker = User.objects.get(name="seba")
+rates = FunctionRate.objects.filter(worker__username="seba").all()
+print(rates)

@@ -36,7 +36,7 @@ class Event(models.Model):
     )
 
     def natural_key(self):
-        return {"number":self.number, "name":self.name}
+        return {"number": self.number, "name": self.name}
 
     def __str__(self):
         return f"{self.number}-{self.name}"
@@ -44,16 +44,25 @@ class Event(models.Model):
 
 class Addition(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
+    value = models.IntegerField(default=0)
+    is_multiplied = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
     def natural_key(self):
-        return (self.name)
+        return {
+            "name": self.name,
+            "value": self.value,
+            "is_multiplied": self.is_multiplied,
+        }
 
 
 class FunctionRate(models.Model):
-    value = models.IntegerField()
+    worker = models.ForeignKey(User, on_delete=models.CASCADE)
+    function = models.OneToOneField(Function, on_delete=models.CASCADE)
+    value = models.IntegerField(default=0)
+    overtime = models.IntegerField()
 
 
 class Accounting(models.Model):
@@ -75,6 +84,6 @@ class EventWorker(models.Model):
         return self.event
 
 
-class Rates(models.Model):
-    user = models.ForeignKey(User)
-    
+class AdditionsRates(models.Model):
+    addition = models.OneToOneField(Addition, on_delete=models.CASCADE)
+    value = models.IntegerField(default=0)
