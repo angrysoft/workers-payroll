@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import Function, Event, Accounting, EventWorker, Addition
+from .models import Function, Event, EventDayWork, Addition
 
 
 admin.site.register(Function)
 admin.site.register(Event)
-admin.site.register(Accounting)
-admin.site.register(EventWorker)
+admin.site.register(EventDayWork)
 admin.site.register(Addition)

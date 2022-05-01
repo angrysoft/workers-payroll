@@ -1,6 +1,6 @@
 from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from workers.models import User
 
 
 class Function(models.Model):
@@ -23,13 +23,13 @@ class Event(models.Model):
         max_length=50, verbose_name=_("Event number"), unique=True
     )
     coordinator = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="event_coordinator",
         verbose_name=_("Coordinator"),
     )
     sales = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="event_sales",
         verbose_name=_("Sales"),
@@ -59,23 +59,18 @@ class Addition(models.Model):
 
 
 class FunctionRate(models.Model):
-    worker = models.ForeignKey(User, on_delete=models.CASCADE)
+    worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     function = models.OneToOneField(Function, on_delete=models.CASCADE)
     value = models.IntegerField(default=0)
     overtime = models.IntegerField()
 
 
-class Accounting(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    overtime = models.IntegerField()
-
-
-class EventWorker(models.Model):
+class EventDayWork(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     function = models.ForeignKey(
         Function, on_delete=models.PROTECT, verbose_name=_("Function")
     )
-    worker = models.ForeignKey(User, on_delete=models.PROTECT)
+    worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     start = models.DateTimeField()
     end = models.DateTimeField()
     additions = models.ManyToManyField(Addition)

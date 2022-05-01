@@ -1,33 +1,27 @@
-from django.contrib.auth.models import Group
-from workers.models import User
-from payroll.models import Function
+from django.contrib.auth.models import Group, User
+from workers.models import Worker
+from payroll.models import Function, Addition
 import requests
 
-# r = requests.get("https://randomuser.me/api?results=10")
 
-# print(r.json(), type(r))
-# print(f"added Post no : {no}")
-
-
-def generate_gropus():
-    group_list = ["technicians", "coordinators", "sales"]
-    for grp in group_list:
-        new_group, created = Group.objects.get_or_create(name=grp)
+def creates_objects(obj, names_list):
+    for item in names_list:
+        new_item, created = obj.objects.get_or_create(name=item)
 
 
-def generate_functions():
-    function_list = [
-        "Technician",
-        "Chief",
-        "Multimedia Designer",
-        "Lighting Designer",
-        "",
-    ]
-    for func in function_list:
-        f = Function()
-        f.name = func
-        f.save()
+creates_objects(Group, ["workers", "coordinators", "sales"])
+creates_objects(
+    Function, ["Technician", "Chief", "Multimedia Designer", "Lighting Designer"]
+)
+creates_objects(Addition, ["Work at height", "Driver", "Follow Spot Operator"])
 
-
-def generate_additions():
-    additions_list = ["Work at height", "Driver", "Follow Spot Operator"]
+# Add Workers
+r = requests.get("https://randomuser.me/api?results=20")
+results = r.json()["results"]
+for u in results:
+    usr = User.objects.create_user(
+        nickname=u["login"]["username"],
+        first_name=u["name"]["first"],
+        last_name=u["name"]["last"],
+        email=u["email"],
+    )

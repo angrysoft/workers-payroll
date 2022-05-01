@@ -1,4 +1,4 @@
-from payroll.models import Event, EventWorker, FunctionRate
+from payroll.models import Event, EventDayWork, FunctionRate
 from workers.models import User
 from django.core.serializers import serialize
 
@@ -40,7 +40,7 @@ sss = serialize(
 print(sss)
 
 work_from_2022_01 = (
-    EventWorker.objects.filter(start__year=2022, start__month=1, worker__pk=2)
+    EventDayWork.objects.filter(start__year=2022, start__month=1, worker__pk=2)
     .order_by("start")
     .all()
 )
