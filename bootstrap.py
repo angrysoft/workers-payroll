@@ -1,5 +1,5 @@
-from django.contrib.auth.models import Group, User
-from workers.models import Worker
+from django.contrib.auth.models import Group
+from workers.models import User
 from payroll.models import Function, Addition
 import requests
 
@@ -15,13 +15,14 @@ creates_objects(
 )
 creates_objects(Addition, ["Work at height", "Driver", "Follow Spot Operator"])
 
-# Add Workers
-r = requests.get("https://randomuser.me/api?results=20")
-results = r.json()["results"]
-for u in results:
-    usr = User.objects.create_user(
-        nickname=u["login"]["username"],
-        first_name=u["name"]["first"],
-        last_name=u["name"]["last"],
-        email=u["email"],
-    )
+
+def add_workers():
+    r = requests.get("https://randomuser.me/api?results=20")
+    results = r.json()["results"]
+    for u in results:
+        usr = User.objects.create_user(
+            nickname=u["login"]["username"],
+            first_name=u["name"]["first"],
+            last_name=u["name"]["last"],
+            email=u["email"],
+        )

@@ -1,8 +1,8 @@
 bootstrap:
 	./manage.py makemigrations workers user_auth payroll
 	./manage.py migrate
-	./manage.py createsuperuser
 	./manage.py shell < bootstrap.py
+	./manage.py createsuperuser
 
 
 reset:
@@ -12,3 +12,6 @@ reset:
 
 run:
 	./manage.py runserver
+
+test:
+	./manage.py test
