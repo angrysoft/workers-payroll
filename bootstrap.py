@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group
 from workers.models import User
-from payroll.models import Function, Addition
+from payroll.models import Function, AdditionRate
 import requests
 
 
@@ -13,7 +13,7 @@ creates_objects(Group, ["workers", "coordinators", "sales"])
 creates_objects(
     Function, ["Technician", "Chief", "Multimedia Designer", "Lighting Designer"]
 )
-creates_objects(Addition, ["Work at height", "Driver", "Follow Spot Operator"])
+creates_objects(AdditionRate, ["Work at height", "Driver", "Follow Spot Operator"])
 
 
 def add_workers():

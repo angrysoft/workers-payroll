@@ -15,3 +15,6 @@ run:
 
 test:
 	./manage.py test
+
+format:
+	black .

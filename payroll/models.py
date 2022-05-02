@@ -34,6 +34,7 @@ class Event(models.Model):
         related_name="event_sales",
         verbose_name=_("Sales"),
     )
+    is_readonly = models.BooleanField(default=False)
 
     def natural_key(self):
         return {"number": self.number, "name": self.name}
@@ -42,7 +43,7 @@ class Event(models.Model):
         return f"{self.number}-{self.name}"
 
 
-class Addition(models.Model):
+class AdditionRate(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
     value = models.IntegerField(default=0)
     is_multiplied = models.BooleanField(default=False)
@@ -50,11 +51,17 @@ class Addition(models.Model):
     def __str__(self):
         return self.name
 
+
+class Addition(models.Model):
+    addition = models.OneToOneField(AdditionRate, on_delete=models.CASCADE)
+    value = models.IntegerField(default=0)
+
     def natural_key(self):
         return {
-            "name": self.name,
+            "name": self.addition.name,
+            "rate": self.addition.value,
             "value": self.value,
-            "is_multiplied": self.is_multiplied,
+            "is_multiplied": self.addition.is_multiplied,
         }
 
 
@@ -62,7 +69,11 @@ class FunctionRate(models.Model):
     worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     function = models.OneToOneField(Function, on_delete=models.CASCADE)
     value = models.IntegerField(default=0)
-    overtime = models.IntegerField()
+    overtime = models.IntegerField(default=0)
+    overtime_after = models.IntegerField(default=12)
+
+    def __str__(self) -> str:
+        return f"{self.worker.username} - {self.function.name}"
 
 
 class EventDayWork(models.Model):
@@ -73,12 +84,7 @@ class EventDayWork(models.Model):
     worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     start = models.DateTimeField()
     end = models.DateTimeField()
-    additions = models.ManyToManyField(Addition)
+    additions = models.ManyToManyField(Addition, blank=True)
 
     def natural_key(self):
         return self.event
-
-
-class AdditionsRates(models.Model):
-    addition = models.OneToOneField(Addition, on_delete=models.CASCADE)
-    value = models.IntegerField(default=0)
