@@ -28,7 +28,7 @@ class Event(models.Model):
         related_name="event_coordinator",
         verbose_name=_("Coordinator"),
     )
-    sales = models.ForeignKey(
+    account_manager = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="event_sales",
@@ -64,6 +64,9 @@ class Addition(models.Model):
             "is_multiplied": self.addition.is_multiplied,
         }
 
+    def __str__(self):
+        return f"{self.addition.name}"
+
 
 class FunctionRate(models.Model):
     worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -88,3 +91,6 @@ class EventDayWork(models.Model):
 
     def natural_key(self):
         return self.event
+
+    class Meta:
+        ordering = ["start", "worker"]
