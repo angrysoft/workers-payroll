@@ -37,7 +37,7 @@ class Event(models.Model):
     is_readonly = models.BooleanField(default=False)
 
     def natural_key(self):
-        return {"number": self.number, "name": self.name}
+        return {"number": self.number, "name": self.name, "id": self.pk}
 
     def __str__(self):
         return f"{self.number}-{self.name}"
