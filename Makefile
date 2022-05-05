@@ -14,7 +14,7 @@ run:
 	./manage.py runserver
 
 test:
-	./manage.py test -v 2
+	./manage.py test -v 2 
 
 format:
 	black .

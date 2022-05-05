@@ -4,7 +4,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect
 from django.views import View
 from django.contrib.auth import authenticate
-
+from django.core.serializers import serialize
 from .models import Token
 from .forms import LoginForm
 from WorkersPayroll.decorators import auth_required
@@ -33,20 +33,25 @@ class LoginView(View):
         return JsonResponse(results)
 
 
+@auth_required
 def logoutView(request: HttpRequest):
-    status_code = 200
     results = {"results": {}}
-    if request.user.is_authenticated:
-        Token.objects.filter(user=request.user).delete()
-        results["results"]["status"] = "logout success"
-    else:
-        status_code = 401
-        results["results"]["errors"] = "User is not authenticated"
-
-    return JsonResponse(results, status=status_code)
+    Token.objects.filter(user=request.user).delete()
+    results["results"]["status"] = "logout success"
+    return JsonResponse(results)
 
 
 @auth_required
 def user_view(request: HttpRequest):
-    print("userInfo", request.user.is_authenticated)
-    return JsonResponse({"results": {"status": "ok"}})
+    results = {"errors": "", "results": {}}
+    results["results"]["user"] = {
+        "is_authenticated": request.user.is_authenticated,
+        "username": request.user.username,
+        "email": request.user.email,
+        "first_name" : request.user.first_name,
+        "last_name" : request.user.last_name,
+        "is_coordinator": request.user.is_coordinator,
+        "is_account_manager": request.user.is_account_manager
+    }
+    print("userInfo", request.user.is_authenticated, results)
+    return JsonResponse(results)

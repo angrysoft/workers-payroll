@@ -1,3 +1,4 @@
+from urllib import response
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from payroll.models import Function, FunctionRate
@@ -66,6 +67,17 @@ class TestAuth(TestCase):
         response_data = response.json()
         self.assertIn("token", response_data["results"])
 
+    def test_is_user_auth(self):
+        c = Client()
+        response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
+        response_data = response.json()
+        
+        get_response = c.get("/auth/user")
+        self.assertEqual(get_response.status_code, 401)
+        
+        get_response = c.get("/auth/user", HTTP_AUTHORIZATION=response_data["results"]["token"])
+        self.assertEqual(get_response.status_code, 200)
+
     def test_user_logout(self):
         c = Client()
         response = c.get("/auth/logout")
@@ -73,7 +85,6 @@ class TestAuth(TestCase):
 
         response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
         response_data = response.json()
-        print(response_data["results"]["token"])
-        header = {"Authorization": response_data["results"]["token"]}
-        logout_response = c.get("/auth/logout", **header)
+        logout_response = c.get("/auth/logout", HTTP_AUTHORIZATION=response_data["results"]["token"])
+        print(logout_response.json())
         self.assertEqual(logout_response.status_code, 200)
