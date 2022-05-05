@@ -1,4 +1,7 @@
+import jwt
+from secrets import token_urlsafe
 from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db.models.signals import m2m_changed
@@ -90,22 +93,43 @@ class User(AbstractBaseUser):
         unique_together = [["first_name", "last_name"]]
 
 
+class Token(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=200)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def generate_new_token(self):
+        self.token = token_urlsafe(32)
+
+    def get_jwt_token(self):
+        if self.token is None:
+            raise ValueError("token is not set")
+
+        return jwt.encode(
+            {
+                "username": self.user.username,
+                "token": self.token
+            },
+            settings.JWTKEY,
+            algorithm="HS256",
+        )
+
+
 def functions_changed(
     sender, instance, action, reverse, model, pk_set, using, **kwargs
 ):
-    print("fired m2m change :", action, reverse, model, pk_set)
     actions = {"post_remove": remove_rates, "post_add": add_rates}
     actions.get(action, log_action)(instance, pk_set)
 
 
 def remove_rates(instance, pk_set):
-    print(f"remove {pk_set} from {instance}")
+    # print(f"remove {pk_set} from {instance}")
     for func_pk in pk_set:
         FunctionRate.objects.filter(pk=func_pk).delete()
 
 
 def add_rates(instance, pk_set):
-    print(f"add {pk_set} from {instance}")
+    # print(f"add {pk_set} from {instance}")
     for func_pk in pk_set:
         new_function_rate = FunctionRate()
         new_function_rate.worker = instance
@@ -114,7 +138,8 @@ def add_rates(instance, pk_set):
 
 
 def log_action(instance, pk_set):
-    print(f"do action on {instance} with {pk_set}")
+    pass
+    # print(f"do action on {instance} with {pk_set}")
 
 
 m2m_changed.connect(functions_changed, sender=User.functions.through)

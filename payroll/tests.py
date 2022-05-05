@@ -1,7 +1,6 @@
 from django.test import TestCase
-
-# from .models import Event, EventDayWork
-# from workers.models import User
+from .models import Event
+from workers.models import User
 
 
 # class TestEvent(TestCase):
@@ -23,3 +22,21 @@ from django.test import TestCase
 #         day = EventDayWork()
 #         day.worker = worker
 #         day.
+
+
+class TestEvent(TestCase):
+    def setUp(self):
+        coordinator = User.objects.create_user('coordinator1', first_name="John", last_name="Doe", email="john.doe@example.net")
+        account_manager = User.objects.create_user('account_man', first_name="Jane", last_name="Foo", email="jane.foo@example.net")
+        self.e = Event()
+        self.e.number = "22-101"
+        self.e.name = "PollandRock"
+        self.e.coordinator = coordinator
+        self.e.account_manager = account_manager
+        self.e.save()
+
+    def test_add_event(self):
+        self.assertEqual(str(self.e), "22-101-PollandRock")
+
+    def test_event_unique(self):
+        pass

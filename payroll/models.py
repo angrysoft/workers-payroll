@@ -42,6 +42,10 @@ class Event(models.Model):
     def __str__(self):
         return f"{self.number}-{self.name}"
 
+    class Meta:
+        unique_together = [["name", "number"]]
+
+
 
 class AdditionRate(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
@@ -55,6 +59,7 @@ class AdditionRate(models.Model):
 class Addition(models.Model):
     addition = models.OneToOneField(AdditionRate, on_delete=models.CASCADE)
     value = models.IntegerField(default=0)
+    worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def natural_key(self):
         return {
@@ -70,7 +75,7 @@ class Addition(models.Model):
 
 class FunctionRate(models.Model):
     worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    function = models.OneToOneField(Function, on_delete=models.CASCADE)
+    function = models.ForeignKey(Function, on_delete=models.CASCADE)
     value = models.IntegerField(default=0)
     overtime = models.IntegerField(default=0)
     overtime_after = models.IntegerField(default=12)
@@ -91,6 +96,8 @@ class EventDayWork(models.Model):
 
     def natural_key(self):
         return self.event
-
+    
+    def __str__(self) -> str:
+        return f"{self.event}-{self.worker}-{self.start}"
     class Meta:
         ordering = ["start", "worker"]

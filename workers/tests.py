@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from payroll.models import Function, FunctionRate
 
@@ -45,3 +45,35 @@ class UserManagerTest(TestCase):
         usr.functions.remove(f1)
         usr_rates_count = FunctionRate.objects.filter(worker=usr, function=f1).count()
         self.assertEqual(usr_rates_count, 0)
+
+
+class TestAuth(TestCase):
+    def setUp(self) -> None:
+        self.usr_name = "test"
+        self.usr_passwd = "foobar1234"
+        User = get_user_model()
+        self.usr = User.objects.create_user(
+            username=self.usr_name,
+            email="test@example.net",
+            password=self.usr_passwd,
+        )
+
+    def test_user_login(self):
+        c = Client()
+        response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
+
+        self.assertEqual(response.status_code, 200)
+        response_data = response.json()
+        self.assertIn("token", response_data["results"])
+
+    def test_user_logout(self):
+        c = Client()
+        response = c.get("/auth/logout")
+        self.assertEqual(response.status_code, 401)
+
+        response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
+        response_data = response.json()
+        print(response_data["results"]["token"])
+        header = {"Authorization": response_data["results"]["token"]}
+        logout_response = c.get("/auth/logout", **header)
+        self.assertEqual(logout_response.status_code, 200)

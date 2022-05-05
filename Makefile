@@ -1,5 +1,5 @@
 bootstrap:
-	./manage.py makemigrations workers user_auth payroll
+	./manage.py makemigrations workers payroll
 	./manage.py migrate
 	./manage.py shell < bootstrap.py
 	./manage.py createsuperuser
@@ -14,7 +14,7 @@ run:
 	./manage.py runserver
 
 test:
-	./manage.py test
+	./manage.py test -v 2
 
 format:
 	black .

@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.backends import BaseBackend
-from workers.models import User
-from user_auth.models import Token
+from workers.models import User, Token
 from django.http import HttpRequest
 import jwt
 
@@ -12,13 +11,12 @@ class TokenBackend(BaseBackend):
             token = request.headers.get("Authorization")
             print("auth", token)
             payload = jwt.decode(token, settings.JWTKEY, algorithms=["HS256"])
-            if not Token.objects.filter(token__exact=payload.get("token")).exists():
-                print("debug: token not found")
-                return None
-            user = User.objects.get(username=payload.get("username", ""))
-            return user
+            if Token.objects.filter(token__exact=payload.get("token")).exists():
+                user = User.objects.get(username=payload.get("username", ""))
+                return user
         except jwt.exceptions.InvalidTokenError:
-            return None
+            pass
+        return None
 
     def get_user(self, user_id):
         try:
