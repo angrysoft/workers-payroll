@@ -8,12 +8,13 @@ import jwt
 class TokenBackend(BaseBackend):
     def authenticate(self, request: HttpRequest) -> User | None:
         try:
-            token = request.headers.get("Authorization")
-            print("auth", token)
-            payload = jwt.decode(token, settings.JWTKEY, algorithms=["HS256"])
-            if Token.objects.filter(token__exact=payload.get("token")).exists():
-                user = User.objects.get(username=payload.get("username", ""))
-                return user
+            jwt_token = request.headers.get("Authorization")
+            print("auth", jwt_token)
+            payload = jwt.decode(jwt_token, settings.JWTKEY, algorithms=["HS256"])
+            token = Token.objects.get(token__exact=payload.get("token"))
+            return token.user
+        except Token.DoesNotExist:
+            pass
         except jwt.exceptions.InvalidTokenError:
             pass
         return None

@@ -96,8 +96,9 @@ class EventDayWork(models.Model):
 
     def natural_key(self):
         return self.event
-    
+
     def __str__(self) -> str:
-        return f"{self.event}-{self.worker}-{self.start}"
+        return f"{self.event}-{self.worker}-{self.start}-{self.end}"
+
     class Meta:
         ordering = ["start", "worker"]

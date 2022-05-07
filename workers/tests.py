@@ -1,4 +1,3 @@
-from urllib import response
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from payroll.models import Function, FunctionRate
@@ -72,10 +71,10 @@ class TestAuth(TestCase):
         response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
         response_data = response.json()
         
-        get_response = c.get("/auth/user")
+        get_response = c.get("/auth/user/1")
         self.assertEqual(get_response.status_code, 401)
         
-        get_response = c.get("/auth/user", HTTP_AUTHORIZATION=response_data["results"]["token"])
+        get_response = c.get("/auth/user/1", HTTP_AUTHORIZATION=response_data["results"]["token"])
         self.assertEqual(get_response.status_code, 200)
 
     def test_user_logout(self):
