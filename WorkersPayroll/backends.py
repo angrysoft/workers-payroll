@@ -9,7 +9,6 @@ class TokenBackend(BaseBackend):
     def authenticate(self, request: HttpRequest) -> User | None:
         try:
             jwt_token = request.headers.get("Authorization")
-            print("auth", jwt_token)
             payload = jwt.decode(jwt_token, settings.JWTKEY, algorithms=["HS256"])
             token = Token.objects.get(token__exact=payload.get("token"))
             return token.user

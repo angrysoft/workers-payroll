@@ -47,10 +47,12 @@ class UserManagerTest(TestCase):
         self.assertEqual(usr_rates_count, 0)
 
 
-class TestAuth(TestCase):
+class TestUserEndpoint(TestCase):
     def setUp(self) -> None:
         self.usr_name = "test"
         self.usr_passwd = "foobar1234"
+        self.email="test@example.net",
+
         User = get_user_model()
         self.usr = User.objects.create_user(
             username=self.usr_name,
