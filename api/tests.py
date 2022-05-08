@@ -60,7 +60,15 @@ class TestUserEndpoint(TestCase):
 
     def test_add_user(self):
         username = "test_user"
-        password = "foobar1234"userid
+        password = "foobar1234"
+        email = "test_user@example.net"
+        first_name = "FooOne"
+        last_name = "BarOne"
+
+        response_login = self.c.post(
+            f"{USER_API}/auth/login",
+            {"username": self.usr_name, "password": self.usr_passwd},
+        )
         token = response_login.json()["token"]
         response = self.c.post(
             f"{USER_API}/",
@@ -74,7 +82,7 @@ class TestUserEndpoint(TestCase):
             content_type="application/json",
             HTTP_AUTHORIZATION=token,
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 201)
     
     def test_update_user(self):
         new_email = "new@example.net"
@@ -94,7 +102,7 @@ class TestUserEndpoint(TestCase):
             HTTP_AUTHORIZATION=token,
         )
         print(response, response.json())
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 201)
 
 
 class TestEventEndpoint(TestCase):
