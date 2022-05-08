@@ -46,7 +46,6 @@ class Event(models.Model):
         unique_together = [["name", "number"]]
 
 
-
 class AdditionRate(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
     value = models.IntegerField(default=0)

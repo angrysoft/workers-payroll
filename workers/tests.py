@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.contrib.auth import get_user_model
 from payroll.models import Function, FunctionRate
 
@@ -45,47 +45,3 @@ class UserManagerTest(TestCase):
         usr.functions.remove(f1)
         usr_rates_count = FunctionRate.objects.filter(worker=usr, function=f1).count()
         self.assertEqual(usr_rates_count, 0)
-
-
-class TestUserEndpoint(TestCase):
-    def setUp(self) -> None:
-        self.usr_name = "test"
-        self.usr_passwd = "foobar1234"
-        self.email="test@example.net",
-
-        User = get_user_model()
-        self.usr = User.objects.create_user(
-            username=self.usr_name,
-            email="test@example.net",
-            password=self.usr_passwd,
-        )
-
-    def test_user_login(self):
-        c = Client()
-        response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
-
-        self.assertEqual(response.status_code, 200)
-        response_data = response.json()
-        self.assertIn("token", response_data["results"])
-
-    def test_is_user_auth(self):
-        c = Client()
-        response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
-        response_data = response.json()
-        
-        get_response = c.get("/auth/user/1")
-        self.assertEqual(get_response.status_code, 401)
-        
-        get_response = c.get("/auth/user/1", HTTP_AUTHORIZATION=response_data["results"]["token"])
-        self.assertEqual(get_response.status_code, 200)
-
-    def test_user_logout(self):
-        c = Client()
-        response = c.get("/auth/logout")
-        self.assertEqual(response.status_code, 401)
-
-        response = c.post('/auth/login', {'username': self.usr_name, 'password': self.usr_passwd})
-        response_data = response.json()
-        logout_response = c.get("/auth/logout", HTTP_AUTHORIZATION=response_data["results"]["token"])
-        print(logout_response.json())
-        self.assertEqual(logout_response.status_code, 200)

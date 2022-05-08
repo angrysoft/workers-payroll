@@ -7,7 +7,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(required=True)
 
 
-class CreateWorkerForm(forms.ModelForm):
+class ManageWorkerForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (

@@ -26,5 +26,3 @@ def add_events():
 
 add_workers()
 add_events()
-
-

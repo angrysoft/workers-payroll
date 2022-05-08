@@ -106,10 +106,7 @@ class Token(models.Model):
             raise ValueError("token is not set")
 
         return jwt.encode(
-            {
-                "username": self.user.username,
-                "token": self.token
-            },
+            {"username": self.user.username, "token": self.token},
             settings.JWTKEY,
             algorithm="HS256",
         )

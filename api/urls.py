@@ -1,7 +1,6 @@
-from django.urls import path
-from .views import EventDayWorkView
+from django.urls import path, include
 
 urlpatterns = [
-    path("events", EventDayWorkView.as_view(), name="events"),
-    path("events/<int:event_id>", EventDayWorkView.as_view(), name="events_get"),
+    path("user/", include("workers.urls")),
+    path("event/", include("payroll.urls")),
 ]

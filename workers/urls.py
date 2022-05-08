@@ -4,8 +4,8 @@ from . import views
 
 
 urlpatterns = [
-    path("login", csrf_exempt(views.LoginView.as_view()), name="login"),
-    path("logout", csrf_exempt(views.logoutView), name="logout"),
-    path("user", views.UserView.as_view(), name="user_p"),
-    path("user/<int:userid>", views.UserView.as_view(), name="user"),
+    path("", csrf_exempt(views.UserView.as_view()), name="user_p"),
+    path("<int:userid>", csrf_exempt(views.UserView.as_view()), name="user"),
+    path("auth/login", csrf_exempt(views.LoginView.as_view()), name="login"),
+    path("auth/logout", csrf_exempt(views.logout_view), name="logout"),
 ]
