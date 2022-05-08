@@ -1,7 +1,5 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
-import json
-
 
 USER_API = "/api/v1/user"
 
@@ -41,8 +39,7 @@ class TestUserEndpoint(TestCase):
         self.assertEqual(get_response.status_code, 401)
 
         get_response = self.c.get(
-            f"{USER_API}/1",
-            HTTP_AUTHORIZATION=response_data["token"]
+            f"{USER_API}/1", HTTP_AUTHORIZATION=response_data["token"]
         )
         self.assertEqual(get_response.status_code, 200)
 
@@ -63,15 +60,7 @@ class TestUserEndpoint(TestCase):
 
     def test_add_user(self):
         username = "test_user"
-        password = "foobar1234"
-        email = "test_user@example.net"
-        first_name = "Foo"
-        last_name = "Bar"
-
-        response_login = self.c.post(
-            f"{USER_API}/auth/login",
-            {"username": self.usr_name, "password": self.usr_passwd},
-        )
+        password = "foobar1234"userid
         token = response_login.json()["token"]
         response = self.c.post(
             f"{USER_API}/",
@@ -83,23 +72,29 @@ class TestUserEndpoint(TestCase):
                 "last_name": last_name,
             },
             content_type="application/json",
-            HTTP_AUTHORIZATION=token
+            HTTP_AUTHORIZATION=token,
         )
-        print(response.content)
-        self.assertEqual(response.status_code, 301)
-
-        self.assertDictEqual(
-            response.json(),
+        self.assertEqual(response.status_code, 302)
+    
+    def test_update_user(self):
+        new_email = "new@example.net"
+        response_login = self.c.post(
+            f"{USER_API}/auth/login",
+            {"username": self.usr_name, "password": self.usr_passwd},
+        )
+        token = response_login.json()["token"]
+        response = self.c.put(
+            f"{USER_API}/1",
             {
-                "is_authenticated": False,
-                "username": username,
-                "email": email,
-                "first_name": first_name,
-                "last_name": last_name,
-                "is_coordinator": False,
-                "is_account_manager": False,
+                "email": new_email,
+                "first_name": "Foo",
+                "last_name": "Bar"
             },
+            content_type="application/json",
+            HTTP_AUTHORIZATION=token,
         )
+        print(response, response.json())
+        self.assertEqual(response.status_code, 302)
 
 
 class TestEventEndpoint(TestCase):
@@ -120,7 +115,7 @@ class TestEventEndpoint(TestCase):
         response_data = response.json()
         self.token = response_data["token"]
 
-    def test_add_day_work(self):
+    def test_add_event(self):
         response = self.client.post(
             "/api/v1/user/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},

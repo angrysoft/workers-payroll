@@ -8,4 +8,5 @@ urlpatterns = [
     path("<int:userid>", csrf_exempt(views.UserView.as_view()), name="user"),
     path("auth/login", csrf_exempt(views.LoginView.as_view()), name="login"),
     path("auth/logout", csrf_exempt(views.logout_view), name="logout"),
+    path("status", views.status, name="status")
 ]

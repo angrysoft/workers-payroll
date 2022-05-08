@@ -1,8 +1,8 @@
-from audioop import reverse
-import re
+import json
 from typing import Any, Dict
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
@@ -53,11 +53,11 @@ class UserView(View):
     @method_decorator(auth_required)
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        create_worker_form = ManageWorkerForm()
+        create_worker_form = ManageWorkerForm(data)
         if create_worker_form.is_valid():
             user = create_worker_form.save()
-            return HttpResponse("ok")
-            # return HttpResponseRedirect("/login")
+            # return HttpResponseRedirect(reverse("status", kwargs={"userid": user.pk}), content_type="application/json")
+            return HttpResponseRedirect("/api/v1/user/status")
         else:
             results = get_default_results(error=create_worker_form.errors.as_text())
             return JsonResponse(results, status=400)
@@ -65,16 +65,17 @@ class UserView(View):
     @method_decorator(auth_required)
     def put(self, request: HttpRequest, userid: int):
         user = get_object_or_404(User, pk=userid)
-
-        update_worker_form = ManageWorkerForm(request.POST, instance=user)
+        data = json.loads(request.body)
+        update_worker_form = ManageWorkerForm(instance=user, data=data)
         if update_worker_form.is_valid():
             update_worker_form.save()
-            return HttpResponseRedirect(reverse("user", kwargs={"userid": userid}))
+            # return HttpResponseRedirect(reverse("user", kwargs={"userid": userid}))
+            return HttpResponseRedirect("/api/v1/user/status")
         else:
             results: Dict[str, Any] = get_default_results(
                 error=update_worker_form.errors.as_text()
             )
-            return JsonResponse(results)
+            return JsonResponse(results, status=400)
 
     @method_decorator(auth_required)
     def delete(self, request: HttpRequest, userid: int):
@@ -83,16 +84,6 @@ class UserView(View):
         return JsonResponse(get_default_results())
 
 
-# @auth_required
-# def user_view(request: HttpRequest):
-#     results = {"errors": "", "results": {}}
-#     results["results"]["user"] = {
-#         "is_authenticated": request.user.is_authenticated,
-#         "username": request.user.username,
-#         "email": request.user.email,
-#         "first_name": request.user.first_name,
-#         "last_name": request.user.last_name,
-#         "is_coordinator": request.user.is_coordinator,
-#         "is_account_manager": request.user.is_account_manager
-#     }
-#     return JsonResponse(results)
+def status(request: HttpRequest):
+    # return HttpResponse("ok")
+    return JsonResponse(get_default_results())
