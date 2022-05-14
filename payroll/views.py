@@ -41,9 +41,9 @@ class EventDayWorkView(View):
         else:
             results["errors"] = event_day_work.errors.as_text()
             status_code = 400
-        
+
         return JsonResponse(results, status=status_code)
-    
+
     @method_decorator(auth_required)
     def put(self, request: HttpRequest, event_day_work_id: int):
         day_work = EventDayWork.objects.get(pk=event_day_work_id)
@@ -63,7 +63,7 @@ class EventDayWorkView(View):
 
 class EventView(View):
     @method_decorator(auth_required)
-    def get(self, request:HttpRequest, event_id: int):
+    def get(self, request: HttpRequest, event_id: int):
         event = get_object_or_404(Event, pk=event_id)
         results = get_default_results()
         results["results"].append({"name": event.name, "number": event.number})
@@ -73,9 +73,14 @@ class EventView(View):
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
         create_event_form = ManageEventForm(data)
+        status_code = 201
+
         if create_event_form.is_valid():
             event = create_event_form.save()
-            return HttpResponseRedirect(reverse("event", kwargs={"event_id": event.pk}), content_type="application/json")
+            return HttpResponseRedirect(
+                reverse("event", kwargs={"event_id": event.pk}),
+                content_type="application/json",
+            )
             # return HttpResponseRedirect("/api/v1/user/status")
         else:
             results = get_default_results(error=create_event_form.errors.as_text())
@@ -88,9 +93,7 @@ class EventView(View):
         update_event_form = ManageEventForm(data, instance=event)
         if update_event_form.is_valid():
             update_event_form.save()
-            return HttpResponseRedirect(
-                reverse("event", kwargs={"event_id": event_id})
-            )
+            return HttpResponseRedirect(reverse("event", kwargs={"event_id": event_id}))
         else:
             results: Dict[str, Any] = get_default_results(
                 error=update_event_form.errors.as_text()
@@ -103,9 +106,16 @@ class EventView(View):
         event.delete()
         return JsonResponse(get_default_results())
 
+    def return_error(self, results: Dict[str, Any], model_form) -> int:
+        results["error"] = model_form.errors.as_text()
+        results["ok"] = False
+        status_code: int = 400
+        return status_code
+
 
 class EventListView(View):
     pass
+
 
 # decorators = [never_cache, login_required]
 

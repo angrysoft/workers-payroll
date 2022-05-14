@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+
+# from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
@@ -23,6 +25,8 @@ class UserCreationForm(forms.ModelForm):
             "last_name",
             "is_coordinator",
             "is_account_manager",
+            "is_active",
+            "is_superuser",
         )
 
     def clean_password2(self):
@@ -57,7 +61,7 @@ class UserChangeForm(forms.ModelForm):
             "is_account_manager",
             "password",
             "is_active",
-            "is_admin",
+            "is_superuser",
         )
 
 
@@ -71,19 +75,27 @@ class UserAdmin(BaseUserAdmin):
         "first_name",
         "last_name",
     )
-    list_filter = ("is_admin", "is_coordinator", "is_account_manager")
+    list_filter = ("is_superuser", "is_coordinator", "is_account_manager")
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         ("Worker info", {"fields": ("email", "first_name", "last_name", "functions")}),
         (
             "Permissions",
-            {"fields": ("is_admin", "is_coordinator", "is_account_manager")},
+            {
+                "fields": (
+                    "is_active"
+                    "is_superuser",
+                    "is_coordinator",
+                    "is_account_manager",
+                    "user_permissions",
+                )
+            },
         ),
     )
     add_fieldsets = fieldsets
     search_fields = ("username", "last_name", "first_name")
     ordering = ("last_name", "first_name")
-    filter_horizontal = ("functions",)
+    filter_horizontal = ("functions", "user_permissions")
 
 
 admin.site.register(User, UserAdmin)

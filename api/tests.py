@@ -11,10 +11,11 @@ class TestUserEndpoint(TestCase):
         self.email = ("test@example.net",)
 
         User = get_user_model()
-        self.usr = User.objects.create_user(
+        self.usr = User.objects.create_superuser(
             username=self.usr_name,
             email="test@example.net",
             password=self.usr_passwd,
+            is_superuser=True
         )
         self.c = Client()
 
@@ -83,25 +84,27 @@ class TestUserEndpoint(TestCase):
             HTTP_AUTHORIZATION=token,
         )
         self.assertEqual(response.status_code, 201)
-    
+
     def test_update_user(self):
         new_email = "new@example.net"
+        new_first_name = "Foo"
+        new_last_name = "Bar"
         response_login = self.c.post(
             f"{USER_API}/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
         )
-        token = response_login.json()["token"]
+        data = response_login.json()
+
         response = self.c.put(
-            f"{USER_API}/1",
+            f"{USER_API}/{data['user_id']}",
             {
                 "email": new_email,
-                "first_name": "Foo",
-                "last_name": "Bar"
+                "first_name": new_first_name,
+                "last_name": new_last_name,
             },
             content_type="application/json",
-            HTTP_AUTHORIZATION=token,
+            HTTP_AUTHORIZATION=data["token"],
         )
-        print(response, response.json())
         self.assertEqual(response.status_code, 201)
 
 

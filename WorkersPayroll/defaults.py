@@ -1,4 +1,6 @@
 from typing import Any, Dict, List
+
+from django.views import View
 from workers.models import User
 
 
@@ -9,7 +11,7 @@ def get_default_results(
         status = False
     return_results: Dict[str, Any] = {
         "results": results,
-        "status": status,
+        "ok": status,
         "error": error,
     }
     return return_results.copy()

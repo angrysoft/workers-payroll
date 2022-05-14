@@ -27,6 +27,7 @@ class LoginView(View):
                 token.generate_new_token()
                 token.save()
                 results["token"] = token.get_jwt_token()
+                results["user_id"] = user.pk
 
         else:
             results["error"] = login_form.errors.as_text()
@@ -66,8 +67,10 @@ class UserView(View):
         user = get_object_or_404(User, pk=userid)
         status_code = 201
         results = get_default_results()
+        user_data = user.serialize()
         data = json.loads(request.body)
-        update_worker_form = ManageWorkerForm(instance=user, data=data)
+        user_data.update(data)
+        update_worker_form = ManageWorkerForm(user_data, instance=user)
         if update_worker_form.is_valid():
             update_worker_form.save()
         else:
@@ -83,7 +86,6 @@ class UserView(View):
 
     def return_error(self, results: Dict[str, Any], create_worker_form) -> int:
         results["error"] = create_worker_form.errors.as_text()
-        results["status"] = False
-        status_code: int  = 400
+        results["ok"] = False
+        status_code: int = 400
         return status_code
-
