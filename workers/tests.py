@@ -1,8 +1,7 @@
+from datetime import datetime, timedelta
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from payroll.models import Function, FunctionRate
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
+from payroll.models import Function, FunctionRate, EventDayWork, Event
 
 class UserManagerTest(TestCase):
     def test_create_user(self):
@@ -54,16 +53,75 @@ class UserManagerTest(TestCase):
             email="test@example.net",
             password="foobar1234",
         )
-        has_perm = usr.has_perm("add_work_day")
-        print(has_perm)
-        content_type = ContentType.objects.get(app_label='payroll', model='event')
-        add_work_day_perm = Permission.objects.create(
-            codename="add_work_day",
-            name="Add work day",
-            content_type=content_type
+        has_perm = usr.has_perm("payroll.view_eventdaywork")
+        self.assertFalse(has_perm)
+        usr.is_coordinator = True
+        has_perm = usr.has_perm("payroll.view_eventdaywork")
+        self.assertTrue(has_perm)
+
+    def test_has_perm_account_manager(self):
+        User = get_user_model()
+        usr = User.objects.create_user(
+            username="account_manager",
+            email="accountr@example.net",
+            password="foobar1234",
+            is_account_manager=True
         )
-        usr.user_permissions.add(add_work_day_perm)
-        has_perm = usr.has_perm("add_work_day")
-        print(has_perm)
+        has_perm = usr.has_perm("payroll.view_eventdaywork")
+        self.assertTrue(has_perm)
 
+        has_perm = usr.has_perm("payroll.add_eventdaywork")
+        self.assertFalse(has_perm)
 
+    def test_has_perm_regular_user(self):
+        User = get_user_model()
+        usr = User.objects.create_user(
+            username="regular_user_for_workday",
+            first_name="FooU",
+            last_name="BarU",
+            email="regular_user@example.net",
+            password="foobar1234",
+        )
+
+        coordinator = User.objects.create_user(
+            username="coordinator_for_workday",
+            email="regular_user@example.net",
+            first_name="FooC",
+            last_name="BarC",
+            password="foobar1234",
+            is_coordinator=True
+        )
+
+        account_manager = User.objects.create_user(
+            username="account_manager_for_workday",
+            email="regular_user@example.net",
+            first_name="FooA",
+            last_name="BarA",
+            password="foobar1234",
+            is_account_manager=True
+        )
+
+        f1 = Function(name="f1")
+        f1.save()
+
+        event = Event(
+            name="test_event",
+            number="01-2022",
+            coordinator=coordinator,
+            account_manager=account_manager
+        )
+        event.save()
+
+        event_day_work = EventDayWork()
+        event_day_work.event = event
+        event_day_work.worker = usr
+        event_day_work.start = datetime.now()
+        event_day_work.end = datetime.now() + timedelta(hours=10)
+        event_day_work.function = f1
+        event_day_work.save()
+
+        has_perm = usr.has_perm("payroll.view_eventdaywork", event_day_work)
+        self.assertFalse(has_perm)
+
+        has_perm = usr.has_perm("payroll.add_eventdaywork")
+        self.assertFalse(has_perm)

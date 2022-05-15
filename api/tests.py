@@ -15,7 +15,7 @@ class TestUserEndpoint(TestCase):
             username=self.usr_name,
             email="test@example.net",
             password=self.usr_passwd,
-            is_superuser=True
+            is_superuser=True,
         )
         self.c = Client()
 

@@ -1,4 +1,3 @@
-import imp
 from typing import Optional
 from django.conf import settings
 from django.contrib.auth.backends import BaseBackend
@@ -26,8 +25,30 @@ class TokenBackend(BaseBackend):
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
-    
-    def has_perm(self, user_obj , perm: str, obj: Optional[Model] = ...) -> bool:
-        ret = super().has_perm(user_obj, perm, obj)
-        print("perm: ", self.get_all_permissions(user_obj))
-        return True
+
+    def has_perm(
+        self,
+        user_obj: User,
+        perm: str,
+        obj: Optional[Model] = ...) -> bool:
+        if not user_obj.is_active or user_obj.is_anonymous:
+            return False
+
+        try:
+            app_label, codename = perm.split(".")
+        except ValueError:
+            raise ValueError(
+                "Permission name should be in the form "
+                "app_label.permission_codename."
+            )
+
+        if user_obj.is_coordinator:
+            return True
+        
+        if user_obj.is_account_manager and codename == "view_eventdaywork":
+            return True
+        
+        if obj is not None and obj.objects.filter(user=user_obj).exists():
+            return True
+
+        return False

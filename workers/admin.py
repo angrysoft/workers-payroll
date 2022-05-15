@@ -83,11 +83,11 @@ class UserAdmin(BaseUserAdmin):
             "Permissions",
             {
                 "fields": (
-                    "is_active"
+                    "is_active",
                     "is_superuser",
                     "is_coordinator",
                     "is_account_manager",
-                    "user_permissions",
+                    # "user_permissions",
                 )
             },
         ),
