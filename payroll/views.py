@@ -17,7 +17,7 @@ class EventDayWorkView(View):
         """Get all events / get event by id"""
         results = get_default_results()
         work_days = get_list_or_404(EventDayWork, event=event_id)
-        if request.user.has_perm("read", work_days):
+        if request.user.has_perm("view_eventworkday", work_days):
             work_days_obj = serialize(
                 "python",
                 work_days,
@@ -27,7 +27,6 @@ class EventDayWorkView(View):
             for day in work_days_obj:
                 results["results"].append(day.get("fields"))
 
-        # return HttpResponse(results, content_type="application/json")
         return JsonResponse(results)
 
     @method_decorator(auth_required)
@@ -48,9 +47,10 @@ class EventDayWorkView(View):
     def put(self, request: HttpRequest, event_day_work_id: int):
         day_work = EventDayWork.objects.get(pk=event_day_work_id)
         data = json.loads(request.body)
-
-        event_day_work = EventDayWorkFrom(data, instance=day_work)
+        event_day_work_data = day_work.serialize()
+        event_day_work.update(data)
         results = get_default_results()
+        event_day_work = EventDayWorkFrom(event_day_work_data, instance=day_work)
         status_code = 201
         if event_day_work.is_valid():
             event_day_work.save()
@@ -73,32 +73,31 @@ class EventView(View):
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
         create_event_form = ManageEventForm(data)
+        results = get_default_results()
         status_code = 201
 
         if create_event_form.is_valid():
             event = create_event_form.save()
-            return HttpResponseRedirect(
-                reverse("event", kwargs={"event_id": event.pk}),
-                content_type="application/json",
-            )
-            # return HttpResponseRedirect("/api/v1/user/status")
         else:
             results = get_default_results(error=create_event_form.errors.as_text())
-            return JsonResponse(results, status=400)
+            status_code = 400
+
+        return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)
     def put(self, request: HttpRequest, event_id: int):
         event = get_object_or_404(Event, pk=event_id)
         data = json.loads(request.body)
         update_event_form = ManageEventForm(data, instance=event)
+        status_code = 201
+        results = get_default_results()
         if update_event_form.is_valid():
             update_event_form.save()
-            return HttpResponseRedirect(reverse("event", kwargs={"event_id": event_id}))
         else:
-            results: Dict[str, Any] = get_default_results(
-                error=update_event_form.errors.as_text()
-            )
-            return JsonResponse(results, status=400)
+            results = get_default_results(error=create_event_form.errors.as_text())
+            status_code = 400
+
+        return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)
     def delete(self, request: HttpRequest, event_id: int):
@@ -113,9 +112,15 @@ class EventView(View):
         return status_code
 
 
-class EventListView(View):
+class EventWorkDayListView(View):
+    def get(self, request: HttpRequest, month: str, year: str):
+        pass
+
+def event_work_day_month_report(request: HttpRequest):
     pass
 
+def event_work_day_by_event(request: HttpRequest, event_id: int):
+    pass
 
 # decorators = [never_cache, login_required]
 

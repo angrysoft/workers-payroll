@@ -44,11 +44,11 @@ class TokenBackend(BaseBackend):
 
         if user_obj.is_coordinator:
             return True
-        
+
         if user_obj.is_account_manager and codename == "view_eventdaywork":
             return True
-        
-        if obj is not None and obj.objects.filter(user=user_obj).exists():
+
+        if obj is not None and obj.worker == user_obj:
             return True
 
         return False

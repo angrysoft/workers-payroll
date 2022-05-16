@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -98,6 +99,15 @@ class EventDayWork(models.Model):
 
     def __str__(self) -> str:
         return f"{self.event}-{self.worker}-{self.start}-{self.end}"
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "event": self.event,
+            "function": self.function.all(),
+            "start": self.start,
+            "end": self.end,
+            "additions": self.additions.all()
+        }
 
     class Meta:
         ordering = ["start", "worker"]

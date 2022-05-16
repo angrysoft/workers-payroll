@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from payroll.models import Function, FunctionRate, EventDayWork, Event
@@ -111,7 +111,6 @@ class UserManagerTest(TestCase):
             account_manager=account_manager
         )
         event.save()
-
         event_day_work = EventDayWork()
         event_day_work.event = event
         event_day_work.worker = usr
@@ -121,7 +120,7 @@ class UserManagerTest(TestCase):
         event_day_work.save()
 
         has_perm = usr.has_perm("payroll.view_eventdaywork", event_day_work)
-        self.assertFalse(has_perm)
+        self.assertTrue(has_perm)
 
-        has_perm = usr.has_perm("payroll.add_eventdaywork")
-        self.assertFalse(has_perm)
+        has_no_perm = usr.has_perm("payroll.add_eventdaywork")
+        self.assertFalse(has_no_perm)
