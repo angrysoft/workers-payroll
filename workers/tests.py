@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from payroll.models import Function, FunctionRate, EventDayWork, Event
 
+
 class UserManagerTest(TestCase):
     def test_create_user(self):
         User = get_user_model()
@@ -65,7 +66,7 @@ class UserManagerTest(TestCase):
             username="account_manager",
             email="accountr@example.net",
             password="foobar1234",
-            is_account_manager=True
+            is_account_manager=True,
         )
         has_perm = usr.has_perm("payroll.view_eventdaywork")
         self.assertTrue(has_perm)
@@ -89,7 +90,7 @@ class UserManagerTest(TestCase):
             first_name="FooC",
             last_name="BarC",
             password="foobar1234",
-            is_coordinator=True
+            is_coordinator=True,
         )
 
         account_manager = User.objects.create_user(
@@ -98,7 +99,7 @@ class UserManagerTest(TestCase):
             first_name="FooA",
             last_name="BarA",
             password="foobar1234",
-            is_account_manager=True
+            is_account_manager=True,
         )
 
         f1 = Function(name="f1")
@@ -108,7 +109,7 @@ class UserManagerTest(TestCase):
             name="test_event",
             number="01-2022",
             coordinator=coordinator,
-            account_manager=account_manager
+            account_manager=account_manager,
         )
         event.save()
         event_day_work = EventDayWork()

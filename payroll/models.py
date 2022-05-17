@@ -106,7 +106,7 @@ class EventDayWork(models.Model):
             "function": self.function.all(),
             "start": self.start,
             "end": self.end,
-            "additions": self.additions.all()
+            "additions": self.additions.all(),
         }
 
     class Meta:

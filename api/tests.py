@@ -1,5 +1,10 @@
+from datetime import datetime, timedelta
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from payroll.models import Event, EventDayWork, Function
+from workers.models import User
+
 
 USER_API = "/api/v1/user"
 
@@ -131,3 +136,64 @@ class TestEventEndpoint(TestCase):
             "/api/v1/user/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
         )
+
+
+class TestWorkerReport(TestCase):
+    def setUp(self) -> None:
+        worker = User.objects.create_user(
+            "worker",
+            first_name="Janet",
+            last_name="FooBar",
+            email="janet.foobar@example.net",
+            password="foobar1234"
+        )
+
+        coordinator = User.objects.create_user(
+            "coordinator1",
+            first_name="John",
+            last_name="Doe",
+            email="john.doe@example.net",
+        )
+        account_manager = User.objects.create_user(
+            "account_man",
+            first_name="Jane",
+            last_name="Foo",
+            email="jane.foo@example.net",
+        )
+        ev = Event()
+        ev.number = "22-101"
+        ev.name = "PollandRock"
+        ev.coordinator = coordinator
+        ev.account_manager = account_manager
+        ev.save()
+        test_func = Function(name="f1")
+        test_func.save()
+        worker.functions.add(test_func)
+        # start_day = timezone.localtime(timezone.datetime(2022, 1, 1, 8, 0, 0))
+        start_day = timezone.make_aware(timezone.datetime(2022, 1, 1, 8, 0, 0))
+        for _ in range(10):
+            day = EventDayWork()
+            day.worker = worker
+            day.event = ev
+            start = start_day
+            end = start + timedelta(hours=12)
+            day.start = start
+            day.end = end
+            start_day += timedelta(days=1)
+            day.function = test_func
+            day.save()
+
+        self.c = Client()
+        response_login = self.c.post(
+            f"{USER_API}/auth/login",
+            {"username": "worker", "password": "foobar1234"},
+        )
+        self.token = response_login.json()["token"]
+
+    def test_get_worker_month_report(self):
+        response = self.c.get(
+            "/api/v1/event/report/2022/1",
+            HTTP_AUTHORIZATION=self.token,
+        )
+        print(response.json())
+

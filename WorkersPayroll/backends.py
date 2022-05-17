@@ -26,11 +26,7 @@ class TokenBackend(BaseBackend):
         except User.DoesNotExist:
             return None
 
-    def has_perm(
-        self,
-        user_obj: User,
-        perm: str,
-        obj: Optional[Model] = ...) -> bool:
+    def has_perm(self, user_obj: User, perm: str, obj: Optional[Model] = ...) -> bool:
         if not user_obj.is_active or user_obj.is_anonymous:
             return False
 

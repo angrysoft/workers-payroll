@@ -1,14 +1,14 @@
 import json
 from typing import Any, Dict
-from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
-from django.urls import reverse
 from django.views import View
 from django.utils.decorators import method_decorator
 from payroll.forms import EventDayWorkFrom, ManageEventForm
 from .models import EventDayWork, Event
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results
+from django.core.serializers import serialize
 
 
 class EventDayWorkView(View):
@@ -116,11 +116,37 @@ class EventWorkDayListView(View):
     def get(self, request: HttpRequest, month: str, year: str):
         pass
 
-def event_work_day_month_report(request: HttpRequest):
-    pass
 
+@auth_required
+def worker_event_work_day_month_report(request: HttpRequest, month: str, year: str):
+    work_days = (
+        EventDayWork.objects.filter(
+            worker=request.user,
+            start__year=year,
+            end__year=year,
+            start__month=month,
+            end__month=month,
+        )
+        .order_by("start", "event")
+        .all()
+    )
+    results = get_default_results()
+    work_days_obj = serialize(
+        "python",
+        work_days,
+        use_natural_foreign_keys=True,
+        use_natural_primary_keys=True,
+    )
+    for day in work_days_obj:
+        results["results"].append(day.get("fields"))
+
+    return JsonResponse(results)
+
+
+@auth_required
 def event_work_day_by_event(request: HttpRequest, event_id: int):
     pass
+
 
 # decorators = [never_cache, login_required]
 
