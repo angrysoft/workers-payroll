@@ -1,5 +1,5 @@
-from datetime import datetime, timedelta, tzinfo
 from django.test import TestCase
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from payroll.models import Function, FunctionRate, EventDayWork, Event
 
@@ -111,12 +111,13 @@ class UserManagerTest(TestCase):
             coordinator=coordinator,
             account_manager=account_manager,
         )
+        start_day = timezone.make_aware(timezone.datetime(2022, 1, 1, 8, 0, 0))
         event.save()
         event_day_work = EventDayWork()
         event_day_work.event = event
         event_day_work.worker = usr
-        event_day_work.start = datetime.now()
-        event_day_work.end = datetime.now() + timedelta(hours=10)
+        event_day_work.start = start_day
+        event_day_work.end = start_day + timezone.timedelta(hours=10)
         event_day_work.function = f1
         event_day_work.save()
 

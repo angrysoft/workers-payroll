@@ -1,3 +1,4 @@
+import imp
 import json
 from typing import Any, Dict
 from django.http import HttpRequest, JsonResponse
@@ -112,35 +113,30 @@ class EventView(View):
         return status_code
 
 
-class EventWorkDayListView(View):
+class WorkerEventWorkDayMonthReport(View):
+    @method_decorator(auth_required)
     def get(self, request: HttpRequest, month: str, year: str):
-        pass
-
-
-@auth_required
-def worker_event_work_day_month_report(request: HttpRequest, month: str, year: str):
-    work_days = (
-        EventDayWork.objects.filter(
-            worker=request.user,
-            start__year=year,
-            end__year=year,
-            start__month=month,
-            end__month=month,
+        work_days = (
+            EventDayWork.objects.filter(
+                worker=request.user,
+                start__year=year,
+                end__year=year,
+                start__month=month,
+                end__month=month,
+            )
+            .order_by("start", "event")
+            .all()
         )
-        .order_by("start", "event")
-        .all()
-    )
-    results = get_default_results()
-    work_days_obj = serialize(
-        "python",
-        work_days,
-        use_natural_foreign_keys=True,
-        use_natural_primary_keys=True,
-    )
-    for day in work_days_obj:
-        results["results"].append(day.get("fields"))
+        work_days_report = self.get_report(work_days)
+        results = get_default_results()
+        results["results"] = work_days_report
+        return JsonResponse(results)
 
-    return JsonResponse(results)
+    def get_report(self, work_days):
+        results = []
+        for day in work_days:
+            results.append(day.calculate_rate())
+        return results
 
 
 @auth_required

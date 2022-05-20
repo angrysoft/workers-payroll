@@ -11,7 +11,7 @@ class Function(models.Model):
         return self.name
 
     def natural_key(self):
-        return self.name
+        return {"name": self.name, "rates": ""}
 
     class Meta:
         verbose_name = _("Function")
@@ -57,7 +57,7 @@ class AdditionRate(models.Model):
 
 
 class Addition(models.Model):
-    addition = models.OneToOneField(AdditionRate, on_delete=models.CASCADE)
+    addition = models.ForeignKey(AdditionRate, on_delete=models.CASCADE)
     value = models.IntegerField(default=0)
     worker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -82,6 +82,14 @@ class FunctionRate(models.Model):
 
     def __str__(self) -> str:
         return f"{self.worker.username} - {self.function.name}"
+    
+    # def natural_key(self) -> Dict[str, Any]:
+    #     return {
+    #         "name": self.function.name,
+    #         "value": self.value,
+    #         "overtime": self.overtime,
+    #         "overtime_after": self.overtime_after 
+    #     }
 
 
 class EventDayWork(models.Model):
@@ -103,11 +111,42 @@ class EventDayWork(models.Model):
     def serialize(self) -> Dict[str, Any]:
         return {
             "event": self.event,
-            "function": self.function.all(),
+            "function": self.function,
             "start": self.start,
             "end": self.end,
             "additions": self.additions.all(),
         }
+
+    def calculate_rate(self):
+        work_time = self.end - self.start
+        work_time_hours = round(work_time.total_seconds() / 3600)
+        user_rate = FunctionRate.objects.get(worker=self.worker, function=self.function)
+        overtime = work_time_hours - user_rate.overtime_after
+        if overtime < 0:
+            overtime = 0
+        additions = self.calculate_additions()
+        result = {
+            "work_time": work_time_hours,
+            "rate": user_rate.value,
+            "overtime": overtime,
+            "overtime_rate": overtime * user_rate.overtime,
+            "additions": additions,
+            "total": self.calculate_total(user_rate, overtime, additions)
+        }
+        return result
+
+    def calculate_total(self, user_rate, overtime, additions):
+
+        return user_rate.value + overtime * user_rate.overtime
+
+    def calculate_additions(self):
+        result = {}
+        for add in self.additions.all():
+            value = add.addition.value
+            if add.addition.is_multiplied:
+                value = round(add.addition.value * add.value)
+            result[add.addition.name] = value
+        return result
 
     class Meta:
         ordering = ["start", "worker"]

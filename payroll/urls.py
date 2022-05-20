@@ -1,6 +1,6 @@
 from django.urls import path
 
-from payroll.views import EventDayWorkView, worker_event_work_day_month_report
+from payroll.views import EventDayWorkView, WorkerEventWorkDayMonthReport
 
 urlpatterns = [
     path("", EventDayWorkView.as_view(), name="events"),
@@ -8,7 +8,7 @@ urlpatterns = [
     path("day/<int:event_id>", EventDayWorkView.as_view(), name="events_get"),
     path(
         "report/<int:year>/<int:month>",
-        worker_event_work_day_month_report,
+        WorkerEventWorkDayMonthReport.as_view(),
         name="worker_month_report",
     ),
 ]

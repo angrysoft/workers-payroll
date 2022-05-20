@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+
+
+
+@layer base {
+  p {
+    @apply mt-1 mb-1;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+  h4 {
+    font-size: 1.2rem;
+  }
+  h5 {
+    font-size: 0.9rem;
+  }
+  h6 {
+    font-size: 0.8rem;
+  }
+  ul {
+    @apply list-disc px-2 my-1;
+  }
+  
+  input,
+  textarea {
+    @apply border border-black p-03;
+  }
+  
+  p {
+    word-break: break-word;
+  }
+}
+
+@layer components {
+  .transition-height {
+    transition: height 1s;
+  }
+  
+  .menu-item {
+    @apply frame after:transition-all after:duration-500 transition-all duration-500 hover:shadow-xl after:border-black border-black lg:flex p-05 relative mb-1 lg:my-0 lg:mx-[0.2vw] animate-fadeInDown xl:text-lg lg:text-sm 2xl:text-2xl border-transparent after:border-transparent hover:border-black hover:after:border-black;
+  }
+  
+  .menu-item.active,
+  .menu-item.active::after {
+    @apply font-bold;
+  }
+  
+  .frame {
+    @apply border after:border border-solid after:border-solid relative after:w-full after:h-full after:-top-03 after:left-02 after:absolute after:border after:box-content after:-z-10;
+  }
+  
+  .frame-bg {
+    @apply before:w-full before:h-full before:-top-03 before:left-02 before:absolute before:box-content;
+  }
+}
+
+@layer utilities {
+  .a-delay-none {
+    animation-delay: 0;
+  }
+  
+  .a-delay-1 {
+    animation-delay: 1s;
+  }
+  .a-delay-2 {
+    animation-delay: 2s;
+  }
+  .a-delay-3 {
+    animation-delay: 3s;
+  }
+  .a-delay-4 {
+    animation-delay: 4s;
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  monospace;
+}
+
+body {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--main-font-color);
+  font-size: 16px;
+  overflow-x: hidden;
+  background-color: #ECEFF1;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+
+.material-icons {
+    vertical-align: middle;
+  }
+  
+  span.material-icons,
+  span {
+      line-height: 2rem;
+  }
+  
+  span.material-icons {
+      margin-right: 0.5rem;
+  }
+

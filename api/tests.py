@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from payroll.models import Event, EventDayWork, Function
+from payroll.models import AdditionRate, Event, EventDayWork, Function, FunctionRate, Addition
 from workers.models import User
 
 
@@ -140,6 +140,61 @@ class TestEventEndpoint(TestCase):
 
 class TestWorkerReport(TestCase):
     def setUp(self) -> None:
+        worker, coordinator, account_manager = self.create_users()
+        ev = self.create_event(coordinator, account_manager)
+        func = self.set_user_rates(worker)
+        additions = self.set_user_additions()
+        start_day = timezone.make_aware(timezone.datetime(2022, 1, 1, 8, 0, 0))
+        for _ in range(10):
+            day = EventDayWork()
+            day.worker = worker
+            day.event = ev
+            start = start_day
+            end = start + timedelta(hours=12)
+            day.start = start
+            day.end = end
+            start_day += timedelta(days=1)
+            day.function = func
+            day.save()
+            for add in additions:
+                addition = Addition()
+                addition.addition = add
+                addition.worker = worker
+                if add.is_multiplied:
+                    addition.value = 150
+                addition.save()
+                day.additions.add(addition)
+
+        self.c = Client()
+        response_login = self.c.post(
+            f"{USER_API}/auth/login",
+            {"username": "worker", "password": "foobar1234"},
+        )
+        self.token = response_login.json()["token"]
+
+    def set_user_rates(self, worker):
+        test_func = Function(name="f1")
+        test_func.save()
+        worker.functions.add(test_func)
+        func_rate = FunctionRate.objects.get(function=test_func)
+        func_rate.function = test_func
+        func_rate.value = 550
+        func_rate.overtime = 55
+        func_rate.overtime_after = 10
+        func_rate.worker = worker
+        func_rate.save()
+        return test_func
+
+    def create_event(self, coordinator, account_manager):
+        ev = Event()
+        ev.number = "22-101"
+        ev.name = "PollandRock"
+        ev.coordinator = coordinator
+        ev.account_manager = account_manager
+        ev.save()
+        return ev
+
+    def create_users(self):
         worker = User.objects.create_user(
             "worker",
             first_name="Janet",
@@ -160,40 +215,20 @@ class TestWorkerReport(TestCase):
             last_name="Foo",
             email="jane.foo@example.net",
         )
-        ev = Event()
-        ev.number = "22-101"
-        ev.name = "PollandRock"
-        ev.coordinator = coordinator
-        ev.account_manager = account_manager
-        ev.save()
-        test_func = Function(name="f1")
-        test_func.save()
-        worker.functions.add(test_func)
-        # start_day = timezone.localtime(timezone.datetime(2022, 1, 1, 8, 0, 0))
-        start_day = timezone.make_aware(timezone.datetime(2022, 1, 1, 8, 0, 0))
-        for _ in range(10):
-            day = EventDayWork()
-            day.worker = worker
-            day.event = ev
-            start = start_day
-            end = start + timedelta(hours=12)
-            day.start = start
-            day.end = end
-            start_day += timedelta(days=1)
-            day.function = test_func
-            day.save()
+        
+        return worker, coordinator, account_manager
 
-        self.c = Client()
-        response_login = self.c.post(
-            f"{USER_API}/auth/login",
-            {"username": "worker", "password": "foobar1234"},
-        )
-        self.token = response_login.json()["token"]
+    def set_user_additions(self):
+        results = []
+        results.append(AdditionRate.objects.create(name="Work on high", value=100))
+        results.append(AdditionRate.objects.create(name="Drive car", value=2, is_multiplied=True))
+        return results
 
     def test_get_worker_month_report(self):
         response = self.c.get(
             "/api/v1/event/report/2022/1",
             HTTP_AUTHORIZATION=self.token,
         )
-        print(response.json())
+        self.assertEqual(len(response.json().get("results", [])), 10)
+    
 
