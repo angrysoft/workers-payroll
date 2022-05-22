@@ -1,11 +1,11 @@
-import React, { Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, {Suspense, lazy} from 'react';
+import {Route, Routes} from 'react-router-dom';
 import Home from './routes/Home';
 
-const Loader = lazy(() => import("./components/Loader"));
-const Login = lazy(() => import("./routes/Login"))
+const Loader = lazy(() => import('./components/Loader'));
+const Login = lazy(() => import('./routes/Login'));
 
-function App() {
+const App = () => {
   return (
     <Routes>
       <Route path='/' element={
@@ -18,8 +18,9 @@ function App() {
           <Login />
         </Suspense>
       }/>
+      <Route path='/test' element={<Loader />} />
     </Routes>
   );
-}
+};
 
 export default App;

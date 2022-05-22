@@ -1,7 +1,5 @@
 const CoordinatorView = () => {
-    return (
-        <></>
-    );
-}
+  return <></>;
+};
 
 export default CoordinatorView;

@@ -1,9 +1,10 @@
 import React from "react";
+import UserView from "./UserView";
 
 const Home = () => {
   return (
-    <div>
-        Home
+    <div className="w-full h-screen">
+      <UserView />
     </div>
   );
 };

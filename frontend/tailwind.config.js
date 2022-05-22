@@ -1,6 +1,6 @@
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}"
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     spacing: {
@@ -24,14 +24,22 @@ module.exports = {
       '8': '8rem',
       '9': '9rem',
       '10': '10rem',
-      'a4w': '23cm',
-      'a4h': '31.7cm',
+      '11': '11rem',
+      '12': '12rem',
+      '13': '13rem',
+      '14': '14rem',
+      '15': '15rem',
+      '16': '16rem',
+      '17': '17rem',
+      '18': '18rem',
+      '19': '19rem',
+      '20': '20rem',
     },
-    
+
     extend: {
       colors: {
         primary: "#fff",
-        secondary: "rgb(34,165,78)"
+        secondary: "rgb(34,165,78)",
       },
 
       minHeight: {
@@ -40,74 +48,70 @@ module.exports = {
 
       gridTemplateColumns: {
         "contacts": "repeat(auto-fit,minmax(22rem,1fr))",
-        "jobs": "repeat(auto-fit, minmax(25rem, 35rem))"
+        "jobs": "repeat(auto-fit, minmax(25rem, 35rem))",
       },
 
       keyframes: {
         slideInLeft: {
           "from": {
             transform: "translate3d(-100%, 0, 0)",
-            visibility: "visible"
+            visibility: "visible",
           },
-        
           "to": {
             transform: "translate3d(0, 0, 0)",
-            visibility: "visible"
-          }
+            visibility: "visible",
+          },
         },
         slideInRight: {
           "from": {
             transform: "translate3d(100%, 0, 0)",
-            visibility: "visible"
+            visibility: "visible",
           },
-        
           "to": {
             transform: "translate3d(0, 0, 0)",
-            visibility: "visible"
-          }
+            visibility: "visible",
+          },
         },
         slideInDown: {
           "from": {
             transform: "translate3d(0, 100%, 0)",
-            visibility: "visible"
+            visibility: "visible",
           },
-        
           "to": {
             transform: "translate3d(0, 0, 0)",
-            visibility: "visible"
-          }
+            visibility: "visible",
+          },
         },
         slideInUp: {
           "from": {
             transform: "translate3d(0, -100%, 0)",
-            visibility: "visible"
+            visibility: "visible",
           },
-        
           "to": {
             transform: "translate3d(0, 0, 0)",
-            visibility: "visible"
-          }
+            visibility: "visible",
+          },
         },
 
         showLogo: {
           "from": {
-            opacity: "0"
+            opacity: "0",
           },
 
           "to": {
-            opacity: "1"
-          }
+            opacity: "1",
+          },
         },
         fadeInDown: {
           "from": {
             opacity: "0",
-            transform: "translate3d(0, -100%, 0)"
+            transform: "translate3d(0, -100%, 0)",
           },
           "to": {
             opacity: "1",
-            transform: "translate3d(0, 0, 0)"
-          }
-        }
+            transform: "translate3d(0, 0, 0)",
+          },
+        },
       },
 
       animation: {
