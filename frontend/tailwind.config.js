@@ -37,6 +37,9 @@ module.exports = {
     },
 
     extend: {
+      screens: {
+        'print': { 'raw': 'print' },
+      },
       colors: {
         primary: "#fff",
         secondary: "rgb(34,165,78)",

@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../../context/auth";
 import UserView from "./UserView";
+import WorkerActions from "./WorkerActions";
 
 const Home = () => {
+  const ctx = useContext(AuthContext);
+  const location = useLocation();
+  let actions = <></>;
+
+  switch (ctx.user.type) {
+    case "worker": {
+      actions = <WorkerActions />;
+      break;
+    }
+
+    case "coordinator": {
+      actions = <WorkerActions />;
+      break;
+    }
+
+    default:
+      return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
   return (
-    <div className="w-full h-screen">
-      <UserView />
-    </div>
+    <UserView>
+      {actions}
+    </UserView>
   );
 };
 
