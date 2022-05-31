@@ -10,7 +10,7 @@ interface InputProps {
 const Input = (props: InputProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 items-center">
-      <label htmlFor={props.id} className="font-bold">
+      <label htmlFor={props.id} className="font-bold text-gray-500">
         {props.label}:
       </label>
       <input
@@ -18,8 +18,9 @@ const Input = (props: InputProps) => {
         id={props.id}
         name={props.id}
         className="md:col-span-2 w-full
-                   border-1 border-gray-50 shadow
-                   focus:outline-none focus:shadow-lg"
+                   border border-gray-300 rounded
+                   focus:outline-0 focus:border-gray-500
+                   transition-border duration-500"
         required={props.required}
       />
     </div>

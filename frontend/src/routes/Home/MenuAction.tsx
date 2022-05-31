@@ -3,6 +3,7 @@ import MaterialIcons from "../../components/elements/MaterialIcons";
 
 interface IMenuActionProps {
   name: string;
+  icon: string;
   handleAction: CallableFunction;
   children?: JSX.Element | JSX.Element[];
 }
@@ -14,7 +15,7 @@ const MenuAction = (props: IMenuActionProps) => {
                  overflow-hidden whitespace-nowrap"
       onClick={() => props.handleAction()}
     >
-      <MaterialIcons name="print" />
+      <MaterialIcons name={props.icon} />
       <span className="font-bold">{props.name}</span>
     </div>
   );

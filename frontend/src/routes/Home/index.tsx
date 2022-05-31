@@ -1,22 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../../context/auth";
+import { useAppSelector } from "../../app/hooks";
+import CoordinatorActions from "./CoordinatorActions";
 import UserView from "./UserView";
 import WorkerActions from "./WorkerActions";
 
 const Home = () => {
-  const ctx = useContext(AuthContext);
+  const user = useAppSelector((state) => state.auth);
   const location = useLocation();
   let actions = <></>;
-
-  switch (ctx.user.type) {
+  console.log("wtf", user.type);
+  switch (user.type) {
     case "worker": {
       actions = <WorkerActions />;
       break;
     }
 
     case "coordinator": {
-      actions = <WorkerActions />;
+      actions = <CoordinatorActions />;
       break;
     }
 

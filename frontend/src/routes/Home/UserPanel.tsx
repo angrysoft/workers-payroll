@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import MaterialIcons from '../../components/elements/MaterialIcons';
-import { AuthContext } from '../../context/auth';
-
+import { useAppSelector } from "../../app/hooks";
+import { RootState } from '../../app/store';
 
 interface IUserPanelProps {
   handleMenuClick: CallableFunction;
@@ -9,7 +9,7 @@ interface IUserPanelProps {
 
 
 const UserPanel = (props: IUserPanelProps) => {
-  const ctx = useContext(AuthContext);
+  const user = useAppSelector((state: RootState) => state.auth);
 
   return (
     <div className='print:hidden w-full text-white
@@ -25,7 +25,7 @@ const UserPanel = (props: IUserPanelProps) => {
       </div>
       <div>
         <MaterialIcons name='account_circle' />
-        <span>{ctx.user.username}</span>
+        <span>{user.username}</span>
       </div>
     </div>
   );
