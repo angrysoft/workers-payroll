@@ -50,22 +50,10 @@
     transition: height 1s;
   }
   
-  .menu-item {
-    @apply frame after:transition-all after:duration-500 transition-all duration-500 hover:shadow-xl after:border-black border-black lg:flex p-05 relative mb-1 lg:my-0 lg:mx-[0.2vw] animate-fadeInDown xl:text-lg lg:text-sm 2xl:text-2xl border-transparent after:border-transparent hover:border-black hover:after:border-black;
+  .selected {
+      @apply bg-indigo-200;
   }
   
-  .menu-item.active,
-  .menu-item.active::after {
-    @apply font-bold;
-  }
-  
-  .frame {
-    @apply border after:border border-solid after:border-solid relative after:w-full after:h-full after:-top-03 after:left-02 after:absolute after:border after:box-content after:-z-10;
-  }
-  
-  .frame-bg {
-    @apply before:w-full before:h-full before:-top-03 before:left-02 before:absolute before:box-content;
-  }
 }
 
 @layer utilities {
