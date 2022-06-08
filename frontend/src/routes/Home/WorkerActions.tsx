@@ -9,7 +9,7 @@ const WorkerActions:React.FC = () => {
 
   return (
     <>
-      <MenuAction name="Print Report" handleAction={printReport} />
+      <MenuAction name="Print Report" handleAction={printReport} icon="print"/>
     </>
   );
 };

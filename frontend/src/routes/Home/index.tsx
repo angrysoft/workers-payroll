@@ -1,15 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../../store/auth";
+import { AppContext } from "../../store/store";
 import UserView from "./UserView";
 import WorkerActions from "./WorkerActions";
 
 const Home = () => {
-  const ctx = useContext(AuthContext);
+  const { state } = useContext(AppContext);
   const location = useLocation();
   let actions = <></>;
+  useEffect(() => {
+    console.log("home", state.user);
+  }, [state]);
 
-  switch (ctx.user.type) {
+  switch (state.user.type) {
     case "worker": {
       actions = <WorkerActions />;
       break;
@@ -24,11 +27,7 @@ const Home = () => {
       return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return (
-    <UserView>
-      {actions}
-    </UserView>
-  );
+  return <UserView>{actions}</UserView>;
 };
 
 export default Home;

@@ -1,12 +1,6 @@
-import React from 'react';
-import {createContext, useReducer} from 'react';
-import {User} from "./auth";
-import Reducer, {State} from "../reducer/reducer";
-
-
-interface StoreContextType {
-  user: User;
-}
+import React from "react";
+import { createContext, useReducer } from "react";
+import Reducer, { State } from "../reducer/reducer";
 
 const initialState: State = {
   user: {
@@ -14,20 +8,28 @@ const initialState: State = {
     is_authenticated: false,
     type: "unauthenticated",
   },
+  isLoading: false,
 };
 
 interface IProviderProps {
   children: JSX.Element | JSX.Element[];
-
-};
+}
 
 const Provider = (props: IProviderProps) => {
-  const [state, dispatch] = useReducer<Reducer, State>(Reducer, initialState);
+  const [state, dispatch] = useReducer(Reducer, initialState);
   return (
-    <Store.Provider value={[state, dispatch]}>
+    <AppContext.Provider value={{ state, dispatch }}>
       {props.children}
-    </Store.Provider>
+    </AppContext.Provider>
   );
 };
-export const Store = createContext<StoreContextType>(null!);
-export default Provider;
+
+const AppContext = createContext<{
+  state: State;
+  dispatch: React.Dispatch<any>;
+}>({
+  state: initialState,
+  dispatch: () => null,
+});
+
+export { Provider, AppContext };

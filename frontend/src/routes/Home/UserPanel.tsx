@@ -1,31 +1,30 @@
-import React, { useContext } from 'react';
-import MaterialIcons from '../../components/elements/MaterialIcons';
-import { AuthContext } from '../../context/auth';
-
+import React, { useContext } from "react";
+import MaterialIcons from "../../components/elements/MaterialIcons";
+import { AppContext } from "../../store/store";
 
 interface IUserPanelProps {
   handleMenuClick: CallableFunction;
 }
 
-
 const UserPanel = (props: IUserPanelProps) => {
-  const ctx = useContext(AuthContext);
+  const {state} = useContext(AppContext);
 
   return (
-    <div className='print:hidden w-full text-white
+    <div
+      className="print:hidden w-full text-white
                     bg-gradient-to-r from-indigo-500 to-blue-500
                     h-4 px-1
-                    flex justify-between items-center'
+                    flex justify-between items-center"
     >
       <div
-        className='cursor-pointer md:invisible'
+        className="cursor-pointer md:invisible"
         onClick={() => props.handleMenuClick()}
       >
-        <MaterialIcons name='menu' />
+        <MaterialIcons name="menu" />
       </div>
       <div>
-        <MaterialIcons name='account_circle' />
-        <span>{ctx.user.username}</span>
+        <MaterialIcons name="account_circle" />
+        <span>{state.user.username}</span>
       </div>
     </div>
   );
