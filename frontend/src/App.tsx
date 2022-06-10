@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import { AuthRequired } from "./routes/AuthRequired";
 import Home from "./routes/Home";
 
 const Loader = lazy(() => import("./components/Loader"));
@@ -12,7 +13,9 @@ const App = () => {
         path="/"
         element={
           <Suspense fallback={<Loader />}>
-            <Home />
+            <AuthRequired>
+              <Home />
+            </AuthRequired>
           </Suspense>
         }
       />
