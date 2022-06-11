@@ -29,10 +29,9 @@ const SideMenu: React.FC<SideMenuProps> = (props: SideMenuProps) => {
         className="font-bold text-xl text-center
                    h-4 px-1
                    border-b border-gray-300
-                   grid grid-cols-5 items-center"
+                   flex items-center justify-between md:justify-center"
       >
-        <span className="col-start-2 col-span-3
-                         overflow-hidden whitespace-nowrap">
+        <span className="overflow-hidden whitespace-nowrap">
           Workers Payroll
         </span>
         { props.open && closeIcon}
