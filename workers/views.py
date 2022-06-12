@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate
 from .models import Token, User
 from .forms import LoginForm, ManageWorkerForm
@@ -14,7 +15,8 @@ from WorkersPayroll.defaults import get_default_results, get_default_user_result
 class LoginView(View):
     # @method_decorator(csrf_exempt)
     def post(self, request: HttpRequest):
-        login_form = LoginForm(request.POST)
+        data = json.loads(request.body)
+        login_form = LoginForm(data)
         results = get_default_results()
         if login_form.is_valid():
             user = authenticate(
@@ -28,13 +30,19 @@ class LoginView(View):
                 token.save()
                 results["token"] = token.get_jwt_token()
                 results["user_id"] = user.pk
+                results["results"] = user.serialize()
+            else:
+                results["ok"] = False
+                results["error"] = "Wrong login or password"
 
         else:
+            results["ok"] = False
             results["error"] = login_form.errors.as_text()
 
         return JsonResponse(results)
 
 
+@require_POST
 @auth_required
 def logout_view(request: HttpRequest):
     results = get_default_results()

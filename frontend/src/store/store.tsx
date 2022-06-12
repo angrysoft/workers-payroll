@@ -7,6 +7,7 @@ const initialState: State = {
     username: "unknown",
     is_authenticated: false,
     type: "unauthenticated",
+    userId: -1,
   },
   isLoading: false,
 };

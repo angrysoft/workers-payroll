@@ -28,6 +28,7 @@ class TestUserEndpoint(TestCase):
         response = self.c.post(
             f"{USER_API}/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
+            content_type="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
@@ -38,6 +39,7 @@ class TestUserEndpoint(TestCase):
         response = self.c.post(
             f"{USER_API}/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
+            content_type="application/json",
         )
         response_data = response.json()
 
@@ -50,15 +52,16 @@ class TestUserEndpoint(TestCase):
         self.assertEqual(get_response.status_code, 200)
 
     def test_user_logout(self):
-        response = self.c.get(f"{USER_API}/auth/logout")
+        response = self.c.post(f"{USER_API}/auth/logout")
         self.assertEqual(response.status_code, 401)
 
         response = self.c.post(
             f"{USER_API}/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
+            content_type="application/json",
         )
         response_data = response.json()
-        logout_response = self.c.get(
+        logout_response = self.c.post(
             f"{USER_API}/auth/logout",
             HTTP_AUTHORIZATION=response_data["token"],
         )
@@ -74,6 +77,7 @@ class TestUserEndpoint(TestCase):
         response_login = self.c.post(
             f"{USER_API}/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
+            content_type="application/json",
         )
         token = response_login.json()["token"]
         response = self.c.post(
@@ -97,6 +101,7 @@ class TestUserEndpoint(TestCase):
         response_login = self.c.post(
             f"{USER_API}/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
+            content_type="application/json",
         )
         data = response_login.json()
 
@@ -127,6 +132,7 @@ class TestEventEndpoint(TestCase):
         response = self.client.post(
             "/api/v1/user/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
+            content_type="application/json",
         )
         response_data = response.json()
         self.token = response_data["token"]
@@ -135,6 +141,7 @@ class TestEventEndpoint(TestCase):
         response = self.client.post(
             "/api/v1/user/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
+            content_type="application/json",
         )
 
 
@@ -169,6 +176,7 @@ class TestWorkerReport(TestCase):
         response_login = self.c.post(
             f"{USER_API}/auth/login",
             {"username": "worker", "password": "foobar1234"},
+            content_type="application/json",
         )
         self.token = response_login.json()["token"]
 

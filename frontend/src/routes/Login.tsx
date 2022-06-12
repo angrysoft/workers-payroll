@@ -1,22 +1,35 @@
-import React, { SyntheticEvent, useContext } from "react";
+import React, { SyntheticEvent, useContext, useState } from "react";
 import Button from "../components/elements/Button";
 import Input from "../components/elements/Input";
 import { AppContext } from "../store/store";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/auth";
+import MaterialIcons from "../components/elements/MaterialIcons";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handelSubmit = (ev: SyntheticEvent) => {
+  const handelSubmit = async (ev: SyntheticEvent) => {
     ev.preventDefault();
+    setLoading(true);
     const form = new FormData(ev.target as HTMLFormElement);
-    const user = login(
+    const user = await login(
       form.get("username") as string,
       form.get("password") as string,
     );
+
+    console.log("user", user);
+    if (user.error) {
+      setError(user.error);
+      setLoading(false);
+      return;
+    }
+
     dispatch({
       type: "USER_LOGGED",
       isLoading: false,
@@ -25,23 +38,41 @@ const Login = () => {
     navigate("/", { replace: true });
   };
 
+  const showError = () => {
+    return (
+      <div className="text-red-500 text-center">
+        <MaterialIcons name="error" />
+        <span>{error}</span>
+      </div>
+    );
+  };
+
   if (state.user.is_authenticated) {
     return <Navigate to="/" state={{ from: location }} replace />;
-  } else {
+  }
+
+  if (loading) {
     return (
       <div className="flex w-full h-screen justify-center items-center p-2">
-        <form
-          action=""
-          className="p-2 grid gap-1 shadow-md bg-white"
-          onSubmit={handelSubmit}
-        >
-          <Input id="username" type="text" label="Login" required />
-          <Input id="password" type="password" label="Password" required />
-          <Button>Login</Button>
-        </form>
+        <Loader />
       </div>
     );
   }
+
+  return (
+    <div className="flex w-full h-screen justify-center items-center p-2">
+      <form
+        action=""
+        className="p-2 grid gap-1 shadow-md bg-white"
+        onSubmit={handelSubmit}
+      >
+        {error && showError()}
+        <Input id="username" type="text" label="Login" required />
+        <Input id="password" type="password" label="Password" required />
+        <Button>Login</Button>
+      </form>
+    </div>
+  );
 };
 
 export default Login;
