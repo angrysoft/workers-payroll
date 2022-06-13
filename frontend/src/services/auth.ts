@@ -35,6 +35,7 @@ const login = async (username: string, password: string): Promise<User> => {
   }
   results.type = data.results?.is_coordinator ? "coordinator" : "worker";
   results.is_authenticated = true;
+  localStorage.setItem("token", data.token || "");
   return results;
 };
 
