@@ -43,11 +43,11 @@ class TestUserEndpoint(TestCase):
         )
         response_data = response.json()
 
-        get_response = self.c.get(f"{USER_API}/1")
+        get_response = self.c.get(f"{USER_API}/auth")
         self.assertEqual(get_response.status_code, 401)
 
         get_response = self.c.get(
-            f"{USER_API}/1", HTTP_AUTHORIZATION=response_data["token"]
+            f"{USER_API}/auth", HTTP_AUTHORIZATION=response_data["token"]
         )
         self.assertEqual(get_response.status_code, 200)
 

@@ -31,6 +31,7 @@ class User(AbstractUser):
             "is_superuser": self.is_superuser,
             "is_coordinator": self.is_coordinator,
             "is_account_manager": self.is_account_manager,
+            "is_authenticated": self.is_authenticated,
         }
 
     class Meta:

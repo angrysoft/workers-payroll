@@ -4,10 +4,9 @@ const Loader = () => {
   return (
     <div className="flex justify-center items-center w-full h-full">
       <div
-        className="spinner-border
-                   animate-spin inline-block
-                   w-8 h-8 border-8 rounded-full
-                   border-t-secondary"
+        className="animate-spin inline-block
+                   w-8 h-8 border-[1rem] rounded-full
+                   border-t-indigo-500"
         role="status"
       >
       </div>

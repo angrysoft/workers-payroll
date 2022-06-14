@@ -10,16 +10,10 @@ const Home = () => {
     console.log("home", state.user);
   }, [state]);
 
-  switch (state.user.type) {
-    case "worker": {
-      actions = <WorkerActions />;
-      break;
-    }
-
-    case "coordinator": {
-      actions = <WorkerActions />;
-      break;
-    }
+  if (state.user.is_coordinator) {
+    actions = <WorkerActions />;
+  } else {
+    actions = <WorkerActions />;
   }
 
   return <UserView>{actions}</UserView>;

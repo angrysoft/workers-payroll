@@ -15,27 +15,29 @@ interface ILoginResponse {
   };
 }
 
-const login = async (username: string, password: string): Promise<User> => {
-  const results: User = {
-    username: username,
-    type: "unknown",
-    is_authenticated: false,
-    userId: -1,
+const login = async (username: string, password: string): Promise<ILoginResponse> => {
+  const results: ILoginResponse = {
+    error: "",
+    ok: true,
+    user_id: -1,
   };
 
-  const response = await fetch("/api/v1/user/auth/login",
-      {
-        method: "POST",
-        body: JSON.stringify({username: username, password: password}),
-      });
-  const data: ILoginResponse = await response.json();
-  console.log("data", data);
-  if (! data.ok && data.error) {
-    results.error = data.error;
+  try {
+    const response = await fetch("/api/v1/user/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify({username: username, password: password}),
+        });
+
+    if (! response.ok) {
+      console.log('fetch response ! ok');
+    }
+    Object.assign(results, await response.json());
+    console.log("data", results);
+  } catch (error) {
+    console.error(error);
+    results.error = "Oops something went wrong";
   }
-  results.type = data.results?.is_coordinator ? "coordinator" : "worker";
-  results.is_authenticated = true;
-  localStorage.setItem("token", data.token || "");
   return results;
 };
 

@@ -1,7 +1,7 @@
 export interface User {
     username: string;
     is_authenticated: boolean;
-    type: string;
+    is_coordinator: boolean;
     error?: string;
-    userId: number;
+    user_id: number;
 }

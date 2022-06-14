@@ -1,6 +1,6 @@
 import json
 from typing import Any, Dict
-from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -50,12 +50,19 @@ def logout_view(request: HttpRequest):
     return JsonResponse(results)
 
 
+@auth_required
+def is_authenticated(request: HttpRequest):
+    return JsonResponse(request.user.serialize())
+
+
 class UserView(View):
     @method_decorator(auth_required)
     def get(self, request: HttpRequest, userid: int):
-        user = get_object_or_404(User, pk=userid)
-        results = get_default_results()
-        results["results"].append(get_default_user_results(user))
+        if not request.user.is_superuser or not request.user.is_coordinator:
+            results = get_default_results(error="Coordinator or  Admin rights required")
+        else:
+            user = get_object_or_404(User, pk=userid)
+            results["results"] = user.serialize()
         return JsonResponse(results)
 
     @method_decorator(auth_required)

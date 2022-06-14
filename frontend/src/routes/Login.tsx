@@ -18,14 +18,14 @@ const Login = () => {
     ev.preventDefault();
     setLoading(true);
     const form = new FormData(ev.target as HTMLFormElement);
-    const user = await login(
+    const response = await login(
       form.get("username") as string,
       form.get("password") as string,
     );
 
-    console.log("user", user);
-    if (user.error) {
-      setError(user.error);
+    console.log("user", response);
+    if (response.error) {
+      setError(response.error);
       setLoading(false);
       return;
     }
@@ -33,7 +33,7 @@ const Login = () => {
     dispatch({
       type: "USER_LOGGED",
       isLoading: false,
-      payload: user,
+      payload: response,
     });
     navigate("/", { replace: true });
   };
