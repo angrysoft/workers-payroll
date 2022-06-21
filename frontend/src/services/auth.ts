@@ -1,5 +1,3 @@
-import { User } from "../store/auth";
-
 interface ILoginResponse {
   error: string;
   ok: boolean;
@@ -15,7 +13,10 @@ interface ILoginResponse {
   };
 }
 
-const login = async (username: string, password: string): Promise<ILoginResponse> => {
+const login = async (
+    username: string,
+    password: string,
+): Promise<ILoginResponse> => {
   const results: ILoginResponse = {
     error: "",
     ok: true,

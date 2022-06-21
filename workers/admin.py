@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.forms import UserCreationForm
 
 # from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
@@ -10,7 +11,7 @@ from django.core.exceptions import ValidationError
 from workers.models import User, Token
 
 
-class UserCreationForm(forms.ModelForm):
+class CreationUserForm(forms.ModelForm):
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
     password2 = forms.CharField(
         label="Password confirmation", widget=forms.PasswordInput
@@ -67,7 +68,7 @@ class UserChangeForm(forms.ModelForm):
 
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
-    add_form = UserCreationForm
+    # add_form = CreationUserForm
 
     list_display = (
         "username",

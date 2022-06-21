@@ -5,6 +5,7 @@ interface InputProps {
   type: string;
   required?: boolean;
   label: string;
+  inputArgs?: any;
 }
 
 const Input = (props: InputProps) => {
@@ -22,6 +23,7 @@ const Input = (props: InputProps) => {
                    focus:outline-0 focus:border-gray-500
                    transition-border duration-500"
         required={props.required}
+        {...props.inputArgs}
       />
     </div>
   );

@@ -18,7 +18,13 @@ const Reducer = (state: State, action: Action): State => {
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.results));
       return {user: action.payload.results, isLoading: false};
-    case "USER_AUTH_CHECH":
+    case "USER_AUTH_CHECK":
+      return {user: action.payload, isLoading: false};
+    case "USER_AUTH_FAILED":
+      localStorage.clear();
+      return {user: action.payload, isLoading: false};
+    case "USER_LOGOUT":
+      localStorage.clear();
       return {user: action.payload, isLoading: false};
 
     default:

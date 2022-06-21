@@ -33,4 +33,4 @@ const AppContext = createContext<{
   dispatch: () => null,
 });
 
-export { Provider, AppContext };
+export { Provider, AppContext, initialState };

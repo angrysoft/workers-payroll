@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import MaterialIcons from "../../components/elements/MaterialIcons";
 import { AppContext } from "../../store/store";
 
@@ -7,7 +7,7 @@ interface IUserPanelProps {
 }
 
 const UserPanel = (props: IUserPanelProps) => {
-  const {state} = useContext(AppContext);
+  const { state } = useContext(AppContext);
 
   return (
     <div
@@ -22,7 +22,7 @@ const UserPanel = (props: IUserPanelProps) => {
       >
         <MaterialIcons name="menu" />
       </div>
-      <div>
+      <div className="cursor-pointer relative">
         <MaterialIcons name="account_circle" />
         <span>{state.user.username}</span>
       </div>
