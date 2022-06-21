@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialIcons from "../../components/elements/MaterialIcons";
+import MaterialIcons from "../../../components/elements/MaterialIcons";
 
 interface IMenuActionProps {
   name: string;
@@ -11,8 +11,8 @@ interface IMenuActionProps {
 const MenuAction = (props: IMenuActionProps) => {
   return (
     <div
-      className="hover:bg-blue-400 p-05 px-1 transition cursor-pointer
-                 overflow-hidden whitespace-nowrap"
+      className="hover:bg-blue-400 p-05 px-1 transition-background
+                 overflow-hidden whitespace-nowrap select-none cursor-pointer"
       onClick={() => props.handleAction()}
     >
       <MaterialIcons name={props.icon} />

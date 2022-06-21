@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import MenuAction from './MenuAction';
+import MenuAction from '../Menu/MenuAction';
 
 
 const WorkerActions:React.FC = () => {

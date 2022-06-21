@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { DateSelector } from "../../components/DateSelector";
-import Table from "../../components/elements/Table";
-import { IRow } from "../../components/elements/Table/TableBody";
-import { header, prepareDataToTable, fakeData } from "./fakeData";
-import SideMenu from "./SideMenu";
-import UserPanel from "./UserPanel";
+import { DateSelector } from "../../../components/DateSelector";
+import Table from "../../../components/elements/Table";
+import { IRow } from "../../../components/elements/Table/TableBody";
+import { header, prepareDataToTable, fakeData } from "../fakeData";
+import SideMenu from "../Menu/SideMenu";
+import UserPanel from "../UserPanel";
 import WorkerActions from "./WorkerActions";
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialIcons from "../../components/elements/MaterialIcons";
+import MaterialIcons from "../../../components/elements/MaterialIcons";
 
 interface SideMenuProps {
   open: boolean;
@@ -36,7 +36,7 @@ const SideMenu: React.FC<SideMenuProps> = (props: SideMenuProps) => {
         </span>
         { props.open && closeIcon}
       </div>
-      <div className="grid grid-cols-1 gap-1 py-1">{props.children}</div>
+      <div className="grid grid-cols-1 py-1">{props.children}</div>
     </div>
   );
 };

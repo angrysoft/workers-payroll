@@ -22,7 +22,7 @@ const UserPanel = (props: IUserPanelProps) => {
       >
         <MaterialIcons name="menu" />
       </div>
-      <div className="cursor-pointer relative">
+      <div className="cursor-pointer">
         <MaterialIcons name="account_circle" />
         <span>{state.user.username}</span>
       </div>
