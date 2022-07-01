@@ -1,15 +1,20 @@
 import React from "react";
 import { createContext, useReducer } from "react";
-import Reducer, { State } from "../reducer/reducer";
+import rootReducer, { RootState } from "../reducers/rootReducer";
 
-const initialState: State = {
-  user: {
-    username: "unknown",
-    is_authenticated: false,
-    user_id: -1,
-    is_coordinator: false,
+const initialState: RootState = {
+  users: {
+    user: {
+      username: "unknown",
+      is_authenticated: false,
+      user_id: -1,
+      is_coordinator: false,
+    },
+    isLoading: false,
   },
-  isLoading: false,
+  table: {
+    selected: "",
+  },
 };
 
 interface IProviderProps {
@@ -17,7 +22,7 @@ interface IProviderProps {
 }
 
 const Provider = (props: IProviderProps) => {
-  const [state, dispatch] = useReducer(Reducer, initialState);
+  const [state, dispatch] = useReducer(rootReducer, initialState);
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       {props.children}
@@ -26,7 +31,7 @@ const Provider = (props: IProviderProps) => {
 };
 
 const AppContext = createContext<{
-  state: State;
+  state: RootState;
   dispatch: React.Dispatch<any>;
 }>({
   state: initialState,

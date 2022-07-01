@@ -4,8 +4,9 @@ import Input from "../components/elements/Input";
 import { AppContext } from "../store/store";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/auth";
-import MaterialIcons from "../components/elements/MaterialIcons";
+import {MaterialIcons} from "../components/elements/MaterialIcons";
 import Loader from "../components/Loader";
+
 
 const Login = () => {
   const location = useLocation();
@@ -47,7 +48,7 @@ const Login = () => {
     );
   };
 
-  if (state.user.is_authenticated) {
+  if (state.users.user.is_authenticated) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 

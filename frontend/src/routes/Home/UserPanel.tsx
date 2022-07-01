@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import MaterialIcons from "../../components/elements/MaterialIcons";
+import React, { useContext } from "react";
+import {MaterialIcons} from "../../components/elements/MaterialIcons";
 import { AppContext } from "../../store/store";
 
 interface IUserPanelProps {
@@ -24,7 +24,7 @@ const UserPanel = (props: IUserPanelProps) => {
       </div>
       <div className="cursor-pointer">
         <MaterialIcons name="account_circle" />
-        <span>{state.user.username}</span>
+        <span>{state.users.user.username}</span>
       </div>
     </div>
   );

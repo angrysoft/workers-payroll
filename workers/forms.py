@@ -7,12 +7,28 @@ class LoginForm(forms.Form):
     password = forms.CharField(required=True)
 
 
-class ManageWorkerForm(forms.ModelForm):
+class CreateWorkerForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
             "username",
             "email",
+            "password",
+            "functions",
+            "first_name",
+            "last_name",
+            "is_coordinator",
+            "is_account_manager",
+        )
+
+
+class UpdateWorkerForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+            "functions",
             "first_name",
             "last_name",
             "is_coordinator",

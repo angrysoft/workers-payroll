@@ -1,17 +1,13 @@
+import { Action } from ".";
 import { User } from "../store/auth";
 
-export type State = {
+export type userState = {
    user: User,
    isLoading: boolean,
 }
 
-export interface Action {
-  type: string;
-  payload: any;
-};
 
-
-const Reducer = (state: State, action: Action): State => {
+const userReducer = (state: userState, action: Action): userState => {
   switch (action.type) {
     case 'USER_LOGGED':
       console.log("reducer", action.payload);
@@ -32,5 +28,6 @@ const Reducer = (state: State, action: Action): State => {
   }
 };
 
-export default Reducer;
-export type ReducerType = typeof Reducer;
+export {userReducer};
+export type userReducerType = typeof userReducer;
+

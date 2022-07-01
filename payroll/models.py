@@ -12,6 +12,12 @@ class Function(models.Model):
 
     def natural_key(self):
         return {"name": self.name, "rates": ""}
+    
+    def serialize(self):
+        return {
+            "name": self.name,
+            "id": self.pk,
+        }
 
     class Meta:
         verbose_name = _("Function")

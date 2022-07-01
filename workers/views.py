@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate
 from .models import Token, User
-from .forms import LoginForm, ManageWorkerForm
+from .forms import LoginForm, CreateWorkerForm, UpdateWorkerForm
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results, get_default_user_results
 
@@ -70,11 +70,24 @@ class UserView(View):
         status_code = 201
         results = get_default_results()
         data = json.loads(request.body)
-        create_worker_form = ManageWorkerForm(data)
+        print(data)
+        create_worker_form = CreateWorkerForm(data)
         if create_worker_form.is_valid():
-            create_worker_form.save()
-        else:
+            user = User.objects.create_user(
+                username=create_worker_form.cleaned_data.get("username"),
+                email=create_worker_form.cleaned_data.get("email"),
+                first_name=create_worker_form.cleaned_data.get("first_name"),
+                last_name=create_worker_form.cleaned_data.get("last_name"),
+                password=create_worker_form.cleaned_data.get("password"),
+                is_coordinator=create_worker_form.cleaned_data.get("is_coordinator"),
+            )
+            print("user", dir(user))
+        #     print("form data", create_worker_form.cleaned_data)
+        #     map(create_worker_form.cleaned_data.get("functions"), user.functions.add)
+        #     user.save()
+        # else:
             status_code: int = self.return_error(results, create_worker_form)
+        print(results)
         return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)
@@ -85,7 +98,7 @@ class UserView(View):
         user_data = user.serialize()
         data = json.loads(request.body)
         user_data.update(data)
-        update_worker_form = ManageWorkerForm(user_data, instance=user)
+        update_worker_form = UpdateWorkerForm(user_data, instance=user)
         if update_worker_form.is_valid():
             update_worker_form.save()
         else:

@@ -1,4 +1,3 @@
-import imp
 import json
 from typing import Any, Dict
 from django.http import HttpRequest, JsonResponse
@@ -6,7 +5,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views import View
 from django.utils.decorators import method_decorator
 from payroll.forms import EventDayWorkFrom, ManageEventForm
-from .models import EventDayWork, Event
+from .models import EventDayWork, Event, Function
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results
 from django.core.serializers import serialize
@@ -144,13 +143,10 @@ def event_work_day_by_event(request: HttpRequest, event_id: int):
     pass
 
 
-# decorators = [never_cache, login_required]
-
-# @method_decorator(decorators, name='dispatch')
-# class ProtectedView(TemplateView):
-#     template_name = 'secret.html'
-
-# @method_decorator(never_cache, name='dispatch')
-# @method_decorator(login_required, name='dispatch')
-# class ProtectedView(TemplateView):
-#     template_name = 'secret.html'
+# @auth_required
+def function_list(request: HttpRequest):
+    results = get_default_results()
+    functions = get_list_or_404(Function)
+    for func in functions:
+        results["results"].append(func.serialize())
+    return JsonResponse(results)

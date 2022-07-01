@@ -6,6 +6,7 @@ import { CoordinatorActions } from "./CoordinatorActions";
 import { header, prepareDataToTable, fakeData } from "../fakeData";
 import SideMenu from "../Menu/SideMenu";
 import UserPanel from "../UserPanel";
+import { Outlet } from "react-router-dom";
 
 
 interface ICoordinatorViewProps {
@@ -33,11 +34,8 @@ const CoordinatorView = (props: ICoordinatorViewProps) => {
         </SideMenu>
         <div className="w-full max-h-screen col-span-5 grid auto-rows-min">
           <UserPanel handleMenuClick={menuToggle} />
-          <div className="flex py-05 px-1 print:hidden">
-            <DateSelector handleDateChange={console.log}/>
-          </div>
-          <div className="h-[calc(100vh_-_5rem)] print:h-full overflow-auto">
-            <Table header={header} data={prepareDataToTable(fakeData)} />
+          <div className="h-[calc(100vh_-_5rem)] overflow-auto">
+            <Outlet />
           </div>
         </div>
       </div>

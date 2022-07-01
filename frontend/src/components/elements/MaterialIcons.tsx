@@ -12,4 +12,4 @@ const MaterialIcons = (props:MaterialIconsProps) => {
   );
 };
 
-export default MaterialIcons;
+export {MaterialIcons};

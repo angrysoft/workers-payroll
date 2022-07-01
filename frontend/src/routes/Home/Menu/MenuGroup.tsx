@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MaterialIcons from "../../../components/elements/MaterialIcons";
+import {MaterialIcons} from "../../../components/elements/MaterialIcons";
 
 interface IMenuGroupProps {
   name: string;

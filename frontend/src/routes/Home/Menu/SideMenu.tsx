@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialIcons from "../../../components/elements/MaterialIcons";
+import {MaterialIcons} from "../../../components/elements/MaterialIcons";
 
 interface SideMenuProps {
   open: boolean;

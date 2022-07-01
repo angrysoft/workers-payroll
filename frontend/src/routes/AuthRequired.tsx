@@ -27,12 +27,12 @@ const AuthRequired = ({ children }: { children: JSX.Element }) => {
   };
 
   useEffect(() => {
-    if (! state.user.is_authenticated) {
+    if (! state.users.user.is_authenticated) {
       checkAuth();
     }
   }, []);
 
-  if (state.user.is_authenticated) {
+  if (state.users.user.is_authenticated) {
     return children;
   }
   return <Navigate to="/login" state={{ from: location }} replace />;
