@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 
 const useGet = (url: string) => {
   const token:string = localStorage.getItem("token") || "";
-  const [data, setData] = useState<any>(null);
+  const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [code, setCode] = useState<number>(0);
 
   useEffect(() => {
     setLoading(true);
-    setData(null);
+    setResults(null);
     setError("");
     const fetchOptions: any = {
       method: "GET",
@@ -21,9 +21,9 @@ const useGet = (url: string) => {
 
     fetch(url, fetchOptions).then((response) =>{
       if (response.ok) {
-        response.json().then((data) => {
-          setData(data);
-          console.log("wtf", data);
+        response.json().then((results) => {
+          setResults(results);
+          console.log("wtf", results);
         })
             .catch((err) => setError(err.toString()));
       }
@@ -32,7 +32,7 @@ const useGet = (url: string) => {
     });
   }, []);
 
-  return { data, loading, error, code };
+  return { results, loading, error, code };
 };
 
 export {useGet};

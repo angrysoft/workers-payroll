@@ -25,11 +25,6 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
 
   const handleChange = (ev: SyntheticEvent) => {
     const select = ev.target as HTMLSelectElement;
-    console.log(
-        Array.from(select.selectedOptions)
-            .map((el) => el.value)
-            .toString(),
-    );
     props.handleSelectionChange(
         Array.from(select.selectedOptions).map((el) => el.value),
     );

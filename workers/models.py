@@ -24,6 +24,7 @@ class User(AbstractUser):
 
     def serialize(self) -> Dict[str, Any]:
         return {
+            "id": self.pk,
             "username": self.username,
             "email": self.email,
             "first_name": self.first_name,
@@ -32,6 +33,15 @@ class User(AbstractUser):
             "is_coordinator": self.is_coordinator,
             "is_account_manager": self.is_account_manager,
             "is_authenticated": self.is_authenticated,
+        }
+
+    def serialize_short(self) -> Dict[str, Any]:
+        return {
+            "id": self.pk,
+            "username": self.username,
+            "email": self.email,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
         }
 
     class Meta:

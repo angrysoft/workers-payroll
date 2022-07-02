@@ -1,38 +1,34 @@
-import React from 'react';
-import Table from '../../components/elements/Table';
+import React from "react";
+import Table from "../../components/elements/Table";
+import Pagination from "../../components/Pagination";
 
-
-const header = [
-  "Firstname",
-  "Lastname",
-  "Email",
-];
+const header = ["Firstname", "Lastname", "Email"];
 
 const userData = [
   {
     id: 1,
-    cells: [
-      "John",
-      "Doe",
-      "john.doe@example.net",
-    ],
+    cells: ["John", "Doe", "john.doe@example.net"],
   },
 ];
 
 interface IWorkersProps {
-
   children?: JSX.Element | JSX.Element[];
 }
 
-
-const Workers:React.FC<IWorkersProps> = (props:IWorkersProps) => {
+const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
   return (
     <>
       <div className="h-[calc(100vh_-_5rem)] print:h-full overflow-auto">
         <Table header={header} data={userData} />
       </div>
+      <Pagination
+        path="/workers"
+        currentPage={1 || 0}
+        pageRange={[] || []}
+        pages={1 || 0}
+      />
     </>
   );
 };
 
-export {Workers};
+export { Workers };

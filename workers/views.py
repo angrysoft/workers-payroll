@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate
 from .models import Token, User
 from .forms import LoginForm, CreateWorkerForm, UpdateWorkerForm
+from django.core.paginator import Paginator, Page
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results, get_default_user_results
 
@@ -58,19 +59,22 @@ def is_authenticated(request: HttpRequest):
 class UserView(View):
     @method_decorator(auth_required)
     def get(self, request: HttpRequest, userid: int):
+        status_code: int = 200
+        results = get_default_results()
         if not request.user.is_superuser or not request.user.is_coordinator:
             results = get_default_results(error="Coordinator or  Admin rights required")
+            status_code = 401
         else:
             user = get_object_or_404(User, pk=userid)
             results["results"] = user.serialize()
-        return JsonResponse(results)
+        return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)
     def post(self, request: HttpRequest):
         status_code = 201
         results = get_default_results()
         data = json.loads(request.body)
-        print(data)
+
         create_worker_form = CreateWorkerForm(data)
         if create_worker_form.is_valid():
             user = User.objects.create_user(
@@ -81,11 +85,11 @@ class UserView(View):
                 password=create_worker_form.cleaned_data.get("password"),
                 is_coordinator=create_worker_form.cleaned_data.get("is_coordinator"),
             )
-            print("user", dir(user))
-        #     print("form data", create_worker_form.cleaned_data)
-        #     map(create_worker_form.cleaned_data.get("functions"), user.functions.add)
-        #     user.save()
-        # else:
+            for func in create_worker_form.cleaned_data.get("functions", []):
+                user.functions.add(func)
+            user.save()
+
+        else:
             status_code: int = self.return_error(results, create_worker_form)
         print(results)
         return JsonResponse(results, status=status_code)
@@ -117,3 +121,31 @@ class UserView(View):
         results["ok"] = False
         status_code: int = 400
         return status_code
+
+
+# @auth_required
+def user_list(request: HttpRequest):
+    results = get_default_results()
+
+    try:
+        page_no = int(request.GET.get("page", "1"))
+    except ValueError:
+        page_no = 1
+
+    try:
+        items = int(request.GET.get("items", 10))
+    except ValueError:
+        items = 10
+
+    items_list: list[Dict[Any, Any]] = list(
+        User.objects.all().order_by("first_name", "last_name")
+    )
+    paginator = Paginator(items_list, per_page=items, allow_empty_first_page=True)
+    current_page: Page = paginator.get_page(page_no)
+
+    results["results"] = [user.serialize_short() for user in current_page.object_list]
+    results["pages"] = paginator.num_pages
+    results["currentPage"] = current_page.number
+    results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
+    
+    return JsonResponse(results, safe=False)

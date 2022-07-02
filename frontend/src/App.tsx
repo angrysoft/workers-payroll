@@ -23,6 +23,7 @@ const App = () => {
         }
       >
         <Route path='workers' element={<Workers />} />
+        <Route path='workers/:pageNo' element={<Workers />} />
         <Route path='add_worker' element={<CreateWorkerForm />} />
       </Route>
       <Route

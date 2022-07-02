@@ -143,7 +143,7 @@ def event_work_day_by_event(request: HttpRequest, event_id: int):
     pass
 
 
-# @auth_required
+@auth_required
 def function_list(request: HttpRequest):
     results = get_default_results()
     functions = get_list_or_404(Function)

@@ -1,30 +1,56 @@
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/elements/BackButton";
 import Button from "../../components/elements/Button";
 import { CheckBox } from "../../components/elements/CheckBox";
 import Input from "../../components/elements/Input";
 import { InputGroup } from "../../components/elements/InputGroup";
 import { IOptions, Select } from "../../components/elements/Select";
+import Loader from "../../components/Loader";
 import { useApi } from "../../hooks/useApi";
 import { useGet } from "../../hooks/useGet";
 
 interface IPostDataObj {
-  [key: string]: any
+  [key: string]: any;
 }
 
-const CreateWorkerForm: React.FC = () => {
+interface IFunctionSelector {
+  handleFunctionSelection: CallableFunction;
+}
+
+const FunctionSelector: React.FC<IFunctionSelector> = (
+    props: IFunctionSelector,
+) => {
   const [functionNames, setFunctionNames] = useState<Array<IOptions>>([]);
+  const { results, loading, error } = useGet("/api/v1/event/functions");
+
+  useEffect(() => {
+    console.log("useApi from Create", results, loading, error);
+    results && setFunctionNames(results.results);
+  }, [results]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
+    <Select
+      label="Functions"
+      id="functions"
+      items={functionNames}
+      multiple
+      handleSelectionChange={props.handleFunctionSelection}
+    />
+  );
+};
+
+const CreateWorkerForm: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedFunctionNames, setSelectedFunctionNames] = useState<
     Array<string>
   >([]);
   const [passwdError, setPasswdError] = useState<string>("");
-  const { data, loading, error } = useGet("/api/v1/event/functions");
-  const { results, call } = useApi();
-
-  useEffect(() => {
-    console.log("useApi from Create", data, loading, error);
-    data && setFunctionNames(data.results);
-  }, [data]);
+  const { loading, error, code, call } = useApi();
 
   const handleSubmit = (ev: SyntheticEvent) => {
     setPasswdError("");
@@ -37,18 +63,22 @@ const CreateWorkerForm: React.FC = () => {
     const postDataObj: IPostDataObj = {};
     Object.assign(postDataObj, Object.fromEntries(postData.entries()));
     postDataObj.functions = selectedFunctionNames;
-    console.log(postDataObj, typeof postDataObj );
 
     call("/api/v1/user/", {
       method: "POST",
       data: postDataObj,
     });
-    console.log(results);
   };
+
+  useEffect(() => {
+    console.log(code);
+    if (code === 201) {
+      navigate("/workers", {replace: true});
+    }
+  }, [loading]);
 
   return (
     <div className="p-1 md:p-2">
-      <div>{results}</div>
       <form
         action=""
         onSubmit={handleSubmit}
@@ -76,20 +106,15 @@ const CreateWorkerForm: React.FC = () => {
           <span className="text-pink-600 text-center">{passwdError}</span>
         </InputGroup>
         <InputGroup>
-          <Select
-            label="Functions"
-            id="functions"
-            items={functionNames}
-            multiple
-            handleSelectionChange={setSelectedFunctionNames}
-          />
+          <FunctionSelector handleFunctionSelection={setSelectedFunctionNames}/>
         </InputGroup>
         <InputGroup>
           <CheckBox label="Coordinator" id="is_coordinator" checked={false} />
         </InputGroup>
         <InputGroup>
-          <Button>Save</Button>
+          {loading ? <Loader /> : <Button>Save</Button>}
         </InputGroup>
+        <span className="text-pink-600 text-center">{error}</span>
       </form>
     </div>
   );

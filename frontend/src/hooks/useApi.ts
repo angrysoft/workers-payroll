@@ -13,6 +13,10 @@ const useApi = () => {
   const [code, setCode] = useState<number>(0);
 
   const call = (url: string, options: IFetchOptions) => {
+    setLoading(true);
+    setResults(null);
+    setError("");
+    setCode(0);
     const token:string = localStorage.getItem("token") || "";
     const fetchOptions: any = {
       method: options.method || "GET",
@@ -25,12 +29,17 @@ const useApi = () => {
     }
 
     fetch(url, fetchOptions).then((response) =>{
-      if (response.ok) {
+      if ([200, 201].includes(response.status)) {
         response.json().then((data) => {
           console.log("setResults", data);
           setResults(data);
         })
             .catch((err) => setError(err.toString()));
+      } else if ([400, 401].includes(response.status)) {
+        response.json().then((data) => {
+          console.log("setResults", data);
+          setError(data["error"]);
+        });
       }
       setCode(response.status);
       setLoading(false);

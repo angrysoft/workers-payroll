@@ -2,7 +2,14 @@ from datetime import datetime, timedelta
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from payroll.models import AdditionRate, Event, EventDayWork, Function, FunctionRate, Addition
+from payroll.models import (
+    AdditionRate,
+    Event,
+    EventDayWork,
+    Function,
+    FunctionRate,
+    Addition,
+)
 from workers.models import User
 
 
@@ -208,7 +215,7 @@ class TestWorkerReport(TestCase):
             first_name="Janet",
             last_name="FooBar",
             email="janet.foobar@example.net",
-            password="foobar1234"
+            password="foobar1234",
         )
 
         coordinator = User.objects.create_user(
@@ -223,13 +230,15 @@ class TestWorkerReport(TestCase):
             last_name="Foo",
             email="jane.foo@example.net",
         )
-        
+
         return worker, coordinator, account_manager
 
     def set_user_additions(self):
         results = []
         results.append(AdditionRate.objects.create(name="Work on high", value=100))
-        results.append(AdditionRate.objects.create(name="Drive car", value=2, is_multiplied=True))
+        results.append(
+            AdditionRate.objects.create(name="Drive car", value=2, is_multiplied=True)
+        )
         return results
 
     def test_get_worker_month_report(self):
@@ -238,5 +247,3 @@ class TestWorkerReport(TestCase):
             HTTP_AUTHORIZATION=self.token,
         )
         self.assertEqual(len(response.json().get("results", [])), 10)
-    
-

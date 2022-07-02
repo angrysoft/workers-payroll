@@ -12,7 +12,7 @@ class Function(models.Model):
 
     def natural_key(self):
         return {"name": self.name, "rates": ""}
-    
+
     def serialize(self):
         return {
             "name": self.name,
@@ -88,13 +88,13 @@ class FunctionRate(models.Model):
 
     def __str__(self) -> str:
         return f"{self.worker.username} - {self.function.name}"
-    
+
     # def natural_key(self) -> Dict[str, Any]:
     #     return {
     #         "name": self.function.name,
     #         "value": self.value,
     #         "overtime": self.overtime,
-    #         "overtime_after": self.overtime_after 
+    #         "overtime_after": self.overtime_after
     #     }
 
 
@@ -137,7 +137,7 @@ class EventDayWork(models.Model):
             "overtime": overtime,
             "overtime_rate": overtime * user_rate.overtime,
             "additions": additions,
-            "total": self.calculate_total(user_rate, overtime, additions)
+            "total": self.calculate_total(user_rate, overtime, additions),
         }
         return result
 
