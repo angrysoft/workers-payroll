@@ -1,25 +1,15 @@
 import React, { useState } from "react";
-import { DateSelector } from "../../../components/DateSelector";
-import Table from "../../../components/elements/Table";
-import { IRow } from "../../../components/elements/Table/TableBody";
 import { CoordinatorActions } from "./CoordinatorActions";
-import { header, prepareDataToTable, fakeData } from "../fakeData";
 import SideMenu from "../Menu/SideMenu";
 import UserPanel from "../UserPanel";
 import { Outlet } from "react-router-dom";
 
 
-interface ICoordinatorViewProps {
-  data?: IRow | IRow[];
-}
-
-
-const CoordinatorView = (props: ICoordinatorViewProps) => {
+const CoordinatorView = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const menuToggle = () => {
-    console.log("click menu");
-    setMenuOpen(menuOpen ? false : true);
+    setMenuOpen(! menuOpen);
   };
 
   const menuClose = () => {

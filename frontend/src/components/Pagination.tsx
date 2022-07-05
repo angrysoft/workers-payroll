@@ -16,7 +16,8 @@ const Pagination = (props: IPaginationProps) => {
           to={`${props.path}/${page}`}
           key={page}
           className={
-            "border-2 border-black px-05 bg-secondary" +
+            "border-2 border-blue-900 px-05 shadow-xl rounded-md " +
+            "bg-gradient-to-b from-indigo-500 to-blue-500 text-white" +
             (page === props.currentPage ? " font-bold" : "")
           }
         >
@@ -56,8 +57,10 @@ const Pagination = (props: IPaginationProps) => {
   };
 
   return (
-    <div className="grid grid-flow-col justify-center items-center
-                   mt-3 gap-1 text-2xl ">
+    <div
+      className="grid grid-flow-col justify-center items-center
+                 gap-1 text-2xl p-1"
+    >
       {prev()}
       {pageRange()}
       {next()}

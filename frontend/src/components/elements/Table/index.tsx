@@ -22,6 +22,9 @@ const Table = (props: TableProps) => {
         <TableHeader names={props.header} />
         <TableBody data={props.data} />
       </table>
+      <div>
+        {props.children}
+      </div>
     </div>
   );
 };

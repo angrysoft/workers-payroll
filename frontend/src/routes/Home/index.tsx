@@ -1,13 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { AppContext } from "../../store/store";
 import CoordinatorView from "./Coordinator/CoordinatorView";
 import UserView from "./Worker/UserView";
 
 const Home = () => {
   const { state } = useContext(AppContext);
-  useEffect(() => {
-    console.log("home", state.users.user);
-  }, [state]);
 
   if (state.users.user.is_coordinator) {
     return (
