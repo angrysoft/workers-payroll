@@ -23,7 +23,6 @@ const useGet = (url: string) => {
       if (response.ok) {
         response.json().then((results) => {
           setResults(results);
-          console.log("wtf", results);
         })
             .catch((err) => setError(err.toString()));
       }

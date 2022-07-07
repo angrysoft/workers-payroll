@@ -9,6 +9,14 @@ interface TableProps {
 }
 
 const Table = (props: TableProps) => {
+  console.log("table", props.data);
+  if (! props.data) {
+    console.log("dupa");
+    return (
+      <div className="font-bold text-red-500">No record found</div>
+    );
+  }
+
   return (
     <div
       className="overflow-auto

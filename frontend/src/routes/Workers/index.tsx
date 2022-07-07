@@ -1,36 +1,85 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Table from "../../components/elements/Table";
+import { IRow } from "../../components/elements/Table/TableBody";
+import Loader from "../../components/Loader";
 import Pagination from "../../components/Pagination";
+import { useGet } from "../../hooks/useGet";
 
-const header = ["Firstname", "Lastname", "Email"];
-
-const userData = [
-  {
-    id: 1,
-    cells: ["John", "Doe", "john.doe@example.net"],
-  },
-  {
-    id: 2,
-    cells: ["John", "Doe", "john.doe@example.net"],
-  },
-];
+const header = ["First name", "Last name", "Email"];
 
 interface IWorkersProps {
   children?: JSX.Element | JSX.Element[];
 }
 
+interface IUserItem {
+  id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
+interface IPageInfo {
+  pages: number;
+  currentPage: number;
+  pageRange: Array<number>;
+}
+
 const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
+  const [userData, setUserData] = useState<Array<IRow>>([]);
+  const [pageInfo, setPageInfo] = useState<IPageInfo>({
+    pages: 1,
+    currentPage: 1,
+    pageRange: [1],
+  });
+
+  const { pageNo } = useParams();
+  const { results, error, loading } = useGet(
+      `/api/v1/user/list?page_no=${pageNo}`,
+  );
+
+  useEffect(() => {
+    const data: Array<IRow> = [];
+    if (results && results.results) {
+      results.results.forEach((item: IUserItem) => {
+        data.push({
+          id: Number(item.id),
+          cells: [item.first_name, item.last_name, item.email],
+        });
+      });
+      setUserData(data);
+      setPageInfo({
+        pages: results.pages,
+        currentPage: results.currentPage,
+        pageRange: results.pageRange,
+      });
+    }
+  }, [results]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500 font-bold">Ups something went wrong</div>
+    );
+  }
+
   return (
     <>
       <div className="h-[calc(100vh_-_5rem)] print:h-full overflow-auto">
         <Table header={header} data={userData}>
-          <div className="bg-white rounded-xl mt-2 shadow-xl
-                          flex justify-center">
+          <div
+            className="bg-white rounded-xl mt-2 shadow-xl
+                          flex justify-center"
+          >
             <Pagination
               path="/workers"
-              currentPage={1 || 0}
-              pageRange={[1] || []}
-              pages={1 || 0}
+              currentPage={pageInfo.currentPage}
+              pageRange={pageInfo.pageRange}
+              pages={pageInfo.pages}
             />
           </div>
         </Table>

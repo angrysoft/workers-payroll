@@ -36,7 +36,7 @@ const CoordinatorActions: React.FC = () => {
       <MenuGroup name="Workers">
         <MenuAction
           name="Worker List"
-          handleAction={() => loadRoute("/workers")}
+          handleAction={() => loadRoute("/workers/1")}
           icon="groups"
         />
         <MenuAction
