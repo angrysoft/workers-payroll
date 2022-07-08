@@ -46,7 +46,7 @@ const CoordinatorActions: React.FC = () => {
         />
         <MenuAction
           name="Remove Worker"
-          handleAction={printReport}
+          handleAction={() => loadRoute("/remove_worker")}
           icon="person_remove"
         />
         <MenuAction

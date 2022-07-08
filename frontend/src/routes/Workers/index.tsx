@@ -4,6 +4,7 @@ import Table from "../../components/elements/Table";
 import { IRow } from "../../components/elements/Table/TableBody";
 import Loader from "../../components/Loader";
 import Pagination from "../../components/Pagination";
+import { useApi } from "../../hooks/useApi";
 import { useGet } from "../../hooks/useGet";
 
 const header = ["First name", "Last name", "Email"];
@@ -35,9 +36,12 @@ const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
   });
 
   const { pageNo } = useParams();
-  const { results, error, loading } = useGet(
-      `/api/v1/user/list?page_no=${pageNo}`,
-  );
+  const { results, error, loading, call } = useApi();
+
+
+  useEffect(() => {
+    call(`/api/v1/user/list?page=${pageNo}`, {method: "GET"});
+  }, [pageNo]);
 
   useEffect(() => {
     const data: Array<IRow> = [];

@@ -133,10 +133,10 @@ def user_list(request: HttpRequest):
         page_no = 1
 
     try:
-        items = int(request.GET.get("items", 10))
+        items = int(request.GET.get("items", 1))
     except ValueError:
         items = 10
-
+    print(page_no)
     items_list: list[Dict[Any, Any]] = list(
         User.objects.all().order_by("first_name", "last_name")
     )
