@@ -14,10 +14,13 @@ const RemoveWorker: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('code', code);
     if (code === 200) {
       dispatch({type: "REMOVED_WORKER"});
+      navigate("/workers/1", { replace: true });
     }
   }, [code]);
+
 
   return (
     <div className="p-2">

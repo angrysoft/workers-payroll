@@ -1,8 +1,9 @@
-import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/elements/BackButton";
 import Button from "../../components/elements/Button";
 import { CheckBox } from "../../components/elements/CheckBox";
+import { Form } from "../../components/elements/Form";
 import Input from "../../components/elements/Input";
 import { InputGroup } from "../../components/elements/InputGroup";
 import { IOptions, Select } from "../../components/elements/Select";
@@ -50,7 +51,7 @@ const CreateWorkerForm: React.FC = () => {
     Array<string>
   >([]);
   const [passwdError, setPasswdError] = useState<string>("");
-  const { loading, error, code, call } = useApi();
+  const { results, loading, error, code, call } = useApi();
 
   const handleSubmit = (ev: SyntheticEvent) => {
     setPasswdError("");
@@ -71,52 +72,46 @@ const CreateWorkerForm: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(code);
-    if (code === 201) {
-      navigate("/workers", {replace: true});
+    if (code === 201 && results.results !== null) {
+      console.log("results", results);
+      navigate(`/worker/set_rates/${results.results.id}`, {replace: true});
     }
-  }, [loading]);
+  }, [loading, results]);
 
   return (
-    <div className="p-1 md:p-2">
-      <form
-        action=""
-        onSubmit={handleSubmit}
-        className="grid gap-1 grid-cols-1 p-2 bg-white rounded-lg"
-      >
-        <div className="">
-          <BackButton backTo="/workers" />
-        </div>
-        <InputGroup>
-          <Input label="Username" type="text" id="username" required />
-        </InputGroup>
-        <InputGroup>
-          <Input label="Email" type="email" id="email" required />
-          <Input label="First name" type="text" id="first_name" required />
-          <Input label="Last name" type="text" id="last_name" required />
-        </InputGroup>
-        <InputGroup>
-          <Input label="Password" type="password" id="password" required />
-          <Input
-            label="Password confirmation"
-            type="password"
-            id="password2"
-            required
-          />
-          <span className="text-pink-600 text-center">{passwdError}</span>
-        </InputGroup>
-        <InputGroup>
-          <FunctionSelector handleFunctionSelection={setSelectedFunctionNames}/>
-        </InputGroup>
-        <InputGroup>
-          <CheckBox label="Coordinator" id="is_coordinator" checked={false} />
-        </InputGroup>
-        <InputGroup>
-          {loading ? <Loader /> : <Button>Save</Button>}
-        </InputGroup>
-        <span className="text-pink-600 text-center">{error}</span>
-      </form>
-    </div>
+    <Form handleSubmit={handleSubmit}>
+      <div className="">
+        <BackButton backTo="/workers/1" />
+      </div>
+      <InputGroup>
+        <Input label="Username" type="text" id="username" required />
+      </InputGroup>
+      <InputGroup>
+        <Input label="Email" type="email" id="email" required />
+        <Input label="First name" type="text" id="first_name" required />
+        <Input label="Last name" type="text" id="last_name" required />
+      </InputGroup>
+      <InputGroup>
+        <Input label="Password" type="password" id="password" required />
+        <Input
+          label="Password confirmation"
+          type="password"
+          id="password2"
+          required
+        />
+        <span className="text-pink-600 text-center">{passwdError}</span>
+      </InputGroup>
+      <InputGroup>
+        <FunctionSelector handleFunctionSelection={setSelectedFunctionNames}/>
+      </InputGroup>
+      <InputGroup>
+        <CheckBox label="Coordinator" id="is_coordinator" checked={false} />
+      </InputGroup>
+      <InputGroup>
+        {loading ? <Loader /> : <Button>Save</Button>}
+      </InputGroup>
+      <span className="text-pink-600 text-center">{error}</span>
+    </Form>
   );
 };
 

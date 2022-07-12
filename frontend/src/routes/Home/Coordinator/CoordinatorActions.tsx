@@ -41,12 +41,12 @@ const CoordinatorActions: React.FC = () => {
         />
         <MenuAction
           name="Add New Worker"
-          handleAction={() => loadRoute("/add_worker")}
+          handleAction={() => loadRoute("/worker/add")}
           icon="person_add"
         />
         <MenuAction
           name="Remove Worker"
-          handleAction={() => loadRoute("/remove_worker")}
+          handleAction={() => loadRoute("worker/remove")}
           icon="person_remove"
         />
         <MenuAction

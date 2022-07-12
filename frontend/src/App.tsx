@@ -7,6 +7,7 @@ import { Logout } from "./routes/Logout";
 import { Workers } from "./routes/Workers";
 import { CreateWorkerForm } from "./routes/Workers/CreateWorkerForm";
 import { RemoveWorker } from "./routes/Workers/RemoveWorker";
+import { UserRatesForm } from "./routes/Workers/UserRatesForm";
 
 const Loader = lazy(() => import("./components/Loader"));
 const Login = lazy(() => import("./routes/Login"));
@@ -28,8 +29,11 @@ const App = () => {
         <Route path='workers/'>
           <Route path=":pageNo" element={<Workers />} />
         </Route>
-        <Route path='add_worker' element={<CreateWorkerForm />} />
-        <Route path='remove_worker' element={<RemoveWorker />} />
+        <Route path="worker/">
+          <Route path='add' element={<CreateWorkerForm />} />
+          <Route path='remove' element={<RemoveWorker />} />
+          <Route path="set_rates/:workerID" element={<UserRatesForm />} />
+        </Route>
       </Route>
       <Route
         path="/login"

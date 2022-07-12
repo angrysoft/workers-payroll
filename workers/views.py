@@ -1,5 +1,6 @@
 import json
 from typing import Any, Dict
+from unittest import result
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -88,7 +89,7 @@ class UserView(View):
             for func in create_worker_form.cleaned_data.get("functions", []):
                 user.functions.add(func)
             user.save()
-
+            results["results"] = user.serialize()
         else:
             status_code: int = self.return_error(results, create_worker_form)
         print(results)
