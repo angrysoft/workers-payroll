@@ -134,7 +134,7 @@ def user_list(request: HttpRequest):
         page_no = 1
 
     try:
-        items = int(request.GET.get("items", 1))
+        items = int(request.GET.get("items", 15))
     except ValueError:
         items = 10
     print(page_no)

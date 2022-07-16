@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { AppContext } from "../../../store/store";
 
 interface IRow {
@@ -11,18 +11,6 @@ interface ITableBodyProps {
 }
 
 const TableBody: React.FC<ITableBodyProps> = (props: ITableBodyProps) => {
-  const { dispatch } = useContext(AppContext);
-
-  useEffect(() => dispatch("RESET_TABLE_SELECTION"), []);
-
-  const handleClick = (ev: SyntheticEvent) => {
-    const el = ev.target as HTMLElement;
-    if (el.tagName === "TD") {
-      const tr = el.parentElement as HTMLElement;
-      dispatch({ type: "SET_TABLE_SELECTION", payload: tr.dataset["id"] });
-    }
-  };
-
   const rows = props.data.map((row: IRow) => {
     return (
       <Row
@@ -34,7 +22,7 @@ const TableBody: React.FC<ITableBodyProps> = (props: ITableBodyProps) => {
   });
 
   return (
-    <tbody className="overflow-auto" onClick={handleClick}>
+    <tbody className="overflow-auto">
       {rows}
     </tbody>
   );

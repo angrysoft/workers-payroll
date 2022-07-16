@@ -51,7 +51,12 @@ const CoordinatorActions: React.FC = () => {
         />
         <MenuAction
           name="Edit Worker"
-          handleAction={printReport}
+          handleAction={() => loadRoute("worker/edit")}
+          icon="manage_accounts"
+        />
+        <MenuAction
+          name="Edit Worker Rates"
+          handleAction={() => loadRoute("worker/rates")}
           icon="manage_accounts"
         />
       </MenuGroup>

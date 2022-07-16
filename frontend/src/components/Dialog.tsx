@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 
 interface IDialogProps {
-
   children?: JSX.Element | JSX.Element[];
 }
 

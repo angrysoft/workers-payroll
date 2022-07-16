@@ -1,4 +1,5 @@
-import React from "react";
+import React, { SyntheticEvent, useContext, useEffect } from "react";
+import { AppContext } from "../../../store/store";
 import { IRow, TableBody } from "./TableBody";
 import { TableHeader } from "./TableHeader";
 
@@ -9,6 +10,20 @@ interface TableProps {
 }
 
 const Table = (props: TableProps) => {
+  const { dispatch } = useContext(AppContext);
+
+  useEffect(() => dispatch({type: "RESET_TABLE_SELECTION"}), []);
+
+  const handleClick = (ev: SyntheticEvent) => {
+    const el = ev.target as HTMLElement;
+    if (el.tagName === "TD") {
+      const tr = el.parentElement as HTMLElement;
+      dispatch({ type: "SET_TABLE_SELECTION", payload: tr.dataset["id"] });
+    } else {
+      dispatch({ type: "RESET_TABLE_SELECTION"});
+    }
+  };
+
   if (! props.data) {
     return (
       <div className="font-bold text-red-500">No record found</div>
@@ -19,6 +34,7 @@ const Table = (props: TableProps) => {
     <div
       className="overflow-auto
                  print:p-0 p-1 w-full h-full"
+      onClick={handleClick}
     >
       <table
         className="w-full shadow-xl rounded-xl print:shadow-none

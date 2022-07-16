@@ -1,4 +1,5 @@
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent, useContext } from "react";
+import { FormContext } from "./Form";
 
 export interface IOptions {
   id: string;
@@ -11,10 +12,12 @@ interface ISelectProps {
   items: Array<IOptions>;
   multiple: boolean;
   required?: boolean;
-  handleSelectionChange: CallableFunction;
 }
 
 const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
+  const form = useContext(FormContext);
+  const value: Array<string> = form.getValue(props.id);
+
   const optionItems = props.items.map((item) => {
     return (
       <option value={item.id} key={item.id}>
@@ -25,7 +28,8 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
 
   const handleChange = (ev: SyntheticEvent) => {
     const select = ev.target as HTMLSelectElement;
-    props.handleSelectionChange(
+    form.setValue(
+        props.id,
         Array.from(select.selectedOptions).map((el) => el.value),
     );
   };
@@ -43,6 +47,7 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
         id={props.id}
         multiple={props.multiple}
         required={props.required}
+        defaultValue={value || []}
         onChange={handleChange}
       >
         {optionItems}

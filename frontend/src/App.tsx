@@ -6,6 +6,7 @@ import Home from "./routes/Home";
 import { Logout } from "./routes/Logout";
 import { Workers } from "./routes/Workers";
 import { CreateWorkerForm } from "./routes/Workers/CreateWorkerForm";
+import { EditWorker } from "./routes/Workers/EditWorker";
 import { RemoveWorker } from "./routes/Workers/RemoveWorker";
 import { UserRatesForm } from "./routes/Workers/UserRatesForm";
 
@@ -32,7 +33,8 @@ const App = () => {
         <Route path="worker/">
           <Route path='add' element={<CreateWorkerForm />} />
           <Route path='remove' element={<RemoveWorker />} />
-          <Route path="set_rates/:workerID" element={<UserRatesForm />} />
+          <Route path="edit/:workerID" element={<EditWorker />} />
+          <Route path="rates/:workerID" element={<UserRatesForm />} />
         </Route>
       </Route>
       <Route

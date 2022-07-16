@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useContext, useEffect, useState } from "react";
+import { FormContext } from "./Form";
 
 interface ICheckBoxProps {
   id: string;
@@ -8,10 +9,14 @@ interface ICheckBoxProps {
 }
 
 const CheckBox: React.FC<ICheckBoxProps> = (props: ICheckBoxProps) => {
-  const [checked, setChecked] = useState(props.checked || false);
+  const form = useContext(FormContext);
+  const value = form.getValue(props.id);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3
-                    items-center justify-items-start">
+    <div
+      className="grid grid-cols-1 md:grid-cols-3
+                    items-center justify-items-start"
+    >
       <label htmlFor={props.id} className="font-bold text-gray-500">
         {props.label}:
       </label>
@@ -24,8 +29,8 @@ const CheckBox: React.FC<ICheckBoxProps> = (props: ICheckBoxProps) => {
                    focus:outline-0 focus:border-gray-500
                    transition-border duration-500 h-2 w-2"
         required={props.required}
-        value={checked.toString() || ""}
-        onChange={() => setChecked(!checked)}
+        defaultChecked={value || ""}
+        onChange={(ev) => form.setValue(props.id, ev.target.checked)}
       />
     </div>
   );

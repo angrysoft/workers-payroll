@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from "react";
+import { FormContext } from "./Form";
 
 interface InputProps {
   id: string;
@@ -6,9 +7,13 @@ interface InputProps {
   required?: boolean;
   label: string;
   inputArgs?: any;
+  value?: any;
 }
 
 const Input = (props: InputProps) => {
+  const form = useContext(FormContext);
+  const value = form.getValue(props.id);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 items-center">
       <label htmlFor={props.id} className="font-bold text-gray-500">
@@ -23,6 +28,8 @@ const Input = (props: InputProps) => {
                    focus:outline-0 focus:border-gray-500
                    transition-border duration-500"
         required={props.required}
+        defaultValue={value || props.value || ""}
+        onChange={(ev) => form.setValue(props.id, ev.target.value)}
         {...props.inputArgs}
       />
     </div>
