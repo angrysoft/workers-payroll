@@ -3,6 +3,7 @@ import { CoordinatorActions } from "./CoordinatorActions";
 import SideMenu from "../Menu/SideMenu";
 import UserPanel from "../UserPanel";
 import { Outlet } from "react-router-dom";
+import { ErrorDialog } from "../../../components/elements/ErrorDialog";
 
 
 const CoordinatorView = () => {
@@ -25,6 +26,7 @@ const CoordinatorView = () => {
         <div className="w-full max-h-screen col-span-5 grid auto-rows-min">
           <UserPanel handleMenuClick={menuToggle} />
           <div className="h-[calc(100vh_-_5rem)] overflow-auto">
+            <ErrorDialog />
             <Outlet />
           </div>
         </div>

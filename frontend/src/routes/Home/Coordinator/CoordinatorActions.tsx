@@ -33,7 +33,7 @@ const CoordinatorActions: React.FC = () => {
         />
         <MenuAction name="Edit Event" handleAction={printReport} icon="edit" />
       </MenuGroup>
-      <MenuGroup name="Workers">
+      <MenuGroup name="Workers" onClick={() => loadRoute("/workers/1")}>
         <MenuAction
           name="Worker List"
           handleAction={() => loadRoute("/workers/1")}

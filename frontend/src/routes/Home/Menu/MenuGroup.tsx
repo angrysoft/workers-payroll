@@ -4,12 +4,16 @@ import {MaterialIcons} from "../../../components/elements/MaterialIcons";
 interface IMenuGroupProps {
   name: string;
   children?: JSX.Element | JSX.Element[];
+  onClick?: CallableFunction;
 }
 
 const MenuGroup: React.FC<IMenuGroupProps> = (props: IMenuGroupProps) => {
   const [isExpanded, setExpanded] = useState<Boolean>(false);
   const handleToggleExpand = () => {
     setExpanded(!isExpanded);
+    if (props.onClick && isExpanded === false) {
+      props.onClick();
+    }
   };
 
   return (

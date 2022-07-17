@@ -15,6 +15,11 @@ const initialState: RootState = {
   table: {
     selected: "",
   },
+  dialog: {
+    msg: "",
+    show: false,
+    backTo: "",
+  },
 };
 
 interface IProviderProps {
