@@ -96,6 +96,15 @@ class FunctionRate(models.Model):
     #         "overtime": self.overtime,
     #         "overtime_after": self.overtime_after
     #     }
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "id": self.pk,
+            "worker_id": self.worker.pk,
+            "name": self.function.name,
+            "value": self.value,
+            "overtime": self.overtime,
+            "overtime_after": self.overtime_after,
+        }
 
 
 class EventDayWork(models.Model):

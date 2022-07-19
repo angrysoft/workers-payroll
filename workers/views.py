@@ -124,7 +124,7 @@ class UserView(View):
         return status_code
 
 
-# @auth_required
+@auth_required
 def user_list(request: HttpRequest):
     results = get_default_results()
 
@@ -148,5 +148,13 @@ def user_list(request: HttpRequest):
     results["pages"] = paginator.num_pages
     results["currentPage"] = current_page.number
     results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
-    
+
+    return JsonResponse(results, safe=False)
+
+
+@auth_required
+def user_rate_list(request: HttpRequest, userid: int):
+    results = get_default_results()
+    user = get_object_or_404(User, pk=userid)
+    results["results"] = [rate.serialize() for rate in user.functionrate_set.all()]
     return JsonResponse(results, safe=False)

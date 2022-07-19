@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../../store/store";
 import MenuAction from "../Menu/MenuAction";
 import { MenuGroup } from "../Menu/MenuGroup";
 
 const CoordinatorActions: React.FC = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const printReport = () => {
     window.print();
@@ -46,17 +48,56 @@ const CoordinatorActions: React.FC = () => {
         />
         <MenuAction
           name="Remove Worker"
-          handleAction={() => loadRoute("worker/remove")}
+          handleAction={() => {
+            if (state.table.selected) {
+              loadRoute("worker/remove");
+            } else {
+              dispatch({
+                type: "ERROR_DIALOG_SHOW",
+                payload: {
+                  msg: "Select worker first !",
+                  show: true,
+                  backTo: "",
+                },
+              });
+            }
+          }}
           icon="person_remove"
         />
         <MenuAction
           name="Edit Worker"
-          handleAction={() => loadRoute("worker/edit")}
+          handleAction={() => {
+            if (state.table.selected) {
+              loadRoute("worker/edit");
+            } else {
+              dispatch({
+                type: "ERROR_DIALOG_SHOW",
+                payload: {
+                  msg: "Select worker first !",
+                  show: true,
+                  backTo: "",
+                },
+              });
+            }
+          }}
           icon="manage_accounts"
         />
         <MenuAction
           name="Edit Worker Rates"
-          handleAction={() => loadRoute("worker/rates")}
+          handleAction={() => {
+            if (state.table.selected) {
+              loadRoute("worker/rates");
+            } else {
+              dispatch({
+                type: "ERROR_DIALOG_SHOW",
+                payload: {
+                  msg: "Select worker first !",
+                  show: true,
+                  backTo: "",
+                },
+              });
+            }
+          }}
           icon="manage_accounts"
         />
       </MenuGroup>
