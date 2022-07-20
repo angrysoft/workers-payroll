@@ -14,11 +14,11 @@ import { useGet } from "../../hooks/useGet";
 
 const FunctionSelector: React.FC = () => {
   const [functionNames, setFunctionNames] = useState<Array<IOptions>>([]);
-  const { results, loading } = useGet("/api/v1/event/functions");
+  const { data, loading } = useGet("/api/v1/event/functions");
 
   useEffect(() => {
-    results && setFunctionNames(results.results);
-  }, [results]);
+    data && setFunctionNames(data.results);
+  }, [data]);
 
   if (loading) {
     return <Loader />;

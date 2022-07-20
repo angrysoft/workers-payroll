@@ -10,5 +10,6 @@ urlpatterns = [
     path("auth", views.is_authenticated, name="isauth"),
     path("auth/login", csrf_exempt(views.LoginView.as_view()), name="login"),
     path("auth/logout", csrf_exempt(views.logout_view), name="logout"),
+    path("rates/<int:userid>", csrf_exempt(views.user_rate_update), name="user_rate_update"),
     path("rates/list/<int:userid>", views.user_rate_list, name="user_rate_list"),
 ]

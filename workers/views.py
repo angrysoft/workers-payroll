@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate
 from .models import Token, User
+from payroll.models import FunctionRate
 from .forms import LoginForm, CreateWorkerForm, UpdateWorkerForm
 from django.core.paginator import Paginator, Page
 from WorkersPayroll.decorators import auth_required
@@ -157,4 +158,20 @@ def user_rate_list(request: HttpRequest, userid: int):
     results = get_default_results()
     user = get_object_or_404(User, pk=userid)
     results["results"] = [rate.serialize() for rate in user.functionrate_set.all()]
+    print(results)
     return JsonResponse(results, safe=False)
+
+
+@auth_required
+def user_rate_update(request: HttpRequest, userid: int):
+    if request.method == "PUT":
+        results = get_default_results()
+        data = json.loads(request.body)
+        if data:
+            for rate_id, rate_fields in data.items():
+                user = get_object_or_404(User, pk=userid)
+                rate = FunctionRate.objects.filter(worker=user.pk, pk=rate_id).get()
+
+                print("user", user, "rate", rate)
+                print(rate_id, rate_fields)
+        return JsonResponse(results, safe=False)

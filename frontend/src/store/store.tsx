@@ -7,7 +7,7 @@ const initialState: RootState = {
     user: {
       username: "unknown",
       is_authenticated: false,
-      user_id: -1,
+      id: -1,
       is_coordinator: false,
     },
     isLoading: false,
