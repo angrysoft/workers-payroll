@@ -1,4 +1,5 @@
 import React, { SyntheticEvent, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/elements/BackButton";
 import Button from "../../components/elements/Button";
 import { IFormValues } from "../../components/elements/Form";
@@ -23,10 +24,11 @@ const UserRatesForm: React.FC<IUserRatesForm> = (props: IUserRatesForm) => {
   const [values, setValues] = useState<IFormValues>({});
   const { state } = useContext(AppContext);
   const [rates, setRates] = useState([]);
-  const { results, error, loading, call } = useApi();
+  const { results, code, error, loading, call } = useApi();
   const ratesRequest = useGet(
       `/api/v1/user/rates/list/${state.table.selected}`,
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -53,6 +55,12 @@ const UserRatesForm: React.FC<IUserRatesForm> = (props: IUserRatesForm) => {
       data: values,
     });
   };
+
+  useEffect(() => {
+    if (code === 200) {
+      navigate("/workers/1", {replace: true});
+    }
+  }, [code]);
 
   if (ratesRequest.loading) {
     return <Loader />;

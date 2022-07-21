@@ -1,4 +1,3 @@
-import { type } from "@testing-library/user-event/dist/type";
 import React, {
   createContext,
   SyntheticEvent,
@@ -13,7 +12,7 @@ interface IFormProps {
 }
 
 interface IFormValues {
-  [key:string]: any;
+  [key: string]: any;
 }
 
 interface IFromContext {
@@ -27,18 +26,25 @@ const FormContext = createContext<IFromContext>({
 });
 
 const Form: React.FC<IFormProps> = (props: IFormProps) => {
-  const [values, setValues] = useState<IFormValues>({});
-  const setValue = useCallback((filedName: string, fieldValue: any) =>
-    setValues((vs) => {
-      const newValue: IFormValues = { ...vs };
-      newValue[filedName] = fieldValue;
-      console.log(newValue);
-      return newValue;
-    })
-  , [setValues]);
+  const [values, setValues] = useState<IFormValues>(
+      props.formDefaultValues || {},
+  );
+  const setValue = useCallback(
+      (filedName: string, fieldValue: any) =>
+        setValues((vs) => {
+          const newValue: IFormValues = { ...vs };
+          newValue[filedName] = fieldValue;
+          console.log("dupa", newValue);
+          return newValue;
+        }),
+      [setValues],
+  );
 
   const getValue = useCallback(
-      (filedName: string) => values[filedName],
+      (filedName: string) => {
+        console.log('getValue', filedName, values[filedName]);
+        return values[filedName];
+      },
       [values],
   );
 
@@ -62,5 +68,5 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
   );
 };
 
-export { Form, FormContext};
+export { Form, FormContext };
 export type { IFormValues };

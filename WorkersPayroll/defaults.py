@@ -1,10 +1,10 @@
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from workers.models import User
 
 
 def get_default_results(
-    results: List[Any] = [], status: bool = True, error: str = ""
+    results: Any = [], status: bool = True, error: str = ""
 ) -> Dict[str, Any]:
     if error:
         status = False

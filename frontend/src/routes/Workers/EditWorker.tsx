@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import Loader from '../../components/Loader';
+
+import { useGet } from '../../hooks/useGet';
+import { AppContext } from '../../store/store';
+import { WorkerForm } from './WorkerForm';
 
 
 interface IEditWorkerProps {
@@ -9,11 +13,26 @@ interface IEditWorkerProps {
 
 
 const EditWorker:React.FC<IEditWorkerProps> = (props:IEditWorkerProps) => {
-  const { workerID } = useParams();
-  // const { inputs, setInputs} = useState<object>({});
+  const [values, setValues] = useState({});
+  const { state } = useContext(AppContext);
+  const {code, data, loading, error} = useGet(
+      `/api/v1/user/${state.table.selected}`,
+  );
+
+  useEffect(() => {
+    if (code === 200 && data && data.results !== undefined) {
+      setValues(data.results);
+    }
+  }, [code, data]);
+
+  useEffect(() => console.log("edit worker", values), [values]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
-    <></>
+    <WorkerForm values={values}/>
   );
 };
 

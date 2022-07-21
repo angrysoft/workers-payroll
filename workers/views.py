@@ -63,8 +63,10 @@ class UserView(View):
     def get(self, request: HttpRequest, userid: int):
         status_code: int = 200
         results = get_default_results()
-        if not request.user.is_superuser or not request.user.is_coordinator:
-            results = get_default_results(error="Coordinator or  Admin rights required")
+        if not request.user.is_superuser and not request.user.is_coordinator:
+            results = get_default_results(
+                error="Coordinator or  Admin rights required"
+            )
             status_code = 401
         else:
             user = get_object_or_404(User, pk=userid)
@@ -170,8 +172,15 @@ def user_rate_update(request: HttpRequest, userid: int):
         if data:
             for rate_id, rate_fields in data.items():
                 user = get_object_or_404(User, pk=userid)
-                rate = FunctionRate.objects.filter(worker=user.pk, pk=rate_id).get()
-
-                print("user", user, "rate", rate)
-                print(rate_id, rate_fields)
+                rate = FunctionRate.objects.filter(
+                    worker=user.pk,
+                    pk=rate_id
+                ).get()
+                for _name, _value in rate_fields.items():
+                    print(_name, _value)
+                    setattr(rate, _name, _value)
+                rate.save()
+                results["results"].append(rate_id)  # type: ignore
+        results["ok"] = results["results"] == list(data.keys())
+        print(results)
         return JsonResponse(results, safe=False)

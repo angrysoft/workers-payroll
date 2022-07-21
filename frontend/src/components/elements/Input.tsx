@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FormContext } from "./Form";
 
 interface InputProps {
@@ -12,7 +12,7 @@ interface InputProps {
 
 const Input = (props: InputProps) => {
   const form = useContext(FormContext);
-  const value = form.getValue(props.id);
+  const value: any = form.getValue(props.id);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 items-center">
