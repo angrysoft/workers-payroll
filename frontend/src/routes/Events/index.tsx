@@ -6,16 +6,16 @@ import Loader from "../../components/Loader";
 import Pagination from "../../components/Pagination";
 import { useApi } from "../../hooks/useApi";
 
-const header = ["First name", "Last name", "Email"];
+const header = ["Event number", "Event name"];
 
-interface IWorkersProps {
+interface IEventProps {
   children?: JSX.Element | JSX.Element[];
 }
 
-interface IUserItem {
+interface IEventItem {
   id: string;
-  username: string;
-  first_name: string;
+  name: string;
+  number: string;
   last_name: string;
   email: string;
 }
@@ -26,8 +26,8 @@ interface IPageInfo {
   pageRange: Array<number>;
 }
 
-const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
-  const [userData, setUserData] = useState<Array<IRow>>([]);
+const Events: React.FC<IEventProps> = (props: IEventProps) => {
+  const [eventData, setEventData] = useState<Array<IRow>>([]);
   const [pageInfo, setPageInfo] = useState<IPageInfo>({
     pages: 1,
     currentPage: 1,
@@ -39,19 +39,19 @@ const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
 
 
   useEffect(() => {
-    call(`/api/v1/user/list?page=${pageNo}`, {method: "GET"});
+    call(`/api/v1/event/list?page=${pageNo}`, {method: "GET"});
   }, [pageNo]);
 
   useEffect(() => {
     const data: Array<IRow> = [];
     if (results && results.results) {
-      results.results.forEach((item: IUserItem) => {
+      results.results.forEach((item: IEventItem) => {
         data.push({
           id: Number(item.id),
-          cells: [item.first_name, item.last_name, item.email],
+          cells: [item.number, item.name],
         });
       });
-      setUserData(data);
+      setEventData(data);
       setPageInfo({
         pages: results.pages,
         currentPage: results.currentPage,
@@ -73,13 +73,13 @@ const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
   return (
     <>
       <div className="h-[calc(100vh_-_5rem)] print:h-full overflow-auto">
-        <Table header={header} data={userData}>
+        <Table header={header} data={eventData}>
           <div
             className="bg-white rounded-xl mt-2 shadow-xl
                           flex justify-center"
           >
             <Pagination
-              path="/workers"
+              path="/events"
               currentPage={pageInfo.currentPage}
               pageRange={pageInfo.pageRange}
               pages={pageInfo.pages}
@@ -91,4 +91,4 @@ const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
   );
 };
 
-export { Workers };
+export { Events };

@@ -1,5 +1,22 @@
 from django.contrib import admin
-from .models import Function, FunctionRate, Event, EventDayWork, Addition, AdditionRate
+from .models import (
+    Function,
+    FunctionRate,
+    Event,
+    EventDayWork,
+    Addition,
+    AdditionRate,
+)
+
+
+# class EventAdmin(admin.ModelAdmin):
+#     fields = [
+#         "name",
+#         "number",
+#         "coordinator",
+#         "account_manager",
+#         "is_readonly",
+#     ]
 
 
 admin.site.register(Function)

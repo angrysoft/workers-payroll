@@ -13,7 +13,7 @@ class Function(models.Model):
     def natural_key(self):
         return {"name": self.name, "rates": ""}
 
-    def serialize(self):
+    def serialize(self) -> Dict[str, Any]:
         return {
             "name": self.name,
             "id": self.pk,
@@ -48,6 +48,16 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.number}-{self.name}"
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "id": self.pk,
+            "name": self.name,
+            "number": self.number,
+            "coordinator": self.coordinator.serialize_short(),
+            "account_manager": self.account_manager.serialize_short(),
+            "is_readonly": self.is_readonly,
+        }
 
     class Meta:
         unique_together = [["name", "number"]]

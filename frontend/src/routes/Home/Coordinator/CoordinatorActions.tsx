@@ -17,10 +17,10 @@ const CoordinatorActions: React.FC = () => {
 
   return (
     <>
-      <MenuGroup name="Events">
+      <MenuGroup name="Events" onClick={() => loadRoute("/events/1")}>
         <MenuAction
           name="Event List"
-          handleAction={printReport}
+          handleAction={() => loadRoute("/events/1")}
           icon="groups"
         />
         <MenuAction

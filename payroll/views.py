@@ -9,6 +9,7 @@ from .models import EventDayWork, Event, Function
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results
 from django.core.serializers import serialize
+from django.core.paginator import Paginator, Page
 
 
 class EventDayWorkView(View):
@@ -150,3 +151,31 @@ def function_list(request: HttpRequest):
     for func in functions:
         results["results"].append(func.serialize())
     return JsonResponse(results)
+
+
+@auth_required
+def event_list(request: HttpRequest):
+    results = get_default_results()
+
+    try:
+        page_no = int(request.GET.get("page", "1"))
+    except ValueError:
+        page_no = 1
+
+    try:
+        items = int(request.GET.get("items", 15))
+    except ValueError:
+        items = 15
+
+    items_list: list[Dict[Any, Any]] = list(
+        Event.objects.all().order_by("number", "name")
+    )
+    paginator = Paginator(items_list, per_page=items, allow_empty_first_page=True)
+    current_page: Page = paginator.get_page(page_no)
+
+    results["results"] = [event.serialize() for event in current_page.object_list]
+    results["pages"] = paginator.num_pages
+    results["currentPage"] = current_page.number
+    results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
+
+    return JsonResponse(results, safe=False)

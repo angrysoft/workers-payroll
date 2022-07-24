@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AppPool } from "./routes/AppPool";
 import { AuthRequired } from "./routes/AuthRequired";
+import { Events } from "./routes/Events";
 import Home from "./routes/Home";
 import { Logout } from "./routes/Logout";
 import { Workers } from "./routes/Workers";
@@ -27,6 +28,11 @@ const App = () => {
         }
       >
         <Route path="/" element={<AppPool />} />
+        <Route path="/events/">
+          <Route path=":pageNo" element={<Events />} />
+        </Route>
+        <Route path="event/">
+        </Route>
         <Route path='workers/'>
           <Route path=":pageNo" element={<Workers />} />
         </Route>

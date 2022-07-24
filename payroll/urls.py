@@ -1,6 +1,11 @@
 from django.urls import path
 
-from payroll.views import EventDayWorkView, WorkerEventWorkDayMonthReport, function_list
+from payroll.views import (
+    EventDayWorkView,
+    WorkerEventWorkDayMonthReport,
+    event_list,
+    function_list,
+)
 
 urlpatterns = [
     path("", EventDayWorkView.as_view(), name="events"),
@@ -11,5 +16,6 @@ urlpatterns = [
         WorkerEventWorkDayMonthReport.as_view(),
         name="worker_month_report",
     ),
-    path("functions", function_list),
+    path("functions", function_list, name="function_list"),
+    path("list", event_list, name="event_list"),
 ]
