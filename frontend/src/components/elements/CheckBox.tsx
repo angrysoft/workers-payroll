@@ -1,4 +1,10 @@
-import React, { SyntheticEvent, useContext, useEffect, useState } from "react";
+import React, {
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FormContext } from "./Form";
 
 interface ICheckBoxProps {
@@ -10,7 +16,17 @@ interface ICheckBoxProps {
 
 const CheckBox: React.FC<ICheckBoxProps> = (props: ICheckBoxProps) => {
   const form = useContext(FormContext);
-  const value = form.getValue(props.id);
+  const [checked, setChecked] = useState<boolean>(false);
+
+  useEffect(() => {
+    setChecked(form.getValue(props.id));
+  }, [form.getValue]);
+
+  const handleChange = (ev: SyntheticEvent) => {
+    setChecked(! checked);
+    const checkbox: HTMLInputElement = ev.target as HTMLInputElement;
+    form.setValue(props.id, checkbox.checked);
+  };
 
   return (
     <div
@@ -29,8 +45,8 @@ const CheckBox: React.FC<ICheckBoxProps> = (props: ICheckBoxProps) => {
                    focus:outline-0 focus:border-gray-500
                    transition-border duration-500 h-2 w-2"
         required={props.required}
-        defaultChecked={value || ""}
-        onChange={(ev) => form.setValue(props.id, ev.target.checked)}
+        checked={checked || false}
+        onChange={handleChange}
       />
     </div>
   );

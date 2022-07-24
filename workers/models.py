@@ -33,6 +33,7 @@ class User(AbstractUser):
             "is_coordinator": self.is_coordinator,
             "is_account_manager": self.is_account_manager,
             "is_authenticated": self.is_authenticated,
+            "functions": [func.pk for func in self.functions.all()],
         }
 
     def serialize_short(self) -> Dict[str, Any]:

@@ -15,8 +15,9 @@ interface IEditWorkerProps {
 const EditWorker:React.FC<IEditWorkerProps> = (props:IEditWorkerProps) => {
   const [values, setValues] = useState({});
   const { state } = useContext(AppContext);
+  const userEditUri = `/api/v1/user/${state.table.selected}`;
   const {code, data, loading, error} = useGet(
-      `/api/v1/user/${state.table.selected}`,
+      userEditUri,
   );
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const EditWorker:React.FC<IEditWorkerProps> = (props:IEditWorkerProps) => {
   }
 
   return (
-    <WorkerForm values={values}/>
+    <WorkerForm values={values} action={userEditUri} method="PUT"/>
   );
 };
 

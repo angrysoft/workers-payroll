@@ -105,6 +105,7 @@ class UserView(View):
         results = get_default_results()
         user_data = user.serialize()
         data = json.loads(request.body)
+        print(data)
         user_data.update(data)
         update_worker_form = UpdateWorkerForm(user_data, instance=user)
         if update_worker_form.is_valid():

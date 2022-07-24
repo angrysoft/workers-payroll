@@ -2,39 +2,62 @@ import React, {
   createContext,
   SyntheticEvent,
   useCallback,
+  useEffect,
   useState,
 } from "react";
+import { IFetchMethod } from "../../hooks/useApi";
 
 interface IFormProps {
   handleSubmit: CallableFunction;
-  formDefaultValues?: object;
+  submitMethod?: IFetchMethod;
+  formDefaultValues?: IFormValues;
+  requiredFields?: Array<string>;
   children?: JSX.Element | JSX.Element[];
+  action?: string;
 }
 
 interface IFormValues {
   [key: string]: any;
 }
 
+interface ISubmitOptions {
+  action: string;
+  method: IFetchMethod;
+}
+
 interface IFromContext {
   setValue: (filedName: string, fieldValue: any) => void;
   getValue: (filedName: string) => any;
+  isRequired: (filedName: string) => boolean;
 }
 
 const FormContext = createContext<IFromContext>({
   setValue: () => "",
   getValue: () => "",
+  isRequired: () => false,
 });
 
 const Form: React.FC<IFormProps> = (props: IFormProps) => {
   const [values, setValues] = useState<IFormValues>(
       props.formDefaultValues || {},
   );
+
+  const [requiredFields, setRequiredFields] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    setValues(props.formDefaultValues || {});
+  }, [props.formDefaultValues]);
+
+  useEffect(() => {
+    setRequiredFields(props.requiredFields || []);
+  }, [props.requiredFields]);
+
   const setValue = useCallback(
       (filedName: string, fieldValue: any) =>
         setValues((vs) => {
           const newValue: IFormValues = { ...vs };
           newValue[filedName] = fieldValue;
-          console.log("dupa", newValue);
+          console.log(newValue);
           return newValue;
         }),
       [setValues],
@@ -42,22 +65,32 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
 
   const getValue = useCallback(
       (filedName: string) => {
-        console.log('getValue', filedName, values[filedName]);
         return values[filedName];
       },
       [values],
   );
 
+  const isRequired = useCallback(
+      (filedName: string) => requiredFields.includes(filedName),
+      [requiredFields],
+  );
+
   const form = {
     setValue: setValue,
     getValue: getValue,
+    isRequired: isRequired,
   };
 
   return (
     <div className="p-1 md:p-2">
       <form
-        action=""
-        onSubmit={(ev: SyntheticEvent) => props.handleSubmit(ev, values)}
+        action={props.action || ""}
+        onSubmit={(ev: SyntheticEvent) =>
+          props.handleSubmit(ev, values, {
+            action: props.action,
+            method: props.submitMethod || "POST",
+          })
+        }
         className="grid gap-1 grid-cols-1 p-2 bg-white rounded-lg"
       >
         <FormContext.Provider value={form}>
@@ -69,4 +102,4 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
 };
 
 export { Form, FormContext };
-export type { IFormValues };
+export type { IFormValues, ISubmitOptions };

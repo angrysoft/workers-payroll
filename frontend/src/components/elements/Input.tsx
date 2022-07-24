@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext} from "react";
 import { FormContext } from "./Form";
 
 interface InputProps {
@@ -13,6 +13,7 @@ interface InputProps {
 const Input = (props: InputProps) => {
   const form = useContext(FormContext);
   const value: any = form.getValue(props.id);
+  const isRequired: boolean = form.isRequired(props.id);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 items-center">
@@ -27,7 +28,7 @@ const Input = (props: InputProps) => {
                    border border-gray-300 rounded
                    focus:outline-0 focus:border-gray-500
                    transition-border duration-500"
-        required={props.required}
+        required={isRequired}
         defaultValue={value || props.value || ""}
         onChange={(ev) => form.setValue(props.id, ev.target.value)}
         {...props.inputArgs}

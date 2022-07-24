@@ -1,7 +1,9 @@
 import { useState } from "react";
 
+type IFetchMethod = "GET" | "POST" | "PUT" | "DELETE";
+
 interface IFetchOptions {
-  method: "GET" | "POST" | "PUT" | "DELETE";
+  method: IFetchMethod;
   headers?: object;
   data?: any;
 }
@@ -49,3 +51,4 @@ const useApi = () => {
 };
 
 export {useApi};
+export type {IFetchOptions, IFetchMethod};

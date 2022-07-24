@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/elements/BackButton";
 import Button from "../../components/elements/Button";
 import { CheckBox } from "../../components/elements/CheckBox";
-import { Form, IFormValues } from "../../components/elements/Form";
+import {
+  Form,
+  IFormValues,
+  ISubmitOptions as ISubmitOptions,
+} from "../../components/elements/Form";
 import Input from "../../components/elements/Input";
 import { InputGroup } from "../../components/elements/InputGroup";
 import { IOptions, Select } from "../../components/elements/Select";
 import Loader from "../../components/Loader";
-import { useApi } from "../../hooks/useApi";
+import { IFetchMethod, useApi } from "../../hooks/useApi";
 import { useGet } from "../../hooks/useGet";
-
 
 const FunctionSelector: React.FC = () => {
   const [functionNames, setFunctionNames] = useState<Array<IOptions>>([]);
@@ -25,49 +28,55 @@ const FunctionSelector: React.FC = () => {
   }
 
   return (
-    <Select
-      label="Functions"
-      id="functions"
-      items={functionNames}
-      multiple
-    />
+    <Select label="Functions" id="functions" items={functionNames} multiple />
   );
 };
 
-
 interface IWorkerForm {
   values?: object;
-};
-
+  action?: string;
+  method?: IFetchMethod;
+  requiredFields?: Array<string>;
+}
 
 const WorkerForm: React.FC<IWorkerForm> = (props: IWorkerForm) => {
+  console.log("WorkerFrom values", props.values, props.requiredFields);
   const navigate = useNavigate();
   const [passwdError, setPasswdError] = useState<string>("");
   const { results, loading, error, code, call } = useApi();
 
-  const handleSubmit = (ev: SyntheticEvent, values: IFormValues) => {
+  const handleSubmit = (
+      ev: SyntheticEvent,
+      values: IFormValues,
+      options: ISubmitOptions,
+  ) => {
     setPasswdError("");
     ev.preventDefault();
-    console.log(values);
+
     if (values.password !== values.password2) {
       setPasswdError("Passwords are different");
       return;
     }
-
-    call("/api/v1/user/", {
-      method: "POST",
+    call(options.action, {
+      method: options.method,
       data: values,
     });
   };
 
   useEffect(() => {
     if (code === 201 && results && results.results !== undefined) {
-      navigate(`/worker/rates/`, {replace: true});
+      navigate(`/workers/1`, { replace: true });
     }
   }, [code, results]);
 
   return (
-    <Form handleSubmit={handleSubmit} formDefaultValues={props.values}>
+    <Form
+      handleSubmit={handleSubmit}
+      formDefaultValues={props.values}
+      requiredFields={props.requiredFields}
+      action={props.action}
+      submitMethod={props.method}
+    >
       <div className="">
         <BackButton backTo="/workers/1" />
       </div>
@@ -93,11 +102,9 @@ const WorkerForm: React.FC<IWorkerForm> = (props: IWorkerForm) => {
         <FunctionSelector />
       </InputGroup>
       <InputGroup>
-        <CheckBox label="Coordinator" id="is_coordinator" checked={false} />
+        <CheckBox label="Coordinator" id="is_coordinator" />
       </InputGroup>
-      <InputGroup>
-        {loading ? <Loader /> : <Button>Save</Button>}
-      </InputGroup>
+      <InputGroup>{loading ? <Loader /> : <Button>Save</Button>}</InputGroup>
       <span className="text-pink-600 text-center">{error}</span>
     </Form>
   );

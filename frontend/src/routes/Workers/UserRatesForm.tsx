@@ -24,7 +24,7 @@ const UserRatesForm: React.FC<IUserRatesForm> = (props: IUserRatesForm) => {
   const [values, setValues] = useState<IFormValues>({});
   const { state } = useContext(AppContext);
   const [rates, setRates] = useState([]);
-  const { results, code, error, loading, call } = useApi();
+  const { code, loading, call } = useApi();
   const ratesRequest = useGet(
       `/api/v1/user/rates/list/${state.table.selected}`,
   );
