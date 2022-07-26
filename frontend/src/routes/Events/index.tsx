@@ -73,7 +73,7 @@ const Events: React.FC<IEventProps> = (props: IEventProps) => {
   return (
     <>
       <div className="h-[calc(100vh_-_5rem)] print:h-full overflow-auto">
-        <Table header={header} data={eventData}>
+        <Table header={header} data={eventData} id="EventsTable">
           <div
             className="bg-white rounded-xl mt-2 shadow-xl
                           flex justify-center"

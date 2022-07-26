@@ -63,11 +63,11 @@ class EventDayWorkView(View):
 
 
 class EventView(View):
-    @method_decorator(auth_required)
+    # @method_decorator(auth_required)
     def get(self, request: HttpRequest, event_id: int):
         event = get_object_or_404(Event, pk=event_id)
         results = get_default_results()
-        results["results"].append({"name": event.name, "number": event.number})
+        results["results"] = event.serialize()
         return JsonResponse(results)
 
     @method_decorator(auth_required)
@@ -79,6 +79,7 @@ class EventView(View):
 
         if create_event_form.is_valid():
             event = create_event_form.save()
+            results["results"] = {"event_id": event.pk}
         else:
             results = get_default_results(error=create_event_form.errors.as_text())
             status_code = 400
@@ -93,7 +94,8 @@ class EventView(View):
         status_code = 201
         results = get_default_results()
         if update_event_form.is_valid():
-            update_event_form.save()
+            event = update_event_form.save()
+            results["results"] = {"event_id": event.pk}
         else:
             results = get_default_results(error=create_event_form.errors.as_text())
             status_code = 400

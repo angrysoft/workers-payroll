@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { TableContext } from ".";
 import { AppContext } from "../../../store/store";
 
 interface IRow {
@@ -30,12 +31,12 @@ const TableBody: React.FC<ITableBodyProps> = (props: ITableBodyProps) => {
 
 const Row: React.FC<IRow> = (props: IRow) => {
   const { state } = useContext(AppContext);
-
+  const table = useContext(TableContext);
   const classes: string = "border-b border-b-gray-100";
   return (
     <tr
       className={
-        state.table.selected === props.id.toString() ?
+        state.table[table.tableId].selected === props.id.toString() ?
         "border-b border-b-indigo-200 bg-indigo-200 text-black-500" :
         classes
       }

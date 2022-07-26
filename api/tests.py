@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+from unittest import result
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -12,8 +13,9 @@ from payroll.models import (
 )
 from workers.models import User
 
-
-USER_API = "/api/v1/user"
+API = "/api/v1"
+USER_API = f"{API}/user"
+EVENT_API = f"{API}/event"
 
 
 class TestUserEndpoint(TestCase):
@@ -130,14 +132,27 @@ class TestEventEndpoint(TestCase):
         self.usr_name = "test"
         self.usr_passwd = "foobar1234"
         User = get_user_model()
-        self.usr = User.objects.create_user(
+        self.coor = User.objects.create_user(
             username=self.usr_name,
+            first_name="John",
+            last_name="Doe",
             email="test@example.net",
             password=self.usr_passwd,
+            is_coordinator=True,
         )
+
+        self.accoount_manager = User.objects.create_user(
+            username="sales1",
+            first_name="Sal",
+            last_name="Man",
+            email="sales1@example.net",
+            password=self.usr_passwd,
+            is_account_manager=True,
+        )
+
         self.client = Client()
         response = self.client.post(
-            "/api/v1/user/auth/login",
+            f"{USER_API}/auth/login",
             {"username": self.usr_name, "password": self.usr_passwd},
             content_type="application/json",
         )
@@ -145,11 +160,81 @@ class TestEventEndpoint(TestCase):
         self.token = response_data["token"]
 
     def test_add_event(self):
-        response = self.client.post(
-            "/api/v1/user/auth/login",
-            {"username": self.usr_name, "password": self.usr_passwd},
+        event_response = self.client.post(
+            f"{EVENT_API}/",
+            {
+                "name": "first",
+                "number": "01-2022",
+                "coordinator": self.coor.pk,
+                "account_manager": self.accoount_manager.pk,
+            },
             content_type="application/json",
+            HTTP_AUTHORIZATION=self.token,
         )
+
+        self.assertEqual(event_response.status_code, 201)
+
+    def test_get_event(self):
+        event_response = self.client.post(
+            f"{EVENT_API}/",
+            {
+                "name": "first",
+                "number": "01-2022",
+                "coordinator": self.coor.pk,
+                "account_manager": self.accoount_manager.pk,
+            },
+            content_type="application/json",
+            HTTP_AUTHORIZATION=self.token,
+        )
+        event_id = event_response.json().get("results", {}).get("event_id")
+
+        event = self.client.get(
+            f"{EVENT_API}/{event_id}",
+            HTTP_AUTHORIZATION=self.token,
+        )
+        results = event.json().get("results")
+        self.assertEqual(
+            {"name": results.get("name"), "number": results.get("number")},
+            {"name": "first", "number": "01-2022"}
+        )
+
+    def test_update_event(self):
+        event_response = self.client.post(
+            f"{EVENT_API}/",
+            {
+                "name": "first",
+                "number": "01-2022",
+                "coordinator": self.coor.pk,
+                "account_manager": self.accoount_manager.pk,
+            },
+            content_type="application/json",
+            HTTP_AUTHORIZATION=self.token,
+        )
+        event_id = event_response.json().get("results", {}).get("event_id")
+
+        event_update = self.client.put(
+            f"{EVENT_API}/{event_id}",
+            {
+                "name": "first",
+                "number": "02-2022",
+                "coordinator": self.coor.pk,
+                "account_manager": self.accoount_manager.pk,
+            },
+            content_type="application/json",
+            HTTP_AUTHORIZATION=self.token,
+        )
+
+        event = self.client.get(
+            f"{EVENT_API}/{event_id}",
+            HTTP_AUTHORIZATION=self.token,
+        )
+
+        results = event.json().get("results")
+        self.assertEqual(
+            {"name": results.get("name"), "number": results.get("number")},
+            {"name": "first", "number": "02-2022"}
+        )
+    
 
 
 class TestWorkerReport(TestCase):

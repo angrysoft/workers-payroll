@@ -93,7 +93,6 @@ class UserView(View):
             results["results"] = user.serialize()
         else:
             status_code: int = self.return_error(results, create_worker_form)
-        print(results)
         return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)
@@ -103,7 +102,6 @@ class UserView(View):
         results = get_default_results()
         user_data = user.serialize()
         data = json.loads(request.body)
-        print(data)
         user_data.update(data)
         update_worker_form = UpdateWorkerForm(user_data, instance=user)
         if update_worker_form.is_valid():
@@ -139,7 +137,6 @@ def user_list(request: HttpRequest):
         items = int(request.GET.get("items", 15))
     except ValueError:
         items = 10
-    print(page_no)
     items_list: list[Dict[Any, Any]] = list(
         User.objects.all().order_by("first_name", "last_name")
     )
@@ -159,7 +156,14 @@ def user_rate_list(request: HttpRequest, userid: int):
     results = get_default_results()
     user = get_object_or_404(User, pk=userid)
     results["results"] = [rate.serialize() for rate in user.functionrate_set.all()]
-    print(results)
+    return JsonResponse(results, safe=False)
+
+
+# @auth_required
+def coordinators_list(request: HttpRequest):
+    results = get_default_results()
+    user = get_object_or_404(User, pk=userid)
+    results["results"] = [rate.serialize() for rate in user.functionrate_set.all()]
     return JsonResponse(results, safe=False)
 
 
@@ -173,10 +177,8 @@ def user_rate_update(request: HttpRequest, userid: int):
                 user = get_object_or_404(User, pk=userid)
                 rate = FunctionRate.objects.filter(worker=user.pk, pk=rate_id).get()
                 for _name, _value in rate_fields.items():
-                    print(_name, _value)
                     setattr(rate, _name, _value)
                 rate.save()
                 results["results"].append(rate_id)  # type: ignore
         results["ok"] = results["results"] == list(data.keys())
-        print(results)
         return JsonResponse(results, safe=False)

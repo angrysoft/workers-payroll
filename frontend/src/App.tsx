@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { AppPool } from "./routes/AppPool";
 import { AuthRequired } from "./routes/AuthRequired";
 import { Events } from "./routes/Events";
+import { AddEventForm } from "./routes/Events/AddEvent";
 import Home from "./routes/Home";
 import { Logout } from "./routes/Logout";
 import { Workers } from "./routes/Workers";
@@ -32,6 +33,7 @@ const App = () => {
           <Route path=":pageNo" element={<Events />} />
         </Route>
         <Route path="event/">
+          <Route path="add" element={<AddEventForm />} />
         </Route>
         <Route path='workers/'>
           <Route path=":pageNo" element={<Workers />} />

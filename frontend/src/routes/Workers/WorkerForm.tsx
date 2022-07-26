@@ -40,7 +40,6 @@ interface IWorkerForm {
 }
 
 const WorkerForm: React.FC<IWorkerForm> = (props: IWorkerForm) => {
-  console.log("WorkerFrom values", props.values, props.requiredFields);
   const navigate = useNavigate();
   const [passwdError, setPasswdError] = useState<string>("");
   const { results, loading, error, code, call } = useApi();

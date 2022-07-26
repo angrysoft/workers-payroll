@@ -13,7 +13,6 @@ const initialState: RootState = {
     isLoading: false,
   },
   table: {
-    selected: "",
   },
   dialog: {
     msg: "",

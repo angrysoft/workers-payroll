@@ -25,7 +25,7 @@ const CoordinatorActions: React.FC = () => {
         />
         <MenuAction
           name="Add New Event"
-          handleAction={printReport}
+          handleAction={() => loadRoute("/event/add")}
           icon="add"
         />
         <MenuAction
@@ -49,7 +49,7 @@ const CoordinatorActions: React.FC = () => {
         <MenuAction
           name="Remove Worker"
           handleAction={() => {
-            if (state.table.selected) {
+            if (state.table.workersTable.selected) {
               loadRoute("worker/remove");
             } else {
               dispatch({
@@ -67,7 +67,7 @@ const CoordinatorActions: React.FC = () => {
         <MenuAction
           name="Edit Worker"
           handleAction={() => {
-            if (state.table.selected) {
+            if (state.table.workersTable.selected) {
               loadRoute("worker/edit");
             } else {
               dispatch({
@@ -85,7 +85,7 @@ const CoordinatorActions: React.FC = () => {
         <MenuAction
           name="Edit Worker Rates"
           handleAction={() => {
-            if (state.table.selected) {
+            if (state.table.workersTable.selected) {
               loadRoute("worker/rates");
             } else {
               dispatch({

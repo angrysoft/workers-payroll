@@ -7,11 +7,9 @@ import SideMenu from "../Menu/SideMenu";
 import UserPanel from "../UserPanel";
 import WorkerActions from "./WorkerActions";
 
-
 interface IUserViewProps {
   data?: IRow | IRow[];
 }
-
 
 const UserView = (props: IUserViewProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,10 +32,14 @@ const UserView = (props: IUserViewProps) => {
         <div className="w-full max-h-screen col-span-5 grid auto-rows-min">
           <UserPanel handleMenuClick={menuToggle} />
           <div className="flex py-05 px-1 print:hidden">
-            <DateSelector handleDateChange={console.log}/>
+            <DateSelector handleDateChange={console.log} />
           </div>
           <div className="h-[calc(100vh_-_5rem)] print:h-full overflow-auto">
-            <Table header={header} data={prepareDataToTable(fakeData)} />
+            <Table
+              header={header}
+              data={prepareDataToTable(fakeData)}
+              id="UserViewTable"
+            />
           </div>
         </div>
       </div>

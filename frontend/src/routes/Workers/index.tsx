@@ -73,7 +73,7 @@ const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
   return (
     <>
       <div className="h-[calc(100vh_-_5rem)] print:h-full overflow-auto">
-        <Table header={header} data={userData}>
+        <Table header={header} data={userData} id="workersTable">
           <div
             className="bg-white rounded-xl mt-2 shadow-xl
                           flex justify-center"

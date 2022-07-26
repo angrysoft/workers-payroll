@@ -25,8 +25,9 @@ const UserRatesForm: React.FC<IUserRatesForm> = (props: IUserRatesForm) => {
   const { state } = useContext(AppContext);
   const [rates, setRates] = useState([]);
   const { code, loading, call } = useApi();
+  const userId = state.table.workersTable.selected;
   const ratesRequest = useGet(
-      `/api/v1/user/rates/list/${state.table.selected}`,
+      `/api/v1/user/rates/list/${userId}`,
   );
   const navigate = useNavigate();
 
@@ -49,8 +50,7 @@ const UserRatesForm: React.FC<IUserRatesForm> = (props: IUserRatesForm) => {
 
   const handleSubmit = (ev: SyntheticEvent) => {
     ev.preventDefault();
-    console.log("form submitted", values, state.table.selected);
-    call(`/api/v1/user/rates/${state.table.selected}`, {
+    call(`/api/v1/user/rates/${userId}`, {
       method: "PUT",
       data: values,
     });
