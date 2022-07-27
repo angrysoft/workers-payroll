@@ -1,18 +1,20 @@
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
 from unittest import result
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate
+
+from WorkersPayroll.generic_views import GenericListView
 from .models import Token, User
 from payroll.models import FunctionRate
 from .forms import LoginForm, CreateWorkerForm, UpdateWorkerForm
 from django.core.paginator import Paginator, Page
 from WorkersPayroll.decorators import auth_required
-from WorkersPayroll.defaults import get_default_results, get_default_user_results
+from WorkersPayroll.defaults import get_default_results
 
 
 class LoginView(View):
@@ -140,7 +142,9 @@ def user_list(request: HttpRequest):
     items_list: list[Dict[Any, Any]] = list(
         User.objects.all().order_by("first_name", "last_name")
     )
-    paginator = Paginator(items_list, per_page=items, allow_empty_first_page=True)
+    paginator = Paginator(items_list,
+                          per_page=items,
+                          allow_empty_first_page=True)
     current_page: Page = paginator.get_page(page_no)
 
     results["results"] = [user.serialize_short() for user in current_page.object_list]
@@ -149,6 +153,48 @@ def user_list(request: HttpRequest):
     results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
 
     return JsonResponse(results, safe=False)
+
+
+class WorkersList(GenericListView):
+    def _get_parameters(self, request: HttpRequest) -> Dict[str, Any]:
+        params = super()._get_parameters(request)
+        try:
+            params["account_type"] = request.GET.get("account_type", "worker")
+        except ValueError:
+            params["account_type"] = "worker"
+        return params
+
+    def _get_items(self, params: Dict[str, Any]) -> list[Dict[Any, Any]]:
+        worker_list: List[Any] = []
+        actions = {
+            "worker": self._get_workers,
+            "coordinator": self._get_coordinators,
+            "account_manager": self._get_account_magagers,
+        }
+        worker_list = list(actions.get(params.get("account_type", "worker"), self._get_worker)())
+        
+        return worker_list
+
+    def _get_workers(self):
+        workers = User.objects.all().filter(
+            is_coordinator__exact=False,
+            is_account_manager__exact=False
+        ).order_by("username")
+
+        return workers
+
+    def _get_coordinators(self):
+        coordinators = User.objects.all().filter(is_coordinator__exact=True).order_by("username")
+        return coordinators
+
+    def _get_account_manager(self):
+        account_manager = User.objects.all().filter(
+            is_account_manager__exact=True
+        ).order_by("username")
+        return account_manager
+
+    def _get_current_page(self, current_page: Page) -> List[Dict[str, Any]]:
+        return [post.serialize_short() for post in current_page.object_list]
 
 
 @auth_required
@@ -162,8 +208,8 @@ def user_rate_list(request: HttpRequest, userid: int):
 # @auth_required
 def coordinators_list(request: HttpRequest):
     results = get_default_results()
-    user = get_object_or_404(User, pk=userid)
-    results["results"] = [rate.serialize() for rate in user.functionrate_set.all()]
+    users = get_list_or_404(User, is_coordinator=True)
+    results["results"] = [user.serialize_short() for user in users]
     return JsonResponse(results, safe=False)
 
 

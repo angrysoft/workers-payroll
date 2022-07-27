@@ -63,7 +63,7 @@ class EventDayWorkView(View):
 
 
 class EventView(View):
-    # @method_decorator(auth_required)
+    @method_decorator(auth_required)
     def get(self, request: HttpRequest, event_id: int):
         event = get_object_or_404(Event, pk=event_id)
         results = get_default_results()
