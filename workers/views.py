@@ -1,8 +1,7 @@
 import json
 from typing import Any, Dict, List
-from unittest import result
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
@@ -126,33 +125,6 @@ class UserView(View):
         return status_code
 
 
-@auth_required
-def user_list(request: HttpRequest):
-    results = get_default_results()
-
-    try:
-        page_no = int(request.GET.get("page", "1"))
-    except ValueError:
-        page_no = 1
-
-    try:
-        items = int(request.GET.get("items", 15))
-    except ValueError:
-        items = 10
-    items_list: list[Dict[Any, Any]] = list(
-        User.objects.all().order_by("first_name", "last_name")
-    )
-    paginator = Paginator(items_list, per_page=items, allow_empty_first_page=True)
-    current_page: Page = paginator.get_page(page_no)
-
-    results["results"] = [user.serialize_short() for user in current_page.object_list]
-    results["pages"] = paginator.num_pages
-    results["currentPage"] = current_page.number
-    results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
-
-    return JsonResponse(results, safe=False)
-
-
 class WorkersList(GenericListView):
     def _get_parameters(self, request: HttpRequest) -> Dict[str, Any]:
         params = super()._get_parameters(request)
@@ -179,9 +151,7 @@ class WorkersList(GenericListView):
         return []
 
     def _get_all(self):
-        all = (
-            User.objects.all()
-        )
+        all = User.objects.all()
         return all
 
     def _get_workers(self):
@@ -216,14 +186,6 @@ def user_rate_list(request: HttpRequest, userid: int):
     results = get_default_results()
     user = get_object_or_404(User, pk=userid)
     results["results"] = [rate.serialize() for rate in user.functionrate_set.all()]
-    return JsonResponse(results, safe=False)
-
-
-# @auth_required
-def coordinators_list(request: HttpRequest):
-    results = get_default_results()
-    users = get_list_or_404(User, is_coordinator=True)
-    results["results"] = [user.serialize_short() for user in users]
     return JsonResponse(results, safe=False)
 
 

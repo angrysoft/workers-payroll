@@ -13,29 +13,30 @@ interface ISelectProps {
   required?: boolean;
 }
 
-const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
+const SelectMultiple: React.FC<ISelectProps> = (props: ISelectProps) => {
   const form = useContext(FormContext);
-  const [selected, setSelected] = useState<string>("");
+  const [selected, setSelected] = useState<Array<string>>([]);
 
   const optionItems = props.items.map((item) => {
     return (
       <option value={item.id} key={item.id}>
-        {item.name}
+        {item.name.toUpperCase()}
       </option>
     );
   });
 
   useEffect(() => {
+    console.log(form.getValue(props.id));
     setSelected(form.getValue(props.id));
   }, [form.getValue]);
 
   const handleChange = (ev: SyntheticEvent) => {
     const select = ev.target as HTMLSelectElement;
-    setSelected(select.value);
+    setSelected(Array.from(select.selectedOptions).map((el) => el.value));
 
     form.setValue(
         props.id,
-        select.value,
+        Array.from(select.selectedOptions).map((el) => el.value),
     );
   };
 
@@ -45,13 +46,14 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
         {props.label}:
       </label>
       <select
-        className="p-05 bg-gray-100 text-gray-600
-                   border border-gray-100 rounded
-                   focus:outline-0 focus:border-gray-300"
+        className="p-05
+                   border border-gray-300 rounded
+                   focus:outline-0 focus:border-gray-500"
         name={props.label.toLowerCase()}
         id={props.id}
+        multiple
         required={props.required}
-        value={selected || ""}
+        value={selected || []}
         onChange={handleChange}
       >
         {optionItems}
@@ -60,4 +62,4 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
   );
 };
 
-export { Select };
+export { SelectMultiple };

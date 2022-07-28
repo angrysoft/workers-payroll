@@ -2,7 +2,6 @@ import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/elements/BackButton";
 import Button from "../../components/elements/Button";
-import { CheckBox } from "../../components/elements/CheckBox";
 import {
   Form,
   IFormValues,
@@ -10,8 +9,11 @@ import {
 } from "../../components/elements/Form";
 import Input from "../../components/elements/Input";
 import { InputGroup } from "../../components/elements/InputGroup";
+import { Select } from "../../components/elements/Select";
 import Loader from "../../components/Loader";
 import { IFetchMethod, useApi } from "../../hooks/useApi";
+import { useGet } from "../../hooks/useGet";
+import { IUserItem } from "../Workers";
 
 interface IEventForm {
   values?: object;
@@ -23,6 +25,34 @@ interface IEventForm {
 const AddEventForm: React.FC<IEventForm> = (props: IEventForm) => {
   const navigate = useNavigate();
   const { results, loading, error, code, call } = useApi();
+  const [coordinatorsList, setCoordinatorList] = useState([]);
+  const [accountManagersList, setAccountManagersList] = useState([]);
+  const coordinators = useGet(
+      "/api/v1/user/list?page=1&account_type=coordinator",
+  );
+
+  const accountManager = useGet(
+      "/api/v1/user/list?page=1&account_type=account_manager",
+  );
+
+  useEffect(() => {
+    if (coordinators.data) {
+      const coorList = coordinators.data.results.map((el: IUserItem)=> {
+        return {id: el.id, name: `${el.first_name}-${el.last_name}`};
+      });
+      setCoordinatorList(coorList);
+    }
+  }, [coordinators.data]);
+
+  useEffect(() => {
+    if (accountManager.data) {
+      const accountList = accountManager.data.results.map((el: IUserItem)=> {
+        return {id: el.id, name: `${el.first_name}-${el.last_name}`};
+      });
+      setAccountManagersList(accountList);
+    }
+  }, [accountManager.data]);
+
 
   const handleSubmit = (
       ev: SyntheticEvent,
@@ -50,10 +80,24 @@ const AddEventForm: React.FC<IEventForm> = (props: IEventForm) => {
       action="/api/v1/event/"
       submitMethod="POST"
     >
-      <BackButton backTo="/events/1" title="Add new event"/>
+      <BackButton backTo="/events/1" title="Add new event" />
       <InputGroup>
         <Input label="Event name" type="text" id="name" required />
         <Input label="Event number" type="text" id="number" required />
+      </InputGroup>
+      <InputGroup>
+        <Select
+          label="Coordinator"
+          id="coordinators"
+          items={coordinatorsList}
+        />
+      </InputGroup>
+      <InputGroup>
+        <Select
+          label="Account Manager"
+          id="account_manager"
+          items={coordinatorsList}
+        />
       </InputGroup>
       <InputGroup>{loading ? <Loader /> : <Button>Save</Button>}</InputGroup>
       <span className="text-pink-600 text-center">{error}</span>

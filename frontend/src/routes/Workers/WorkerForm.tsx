@@ -10,7 +10,10 @@ import {
 } from "../../components/elements/Form";
 import Input from "../../components/elements/Input";
 import { InputGroup } from "../../components/elements/InputGroup";
-import { IOptions, Select } from "../../components/elements/Select";
+import {
+  IOptions,
+  SelectMultiple,
+} from "../../components/elements/SelectMultiple";
 import Loader from "../../components/Loader";
 import { IFetchMethod, useApi } from "../../hooks/useApi";
 import { useGet } from "../../hooks/useGet";
@@ -28,7 +31,7 @@ const FunctionSelector: React.FC = () => {
   }
 
   return (
-    <Select label="Functions" id="functions" items={functionNames} multiple />
+    <SelectMultiple label="Functions" id="functions" items={functionNames} />
   );
 };
 

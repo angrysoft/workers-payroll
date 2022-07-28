@@ -2,11 +2,14 @@ from typing import Any, Dict, List
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator, Page
 from django.views import View
+from django.utils.decorators import method_decorator
 
 from WorkersPayroll.defaults import get_default_results
+from WorkersPayroll.decorators import auth_required
 
 
 class GenericListView(View):
+    @method_decorator(auth_required)
     def get(self, request: HttpRequest) -> HttpResponse:
         params: Dict[str, Any] = self._get_parameters(request)
 
@@ -16,7 +19,7 @@ class GenericListView(View):
         )
         current_page: Page = paginator.get_page(params.get("page_no"))
         results = get_default_results()
-        results["results"] = (self._get_current_page(current_page),)
+        results["results"] = self._get_current_page(current_page)
         results["pages"] = paginator.num_pages
         results["currentPage"] = current_page.number
         results["pageRange"] = list(

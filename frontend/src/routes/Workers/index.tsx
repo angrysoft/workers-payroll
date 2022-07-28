@@ -39,7 +39,7 @@ const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
 
 
   useEffect(() => {
-    call(`/api/v1/user/list?page=${pageNo}`, {method: "GET"});
+    call(`/api/v1/user/list?account_type=all&page=${pageNo}`, {method: "GET"});
   }, [pageNo]);
 
   useEffect(() => {
@@ -92,3 +92,4 @@ const Workers: React.FC<IWorkersProps> = (props: IWorkersProps) => {
 };
 
 export { Workers };
+export type { IUserItem };

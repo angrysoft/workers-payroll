@@ -1,9 +1,10 @@
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views import View
 from django.utils.decorators import method_decorator
+from WorkersPayroll.generic_views import GenericListView
 from payroll.forms import EventDayWorkFrom, ManageEventForm
 from .models import EventDayWork, Event, Function
 from WorkersPayroll.decorators import auth_required
@@ -179,5 +180,13 @@ def event_list(request: HttpRequest):
     results["pages"] = paginator.num_pages
     results["currentPage"] = current_page.number
     results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
-
     return JsonResponse(results, safe=False)
+
+
+class EventList(GenericListView):
+    def _get_items(self, params: Dict[str, Any]) -> List[Dict[Any, Any]]:
+        event_list: List[Any] = list(Event.objects.all().order_by("number", "name"))
+        return event_list
+
+    def _get_current_page(self, current_page: Page) -> List[Dict[str, Any]]:
+        return [event.serialize_short() for event in current_page.object_list]

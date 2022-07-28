@@ -59,6 +59,14 @@ class Event(models.Model):
             "is_readonly": self.is_readonly,
         }
 
+    def serialize_short(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "number": self.number,
+            "is_readonly": self.is_readonly,
+        }
+
     class Meta:
         unique_together = [["name", "number"]]
 

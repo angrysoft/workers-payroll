@@ -26,8 +26,6 @@ const EditWorker:React.FC<IEditWorkerProps> = (props:IEditWorkerProps) => {
     }
   }, [code, data]);
 
-  useEffect(() => console.log("edit worker", values), [values]);
-
   if (loading) {
     return <Loader />;
   }
