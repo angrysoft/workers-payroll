@@ -60,6 +60,7 @@ const AddEventForm: React.FC<IEventForm> = (props: IEventForm) => {
       options: ISubmitOptions,
   ) => {
     ev.preventDefault();
+    console.log("values", values);
     call(options.action, {
       method: options.method,
       data: values,
@@ -96,7 +97,7 @@ const AddEventForm: React.FC<IEventForm> = (props: IEventForm) => {
         <Select
           label="Account Manager"
           id="account_manager"
-          items={coordinatorsList}
+          items={accountManagersList}
         />
       </InputGroup>
       <InputGroup>{loading ? <Loader /> : <Button>Save</Button>}</InputGroup>
