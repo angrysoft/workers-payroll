@@ -142,9 +142,7 @@ def user_list(request: HttpRequest):
     items_list: list[Dict[Any, Any]] = list(
         User.objects.all().order_by("first_name", "last_name")
     )
-    paginator = Paginator(items_list,
-                          per_page=items,
-                          allow_empty_first_page=True)
+    paginator = Paginator(items_list, per_page=items, allow_empty_first_page=True)
     current_page: Page = paginator.get_page(page_no)
 
     results["results"] = [user.serialize_short() for user in current_page.object_list]
@@ -169,28 +167,44 @@ class WorkersList(GenericListView):
         actions = {
             "worker": self._get_workers,
             "coordinator": self._get_coordinators,
-            "account_manager": self._get_account_magagers,
+            "account_manager": self._get_account_managers,
+            "all": self._get_all,
         }
-        worker_list = list(actions.get(params.get("account_type", "worker"), self._get_worker)())
-        
+        worker_list = list(
+            actions.get(params.get("account_type", "none"), self._get_none)()
+        )
         return worker_list
 
+    def _get_none(self) -> List[Any]:
+        return []
+
+    def _get_all(self):
+        all = (
+            User.objects.all()
+        )
+        return all
+
     def _get_workers(self):
-        workers = User.objects.all().filter(
-            is_coordinator__exact=False,
-            is_account_manager__exact=False
-        ).order_by("username")
+        workers = (
+            User.objects.all()
+            .filter(is_coordinator__exact=False, is_account_manager__exact=False)
+            .order_by("username")
+        )
 
         return workers
 
     def _get_coordinators(self):
-        coordinators = User.objects.all().filter(is_coordinator__exact=True).order_by("username")
+        coordinators = (
+            User.objects.all().filter(is_coordinator__exact=True).order_by("username")
+        )
         return coordinators
 
-    def _get_account_manager(self):
-        account_manager = User.objects.all().filter(
-            is_account_manager__exact=True
-        ).order_by("username")
+    def _get_account_managers(self):
+        account_manager = (
+            User.objects.all()
+            .filter(is_account_manager__exact=True)
+            .order_by("username")
+        )
         return account_manager
 
     def _get_current_page(self, current_page: Page) -> List[Dict[str, Any]]:

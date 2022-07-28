@@ -16,10 +16,12 @@ class GenericListView(View):
         )
         current_page: Page = paginator.get_page(params.get("page_no"))
         results = get_default_results()
-        results["results"] = self._get_current_page(current_page),
+        results["results"] = (self._get_current_page(current_page),)
         results["pages"] = paginator.num_pages
         results["currentPage"] = current_page.number
-        results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
+        results["pageRange"] = list(
+            paginator.get_elided_page_range(current_page.number)
+        )
 
         return JsonResponse(results, safe=False)
 

@@ -195,7 +195,7 @@ class TestEventEndpoint(TestCase):
         results = event.json().get("results")
         self.assertEqual(
             {"name": results.get("name"), "number": results.get("number")},
-            {"name": "first", "number": "01-2022"}
+            {"name": "first", "number": "01-2022"},
         )
 
     def test_update_event(self):
@@ -232,9 +232,8 @@ class TestEventEndpoint(TestCase):
         results = event.json().get("results")
         self.assertEqual(
             {"name": results.get("name"), "number": results.get("number")},
-            {"name": "first", "number": "02-2022"}
+            {"name": "first", "number": "02-2022"},
         )
-    
 
 
 class TestWorkerReport(TestCase):
