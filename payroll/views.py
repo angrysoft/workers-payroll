@@ -156,33 +156,6 @@ def function_list(request: HttpRequest):
     return JsonResponse(results)
 
 
-@auth_required
-def event_list(request: HttpRequest):
-    results = get_default_results()
-
-    try:
-        page_no = int(request.GET.get("page", "1"))
-    except ValueError:
-        page_no = 1
-
-    try:
-        items = int(request.GET.get("items", 15))
-    except ValueError:
-        items = 15
-
-    items_list: list[Dict[Any, Any]] = list(
-        Event.objects.all().order_by("number", "name")
-    )
-    paginator = Paginator(items_list, per_page=items, allow_empty_first_page=True)
-    current_page: Page = paginator.get_page(page_no)
-
-    results["results"] = [event.serialize() for event in current_page.object_list]
-    results["pages"] = paginator.num_pages
-    results["currentPage"] = current_page.number
-    results["pageRange"] = list(paginator.get_elided_page_range(current_page.number))
-    return JsonResponse(results, safe=False)
-
-
 class EventList(GenericListView):
     def _get_items(self, params: Dict[str, Any]) -> List[Dict[Any, Any]]:
         event_list: List[Any] = list(Event.objects.all().order_by("number", "name"))

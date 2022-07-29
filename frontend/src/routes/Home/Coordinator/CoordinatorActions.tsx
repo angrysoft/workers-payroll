@@ -30,7 +30,20 @@ const CoordinatorActions: React.FC = () => {
         />
         <MenuAction
           name="Remove Event"
-          handleAction={printReport}
+          handleAction={() => {
+            if (state.table.eventsTable.selected) {
+              loadRoute("event/remove");
+            } else {
+              dispatch({
+                type: "ERROR_DIALOG_SHOW",
+                payload: {
+                  msg: "Select event first !",
+                  show: true,
+                  backTo: "",
+                },
+              });
+            }
+          }}
           icon="remove"
         />
         <MenuAction name="Edit Event" handleAction={printReport} icon="edit" />

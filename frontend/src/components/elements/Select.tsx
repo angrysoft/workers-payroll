@@ -16,6 +16,8 @@ interface ISelectProps {
 const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
   const form = useContext(FormContext);
   const [selected, setSelected] = useState<string>("");
+  const isRequired: boolean = form.isRequired(props.id);
+
 
   const optionItems = props.items.map((item) => {
     return (
@@ -25,6 +27,10 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
     );
   });
 
+  optionItems.unshift(
+      <option value="" ></option>,
+  );
+
   useEffect(() => {
     setSelected(form.getValue(props.id));
   }, [form.getValue]);
@@ -32,7 +38,6 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
   const handleChange = (ev: SyntheticEvent) => {
     const select = ev.target as HTMLSelectElement;
     setSelected(select.value);
-
     form.setValue(
         props.id,
         select.value,
@@ -50,8 +55,8 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
                    focus:outline-0 focus:border-gray-300"
         name={props.label.toLowerCase()}
         id={props.id}
-        required={props.required}
         value={selected || ""}
+        required={isRequired}
         onChange={handleChange}
       >
         {optionItems}

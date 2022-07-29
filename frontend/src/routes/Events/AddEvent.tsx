@@ -77,19 +77,19 @@ const AddEventForm: React.FC<IEventForm> = (props: IEventForm) => {
     <Form
       handleSubmit={handleSubmit}
       formDefaultValues={props.values}
-      requiredFields={props.requiredFields}
+      requiredFields={["name", "number", "coordinator", "account_manager"]}
       action="/api/v1/event/"
       submitMethod="POST"
     >
       <BackButton backTo="/events/1" title="Add new event" />
       <InputGroup>
-        <Input label="Event name" type="text" id="name" required />
-        <Input label="Event number" type="text" id="number" required />
+        <Input label="Event name" type="text" id="name" />
+        <Input label="Event number" type="text" id="number" />
       </InputGroup>
       <InputGroup>
         <Select
           label="Coordinator"
-          id="coordinators"
+          id="coordinator"
           items={coordinatorsList}
         />
       </InputGroup>
