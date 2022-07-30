@@ -44,7 +44,7 @@ const Table = (props: TableProps) => {
         },
       });
     } else {
-      dispatch({ type: "RESET_TABLE_SELECTION", payload: props.id });
+      dispatch({ type: "RESET_TABLE_SELECTION", payload: {tableId: props.id }});
     }
   };
 

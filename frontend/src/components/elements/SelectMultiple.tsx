@@ -26,7 +26,6 @@ const SelectMultiple: React.FC<ISelectProps> = (props: ISelectProps) => {
   });
 
   useEffect(() => {
-    console.log(form.getValue(props.id));
     setSelected(form.getValue(props.id));
   }, [form.getValue]);
 

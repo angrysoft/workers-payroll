@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import Pagination from "../../components/Pagination";
 import { useApi } from "../../hooks/useApi";
 
-const header = ["Event number", "Event name"];
+const header = ["Event number", "Event name", "Status"];
 
 interface IEventProps {
   children?: JSX.Element | JSX.Element[];
@@ -16,8 +16,7 @@ interface IEventItem {
   id: string;
   name: string;
   number: string;
-  last_name: string;
-  email: string;
+  is_readonly: boolean;
 }
 
 interface IPageInfo {
@@ -37,9 +36,8 @@ const Events: React.FC<IEventProps> = (props: IEventProps) => {
   const { pageNo } = useParams();
   const { results, error, loading, call } = useApi();
 
-
   useEffect(() => {
-    call(`/api/v1/event/list?page=${pageNo}`, {method: "GET"});
+    call(`/api/v1/event/list?page=${pageNo}`, { method: "GET" });
   }, [pageNo]);
 
   useEffect(() => {
@@ -48,7 +46,7 @@ const Events: React.FC<IEventProps> = (props: IEventProps) => {
       results.results.forEach((item: IEventItem) => {
         data.push({
           id: Number(item.id),
-          cells: [item.number, item.name],
+          cells: [item.number, item.name, item.is_readonly ? "Close" : "Open"],
         });
       });
       setEventData(data);

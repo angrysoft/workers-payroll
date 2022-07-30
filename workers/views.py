@@ -65,7 +65,9 @@ class UserView(View):
         status_code: int = 200
         results = get_default_results()
         if not request.user.is_superuser and not request.user.is_coordinator:
-            results = get_default_results(error="Coordinator or  Admin rights required")
+            results = get_default_results(
+                error="Coordinator or  Admin rights required"
+            )
             status_code = 401
         else:
             user = get_object_or_404(User, pk=userid)

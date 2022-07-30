@@ -3,8 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import { AppPool } from "./routes/AppPool";
 import { AuthRequired } from "./routes/AuthRequired";
 import { Events } from "./routes/Events";
-import { AddEventForm } from "./routes/Events/AddEvent";
+import { AddEvent } from "./routes/Events/AddEvent";
 import { RemoveEvent } from "./routes/Events/RemoveEvent";
+import { EditEvent } from "./routes/Events/EditEvent";
 import Home from "./routes/Home";
 import { Logout } from "./routes/Logout";
 import { Workers } from "./routes/Workers";
@@ -34,15 +35,16 @@ const App = () => {
           <Route path=":pageNo" element={<Events />} />
         </Route>
         <Route path="event/">
-          <Route path="add" element={<AddEventForm />} />
+          <Route path="add" element={<AddEvent />} />
           <Route path="remove" element={<RemoveEvent />} />
+          <Route path="edit" element={<EditEvent />} />
         </Route>
-        <Route path='workers/'>
+        <Route path="workers/">
           <Route path=":pageNo" element={<Workers />} />
         </Route>
         <Route path="worker/">
-          <Route path='add' element={<CreateWorkerForm />} />
-          <Route path='remove' element={<RemoveWorker />} />
+          <Route path="add" element={<CreateWorkerForm />} />
+          <Route path="remove" element={<RemoveWorker />} />
           <Route path="edit" element={<EditWorker />} />
           <Route path="rates" element={<UserRatesForm />} />
         </Route>

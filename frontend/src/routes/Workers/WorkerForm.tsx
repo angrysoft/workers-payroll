@@ -106,6 +106,9 @@ const WorkerForm: React.FC<IWorkerForm> = (props: IWorkerForm) => {
       <InputGroup>
         <CheckBox label="Coordinator" id="is_coordinator" />
       </InputGroup>
+      <InputGroup>
+        <CheckBox label="Account Manager" id="is_account_manager" />
+      </InputGroup>
       <InputGroup>{loading ? <Loader /> : <Button>Save</Button>}</InputGroup>
       <span className="text-pink-600 text-center">{error}</span>
     </Form>

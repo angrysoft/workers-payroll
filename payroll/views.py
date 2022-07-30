@@ -10,7 +10,7 @@ from .models import EventDayWork, Event, Function
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results
 from django.core.serializers import serialize
-from django.core.paginator import Paginator, Page
+from django.core.paginator import Page
 
 
 class EventDayWorkView(View):
@@ -82,24 +82,25 @@ class EventView(View):
             event = create_event_form.save()
             results["results"] = {"event_id": event.pk}
         else:
-            results = get_default_results(error=create_event_form.errors.as_text())
-            status_code = 400
+            status_code: int = self.return_error(results, create_event_form)
 
         return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)
     def put(self, request: HttpRequest, event_id: int):
         event = get_object_or_404(Event, pk=event_id)
+        event_data = event.serialize()
         data = json.loads(request.body)
-        update_event_form = ManageEventForm(data, instance=event)
+        event_data.update(data)
+        print("event data", event_data)
+        update_event_form = ManageEventForm(event_data, instance=event)
         status_code = 201
         results = get_default_results()
         if update_event_form.is_valid():
-            event = update_event_form.save()
+            update_event_form.save()
             results["results"] = {"event_id": event.pk}
         else:
-            results = get_default_results(error=create_event_form.errors.as_text())
-            status_code = 400
+            status_code: int = self.return_error(results, update_event_form)
 
         return JsonResponse(results, status=status_code)
 
