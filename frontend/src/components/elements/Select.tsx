@@ -32,7 +32,6 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
   );
 
   useEffect(() => {
-    console.log("form get value");
     const user = form.getValue(props.id);
     if (user) {
       setSelected(user.id);
@@ -41,7 +40,6 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
 
   const handleChange = (ev: SyntheticEvent) => {
     const select = ev.target as HTMLSelectElement;
-    console.log("target", select.value);
     setSelected(select.value);
     form.setValue(
         props.id,
@@ -60,7 +58,7 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
                    focus:outline-0 focus:border-gray-300"
         name={props.label.toLowerCase()}
         id={props.id}
-        value={selected || ""}
+        value={selected}
         required={isRequired}
         onChange={handleChange}
       >

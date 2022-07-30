@@ -3,14 +3,19 @@ import Loader from "../../components/Loader";
 
 import { useGet } from "../../hooks/useGet";
 import { AppContext } from "../../store/store";
-import { EventForm } from "./EventForm";
+import { EventForm, IEventFormValues } from "./EventForm";
 
 interface IEditWorkerProps {
   children?: JSX.Element | JSX.Element[];
 }
 
 const EditEvent: React.FC<IEditWorkerProps> = (props: IEditWorkerProps) => {
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState<IEventFormValues>({
+    name: "",
+    number: "",
+    coordinator: "",
+    account_manager: "",
+  });
   const { state } = useContext(AppContext);
   const eventEditUri = `/api/v1/event/${state.table.eventsTable.selected}`;
   const { code, data, loading, error } = useGet(eventEditUri);

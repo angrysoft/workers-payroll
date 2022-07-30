@@ -16,11 +16,18 @@ import { useGet } from "../../hooks/useGet";
 import { IUserItem } from "../Workers";
 
 interface IEventForm {
-  values?: object;
+  values?: IEventFormValues;
   action?: string;
   method?: IFetchMethod;
   requiredFields?: Array<string>;
   header?: string;
+}
+
+interface IEventFormValues {
+  name: string,
+  number: string,
+  coordinator: IUserItem | string,
+  account_manager: IUserItem | string,
 }
 
 const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
@@ -67,6 +74,17 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
     });
   };
 
+  const getValues = () => {
+    const newValues = { ...props.values };
+    if (typeof props?.values?.coordinator === "object") {
+      newValues.coordinator = props.values.coordinator.id;
+    }
+    if (typeof props?.values?.account_manager === "object") {
+      newValues.account_manager = props.values.account_manager.id;
+    }
+    return newValues;
+  };
+
   useEffect(() => {
     if (code === 201 && results && results.results !== undefined) {
       navigate(`/events/1`, { replace: true });
@@ -76,7 +94,7 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
   return (
     <Form
       handleSubmit={handleSubmit}
-      formDefaultValues={props.values}
+      formDefaultValues={() => getValues()}
       requiredFields={props.requiredFields}
       action={props.action}
       submitMethod={props.method}
@@ -102,3 +120,5 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
   );
 };
 export { EventForm };
+export type {IEventForm, IEventFormValues};
+
