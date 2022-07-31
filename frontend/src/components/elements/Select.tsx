@@ -18,7 +18,6 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
   const [selected, setSelected] = useState<string>("");
   const isRequired: boolean = form.isRequired(props.id);
 
-
   const optionItems = props.items.map((item) => {
     return (
       <option value={item.id} key={item.id} >
@@ -27,16 +26,13 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
     );
   });
 
-  optionItems.unshift(
-      <option value="" key="-1"></option>,
-  );
-
   useEffect(() => {
     const user = form.getValue(props.id);
-    if (user) {
-      setSelected(user.id);
+    if (user && optionItems.length > 0) {
+      console.log("form get", user, optionItems);
+      setSelected(user);
     }
-  }, [form.getValue]);
+  }, [form.getValue, optionItems]);
 
   const handleChange = (ev: SyntheticEvent) => {
     const select = ev.target as HTMLSelectElement;

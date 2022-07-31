@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/elements/BackButton";
 import Button from "../../components/elements/Button";
+import { CheckBox } from "../../components/elements/CheckBox";
 import {
   Form,
   IFormValues,
@@ -48,6 +49,7 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
       const coorList = coordinators.data.results.map((el: IUserItem) => {
         return { id: el.id, name: `${el.first_name}-${el.last_name}` };
       });
+      coorList.unshift({id: "", name: ""});
       setCoordinatorList(coorList);
     }
   }, [coordinators.data]);
@@ -57,6 +59,7 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
       const accountList = accountManager.data.results.map((el: IUserItem) => {
         return { id: el.id, name: `${el.first_name}-${el.last_name}` };
       });
+      accountList.unshift({id: "-1", name: ""});
       setAccountManagersList(accountList);
     }
   }, [accountManager.data]);
@@ -113,6 +116,9 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
           id="account_manager"
           items={accountManagersList}
         />
+      </InputGroup>
+      <InputGroup>
+        <CheckBox id="is_readonly" label="Is Readonly Event" />
       </InputGroup>
       <InputGroup>{loading ? <Loader /> : <Button>Save</Button>}</InputGroup>
       <span className="text-pink-600 text-center">{error}</span>

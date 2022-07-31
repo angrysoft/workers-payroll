@@ -6,6 +6,7 @@ import { Events } from "./routes/Events";
 import { AddEvent } from "./routes/Events/AddEvent";
 import { RemoveEvent } from "./routes/Events/RemoveEvent";
 import { EditEvent } from "./routes/Events/EditEvent";
+import {EventWorkDays} from "./routes/Events/EventWorkDays";
 import Home from "./routes/Home";
 import { Logout } from "./routes/Logout";
 import { Workers } from "./routes/Workers";
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="add" element={<AddEvent />} />
           <Route path="remove" element={<RemoveEvent />} />
           <Route path="edit" element={<EditEvent />} />
+          <Route path="workDays" element={<EventWorkDays />} />
         </Route>
         <Route path="workers/">
           <Route path=":pageNo" element={<Workers />} />

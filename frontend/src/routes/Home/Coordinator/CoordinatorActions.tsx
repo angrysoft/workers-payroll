@@ -63,6 +63,23 @@ const CoordinatorActions: React.FC = () => {
             }
           }}
           icon="edit" />
+        <MenuAction
+          name="Event Work Days"
+          handleAction={() => {
+            if (state.table.eventsTable.selected) {
+              loadRoute("event/workDays");
+            } else {
+              dispatch({
+                type: "ERROR_DIALOG_SHOW",
+                payload: {
+                  msg: "Select event first !",
+                  show: true,
+                  backTo: "",
+                },
+              });
+            }
+          }}
+          icon="edit" />
       </MenuGroup>
       <MenuGroup name="Workers" onClick={() => loadRoute("/workers/1")}>
         <MenuAction
