@@ -1,5 +1,17 @@
 import React from 'react';
 
+interface IEventDays {
+  days: Array<IEventWorkerDay>;
+}
+
+interface IEventWorkerDay {
+  event: string;
+  function: string;
+  worker: string;
+  start: Date;
+  end: Date;
+}
+
 
 const EventWorkDays:React.FC = () => {
   return (
