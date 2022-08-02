@@ -6,7 +6,7 @@ import { Events } from "./routes/Events";
 import { AddEvent } from "./routes/Events/AddEvent";
 import { RemoveEvent } from "./routes/Events/RemoveEvent";
 import { EditEvent } from "./routes/Events/EditEvent";
-import {EventWorkDays} from "./routes/Events/EventWorkDays";
+import EventWorkDays from "./routes/Events/EventWorkDays";
 import Home from "./routes/Home";
 import { Logout } from "./routes/Logout";
 import { Workers } from "./routes/Workers";

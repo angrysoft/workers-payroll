@@ -19,6 +19,9 @@ const initialState: RootState = {
     show: false,
     backTo: "",
   },
+  workDays: {
+    days: [],
+  },
 };
 
 interface IProviderProps {
