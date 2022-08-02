@@ -1,15 +1,14 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "../../../hooks/useDispatch";
 import { AppContext } from "../../../store/store";
 import MenuAction from "../Menu/MenuAction";
 import { MenuGroup } from "../Menu/MenuGroup";
 
 const CoordinatorActions: React.FC = () => {
-  const { state, dispatch } = useContext(AppContext);
+  const dispatch = useDispatch();
+  const { state } = useContext(AppContext);
   const navigate = useNavigate();
-  const printReport = () => {
-    window.print();
-  };
 
   const loadRoute = (url: string) => {
     navigate(url, { replace: true });

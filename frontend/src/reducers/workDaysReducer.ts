@@ -13,13 +13,15 @@ const workDaysReducer = (
     state: workDaysState,
     action: Action): workDaysState => {
   switch (action.type) {
-    case "Add_DAY": {
+    case "ADD_WORK_DAY": {
+      console.log(state, action.payload);
       const newState = {...state};
       newState.days.push(action.payload);
       return newState;
     }
 
     case "CLEAR_WORK_DAYS": {
+      console.log('clear work days');
       const newState = {...state};
       newState.days = [];
       return newState;

@@ -25,12 +25,16 @@ const EventWorkDays:React.FC = () => {
     dispatch({type: "CLEAR_WORK_DAYS"});
   }, []);
 
+  const addDay = () => {
+    dispatch({type: "ADD_WORK_DAY", payload: {start: "startday", id: 1}});
+  };
+
   return (
     <div className="p-1 md:p-2">
       <div className="grid gap-1 grid-cols-1 p-2 bg-white rounded-lg">
         <InputGroup>
           <div className='grid gap-05 md:grid-flow-col'>
-            <Button>Add Day</Button>
+            <Button handleClick={addDay}>Add Day</Button>
             <Button>Remove Day</Button>
             <Button>Add Worker</Button>
           </div>

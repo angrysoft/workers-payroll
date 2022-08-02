@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 type ButtonOutlineProps = {
   id?: string;
@@ -7,6 +7,10 @@ type ButtonOutlineProps = {
 };
 
 const Button = (props: ButtonOutlineProps) => {
+  const handleClick = useCallback(() => (
+    props.handleClick && props.handleClick()
+  ), [props.handleClick]);
+
   return (
     <button
       className="w-full p-05 rounded
@@ -17,7 +21,7 @@ const Button = (props: ButtonOutlineProps) => {
                  border border-gray-500
                  transition-all-500 transition-all duration-500"
       id={props.id}
-      onClick={() => props.handleClick && props.handleClick()}
+      onClick={handleClick}
     >
       {props.children}
     </button>
