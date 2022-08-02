@@ -10,6 +10,7 @@ interface IEventWorkerDay {
   worker: string;
   start: Date;
   end: Date;
+  additions: Array<any>;
 }
 
 
