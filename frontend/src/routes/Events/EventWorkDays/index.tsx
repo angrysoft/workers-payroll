@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Dialog } from '../../../components/Dialog';
 import Button from '../../../components/elements/Button';
+import Input from '../../../components/elements/Input';
 import { InputGroup } from '../../../components/elements/InputGroup';
 import { useDispatch } from '../../../hooks/useDispatch';
 import { DayViewList } from './DayViewList';
@@ -20,12 +22,14 @@ interface IEventWorkerDay {
 
 const EventWorkDays:React.FC = () => {
   const dispatch = useDispatch();
+  const [showDialog, setShowDialog] = useState<boolean>(false);
 
   useEffect(()=> {
     dispatch({type: "CLEAR_WORK_DAYS"});
   }, []);
 
   const addDay = () => {
+    setShowDialog(true);
     dispatch({type: "ADD_WORK_DAY", payload: {start: "startday"}});
   };
 
@@ -40,6 +44,13 @@ const EventWorkDays:React.FC = () => {
           </div>
         </InputGroup>
         <DayViewList />
+        <Dialog open={showDialog}>
+          <InputGroup>
+            <Input type='date' label='Choose day' id="start"/>
+          </InputGroup>
+          <Button handleClick={()=> setShowDialog(false)}>Ok</Button>
+          <Button handleClick={()=> setShowDialog(false)}>Cancel</Button>
+        </Dialog>
       </div>
     </div>
   );

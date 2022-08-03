@@ -17,7 +17,7 @@ const ErrorDialog:React.FC = () => {
   };
 
   return (
-    <Dialog open={! state.dialog.show}>
+    <Dialog open={state.dialog.show}>
       <div className='p-1 text-center text-red-500'>
         <MaterialIcons name='warning' />
       </div>

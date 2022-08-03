@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 interface IDialogProps {
   open: boolean;
@@ -6,12 +6,7 @@ interface IDialogProps {
 }
 
 const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
-  const [isOpen, setOpen] = useState<boolean>(false);
-  useEffect(()=> {
-    setOpen(props.open);
-  }, [props.open]);
-
-  if (isOpen) {
+  if (props.open) {
     return (
       <div
         className="flex flex-col
