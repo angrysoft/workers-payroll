@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Button from '../../../components/elements/Button';
 import { InputGroup } from '../../../components/elements/InputGroup';
 import { useDispatch } from '../../../hooks/useDispatch';
@@ -26,7 +26,7 @@ const EventWorkDays:React.FC = () => {
   }, []);
 
   const addDay = () => {
-    dispatch({type: "ADD_WORK_DAY", payload: {start: "startday", id: 1}});
+    dispatch({type: "ADD_WORK_DAY", payload: {start: "startday"}});
   };
 
   return (
@@ -39,9 +39,7 @@ const EventWorkDays:React.FC = () => {
             <Button>Add Worker</Button>
           </div>
         </InputGroup>
-        <InputGroup>
-          <DayViewList />
-        </InputGroup>
+        <DayViewList />
       </div>
     </div>
   );

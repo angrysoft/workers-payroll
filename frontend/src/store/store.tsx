@@ -21,6 +21,8 @@ const initialState: RootState = {
   },
   workDays: {
     days: [],
+    lastId: 0,
+    selected: 1,
   },
 };
 

@@ -2,10 +2,12 @@ import { Action } from ".";
 
 export type workDaysState = {
   days : Array<IWorkDay>;
+  lastId: number;
+  selected: number;
 }
 
 interface IWorkDay {
-  id: String;
+  id: number;
   start: Date;
 }
 
@@ -14,17 +16,33 @@ const workDaysReducer = (
     action: Action): workDaysState => {
   switch (action.type) {
     case "ADD_WORK_DAY": {
-      console.log(state, action.payload);
-      const newState = {...state};
-      newState.days.push(action.payload);
-      return newState;
+      const id = state.lastId + 1;
+      const day = action.payload;
+      day.id = id;
+      return {
+        ...state,
+        lastId: id,
+        days: [...state.days, day],
+        selected: id,
+      };
     }
 
     case "CLEAR_WORK_DAYS": {
       console.log('clear work days');
-      const newState = {...state};
-      newState.days = [];
-      return newState;
+      return {
+        ...state,
+        days: [],
+        lastId: 0,
+        selected: 1,
+      };
+    }
+
+    case "SELECT_WORK_DAY": {
+      console.log("select", action.payload);
+      return {
+        ...state,
+        selected: action.payload,
+      };
     }
 
     default:
