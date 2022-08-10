@@ -5,12 +5,17 @@ import { MaterialIcons } from "./MaterialIcons";
 interface IBackButton {
   backTo: string;
   title?: string;
+  onClick?: CallableFunction;
 }
 
 const BackButton: React.FC<IBackButton> = (props: IBackButton) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(props.backTo, { replace: true });
+    if (props.onClick) {
+      props.onClick();
+    } else {
+      navigate(props.backTo, { replace: true });
+    }
   };
 
   return (

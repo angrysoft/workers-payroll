@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/elements/BackButton";
 import Button from "../../components/elements/Button";
 import { CheckBox } from "../../components/elements/CheckBox";
+import { ErrorMsg } from "../../components/elements/ErrorMsg";
 import {
   Form,
   IFormValues,
@@ -120,8 +121,10 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
       <InputGroup>
         <CheckBox id="is_readonly" label="Is Readonly Event" />
       </InputGroup>
-      <InputGroup>{loading ? <Loader /> : <Button>Save</Button>}</InputGroup>
-      <span className="text-pink-600 text-center">{error}</span>
+      <InputGroup>
+        {loading ? <Loader /> : <Button>Save</Button>}
+      </InputGroup>
+      <ErrorMsg error={error} />
     </Form>
   );
 };

@@ -16,7 +16,7 @@ const Input = (props: InputProps) => {
   const isRequired: boolean = form.isRequired(props.id);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 items-center">
+    <div className="grid gap-05 grid-cols-1 md:grid-cols-3 items-center">
       <label htmlFor={props.id} className="font-bold text-gray-500">
         {props.label}:
       </label>

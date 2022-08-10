@@ -20,9 +20,14 @@ const initialState: RootState = {
     backTo: "",
   },
   workDays: {
+    event_id: "",
+    event_name: "",
     days: [],
     lastId: 0,
     selected: 1,
+    addDayDialogShow: false,
+    removeDayDialogShow: false,
+    dayItemDialogShow: false,
   },
 };
 

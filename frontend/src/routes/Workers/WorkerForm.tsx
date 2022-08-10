@@ -10,21 +10,13 @@ import {
 } from "../../components/elements/Form";
 import Input from "../../components/elements/Input";
 import { InputGroup } from "../../components/elements/InputGroup";
-import {
-  IOptions,
-  SelectMultiple,
-} from "../../components/elements/SelectMultiple";
+import { SelectMultiple } from "../../components/elements/SelectMultiple";
 import Loader from "../../components/Loader";
 import { IFetchMethod, useApi } from "../../hooks/useApi";
-import { useGet } from "../../hooks/useGet";
+import { useGetFunctions } from "../../hooks/useGetFunctions";
 
 const FunctionSelector: React.FC = () => {
-  const [functionNames, setFunctionNames] = useState<Array<IOptions>>([]);
-  const { data, loading } = useGet("/api/v1/event/functions");
-
-  useEffect(() => {
-    data && setFunctionNames(data.results);
-  }, [data]);
+  const {functionNames, loading} = useGetFunctions();
 
   if (loading) {
     return <Loader />;

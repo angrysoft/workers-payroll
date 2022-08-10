@@ -10,7 +10,6 @@ const tableReducer = (state: tableState, action: Action): tableState => {
     case "RESET_TABLE_SELECTION": {
       const newState: tableState = {...state};
       newState[action.payload.tableId] = {selected: ""};
-      console.log("RESET_TABELE__SELECTION", action.payload);
       return newState;
     }
     case "SET_TABLE_SELECTION": {

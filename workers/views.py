@@ -180,7 +180,7 @@ class WorkersList(GenericListView):
         return account_manager
 
     def _get_current_page(self, current_page: Page) -> List[Dict[str, Any]]:
-        return [post.serialize_short() for post in current_page.object_list]
+        return [worker.serialize_short() for worker in current_page.object_list]
 
 
 @auth_required
