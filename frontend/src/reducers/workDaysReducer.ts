@@ -1,16 +1,17 @@
 import { Action } from ".";
-import { User } from "../store/auth";
+import { IUserItem } from "../routes/Workers";
 
 export type workDaysState = {
   event_id: string;
   event_name: string;
-  days : Array<IWorkDay>;
-  lastId: number;
-  selected: number;
+  dates: Array<string>;
+  days : Array<IDayItem>;
+  selected: string;
   addDayDialogShow: boolean;
   removeDayDialogShow: boolean;
   dayItemDialogShow: boolean;
 }
+
 
 interface IWorkDay {
   id: number;
@@ -19,43 +20,64 @@ interface IWorkDay {
 }
 
 interface IDayItem {
-  worker: number;
-  start: Date;
-  end: Date;
-  function: string;
-  additions: Array<number>;
+  id: string;
+  event: IEvent;
+  function: IFunction;
+  worker: IUserItem;
+  start: string;
+  end: string;
+  additions: Array<any>;
+}
+
+interface IEvent {
+  id: string;
+  name: string,
+  number: string,
+  is_readonly: boolean;
+}
+
+interface IFunction {
+  id: string;
+  name: string;
 }
 
 const workDaysReducer = (
     state: workDaysState,
     action: Action): workDaysState => {
   switch (action.type) {
-    case "ADD_WORK_DAY": {
-      const id = state.lastId + 1;
-      const day = action.payload;
-      day.id = id;
-      day.items = [];
+    case "LOAD_WORK_DAYS": {
+      console.log("load days", action.payload);
       return {
         ...state,
-        lastId: id,
-        days: [...state.days, day],
-        selected: id,
+        ...action.payload,
+        selected: action.payload.dates.at(0),
+      };
+    }
+
+    case "ADD_WORK_DAY": {
+      const day = action.payload;
+
+      return {
+        ...state,
+        dates: [...state.dates, day],
+        days: [],
+        selected: day,
         addDayDialogShow: false,
         removeDayDialogShow: false,
         dayItemDialogShow: false,
       };
     }
 
-    case "REMOVE_WORK_DAY": {
-      return {
-        ...state,
-        days: state.days.filter((day) => {
-          return day.id !== state.selected;
-        }),
-        selected: (state.days.at(-1)?.id || 1),
-        removeDayDialogShow: false,
-      };
-    }
+    // case "REMOVE_WORK_DAY": {
+    //   return {
+    //     ...state,
+    //     days: state.days.filter((day) => {
+    //       return day.id !== state.selected;
+    //     }),
+    //     selected: (state.days.at(-1)?.id || 1),
+    //     removeDayDialogShow: false,
+    //   };
+    // }
 
     case "CLEAR_WORK_DAYS": {
       console.log('clear work days');
@@ -64,8 +86,8 @@ const workDaysReducer = (
         event_id: "",
         event_name: "",
         days: [],
-        lastId: 0,
-        selected: 1,
+        dates: [],
+        selected: "",
       };
     }
 
@@ -127,3 +149,5 @@ const workDaysReducer = (
 
 export {workDaysReducer};
 export type workDaysReducerType = typeof workDaysReducer;
+export type { IDayItem, IWorkDay };
+

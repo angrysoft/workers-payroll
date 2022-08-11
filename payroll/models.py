@@ -93,6 +93,14 @@ class Addition(models.Model):
             "is_multiplied": self.addition.is_multiplied,
         }
 
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "id": self.pk,
+            "name": self.addition.name,
+            "value": self.value,
+            "is_multiplied": self.addition.is_multiplied,
+        }
+
     def __str__(self):
         return f"{self.addition.name}"
 
@@ -143,11 +151,13 @@ class EventDayWork(models.Model):
 
     def serialize(self) -> Dict[str, Any]:
         return {
-            "event": self.event,
-            "function": self.function,
+            "id": self.pk,
+            "event": self.event.serialize_short(),
+            "function": self.function.serialize(),
             "start": self.start,
             "end": self.end,
-            "additions": self.additions.all(),
+            "worker": self.worker.serialize(),
+            "additions": [addition.serialize() for addition in self.additions.all()],
         }
 
     def calculate_rate(self):

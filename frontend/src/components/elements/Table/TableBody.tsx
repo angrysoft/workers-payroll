@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TableContext } from ".";
 import { AppContext } from "../../../store/store";
 
 interface IRow {
   id: number;
-  cells: Array<string>;
+  cells: Array<any>;
 }
 
 interface ITableBodyProps {
@@ -13,33 +13,26 @@ interface ITableBodyProps {
 
 const TableBody: React.FC<ITableBodyProps> = (props: ITableBodyProps) => {
   const rows = props.data.map((row: IRow) => {
-    return (
-      <Row
-        key={row.id}
-        id={row.id}
-        cells={row.cells}
-      />
-    );
+    return <Row key={row.id} id={row.id} cells={row.cells} />;
   });
 
-  return (
-    <tbody className="overflow-auto">
-      {rows}
-    </tbody>
-  );
+  return <tbody className="overflow-auto">{rows}</tbody>;
 };
 
 const Row: React.FC<IRow> = (props: IRow) => {
   const { state } = useContext(AppContext);
   const table = useContext(TableContext);
-  const classes: string = "border-b border-b-gray-100";
+  const [classes, setClasses] = useState("");
+
+  useEffect(() => {
+    state.table[table.tableId]?.selected === props.id.toString() ?
+      setClasses("border-b border-b-indigo-200 bg-indigo-200 text-black-500") :
+      setClasses("border-b border-b-gray-100");
+  }, [state.table]);
+
   return (
     <tr
-      className={
-        state.table[table.tableId].selected === props.id.toString() ?
-        "border-b border-b-indigo-200 bg-indigo-200 text-black-500" :
-        classes
-      }
+      className={classes}
       data-id={props.id.toString()}
     >
       {props.cells.map((cell: string, index: number) => {

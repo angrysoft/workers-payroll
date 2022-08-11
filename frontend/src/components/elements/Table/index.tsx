@@ -23,14 +23,12 @@ const TableContext = createContext<ITableContext>({ tableId: "" });
 const Table = (props: TableProps) => {
   const { dispatch } = useContext(AppContext);
 
-  useEffect(
-      () =>
-        dispatch({
-          type: "RESET_TABLE_SELECTION",
-          payload: { tableId: props.id },
-        }),
-      [],
-  );
+  useEffect(() => {
+    dispatch({
+      type: "RESET_TABLE_SELECTION",
+      payload: { tableId: props.id },
+    });
+  }, []);
 
   const handleClick = (ev: SyntheticEvent) => {
     const el = ev.target as HTMLElement;

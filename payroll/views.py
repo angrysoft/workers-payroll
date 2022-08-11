@@ -9,7 +9,6 @@ from payroll.forms import EventDayWorkFrom, ManageEventForm
 from .models import EventDayWork, Event, Function
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results
-from django.core.serializers import serialize
 from django.core.paginator import Page
 
 
@@ -17,19 +16,18 @@ class EventDayWorkView(View):
     @method_decorator(auth_required)
     def get(self, request: HttpRequest, event_id: int):
         """Get all events / get event by id"""
+        status_code = 200
         results = get_default_results()
         work_days = get_list_or_404(EventDayWork, event=event_id)
-        if request.user.has_perm("view_eventworkday", work_days):
-            work_days_obj = serialize(
-                "python",
-                work_days,
-                use_natural_foreign_keys=True,
-                use_natural_primary_keys=True,
-            )
-            for day in work_days_obj:
-                results["results"].append(day.get("fields"))
-
-        return JsonResponse(results)
+        if request.user.is_coordinator:
+            for work_day in work_days:
+                results["results"].append(work_day.serialize())
+        else:
+            results["error"] = "Permission"
+            results["ok"] = False
+            status_code = 403
+   
+        return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)
     def post(self, request: HttpRequest):

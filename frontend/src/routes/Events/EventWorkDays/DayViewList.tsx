@@ -4,23 +4,23 @@ import { DayTab } from "./DayTab";
 import { DayView } from "./DayView";
 
 const DayViewList: React.FC = () => {
-  // const days = useSelector((state: RootState)=> state.workDays.days);
   const { state } = useContext(AppContext);
-  const days = state.workDays.days;
-  const dayList = days.map((el) => (
+  const days = state.workDays.dates;
+  const dates = days.map((el: string) => (
     <DayTab
-      data={el}
-      key={el.id}
-      selected={el.id === state.workDays.selected}
-    />
-  ));
+      date={el}
+      key={el}
+      selected={el === state.workDays.selected}
+    />),
+  );
+
   return (
     <div className="grid">
       <div
         className="grid grid-flow-col justify-start
                       overflow-auto rounded-t-lg"
       >
-        {dayList}
+        {dates}
       </div>
       <DayView />
     </div>

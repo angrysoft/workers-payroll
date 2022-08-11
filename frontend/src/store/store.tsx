@@ -22,9 +22,9 @@ const initialState: RootState = {
   workDays: {
     event_id: "",
     event_name: "",
+    dates: [],
     days: [],
-    lastId: 0,
-    selected: 1,
+    selected: "",
     addDayDialogShow: false,
     removeDayDialogShow: false,
     dayItemDialogShow: false,

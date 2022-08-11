@@ -12,8 +12,12 @@ urlpatterns = [
     path("", csrf_exempt(EventView.as_view()), name="event"),
     path("<int:event_id>", csrf_exempt(EventView.as_view()), name="event_p"),
     path("list", EventList.as_view(), name="event_list"),
-    path("day/", csrf_exempt(EventDayWorkView.as_view()), name="event_day"),
-    path("day/<int:_event_id>", EventDayWorkView.as_view(), name="events_get"),
+    path(
+        "day/<int:event_id>",
+        csrf_exempt(EventDayWorkView.as_view()),
+        name="event_day"
+    ),
+    # path("day/<int:_event_id>", EventDayWorkView.as_view(), name="events_get"),
     path(
         "report/<int:year>/<int:month>",
         WorkerEventWorkDayMonthReport.as_view(),

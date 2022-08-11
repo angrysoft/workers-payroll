@@ -11,13 +11,12 @@ from WorkersPayroll.generic_views import GenericListView
 from .models import Token, User
 from payroll.models import FunctionRate
 from .forms import LoginForm, CreateWorkerForm, UpdateWorkerForm
-from django.core.paginator import Paginator, Page
+from django.core.paginator import Page
 from WorkersPayroll.decorators import auth_required
 from WorkersPayroll.defaults import get_default_results
 
 
 class LoginView(View):
-    # @method_decorator(csrf_exempt)
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
         login_form = LoginForm(data)
