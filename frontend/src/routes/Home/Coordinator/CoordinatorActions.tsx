@@ -66,7 +66,6 @@ const CoordinatorActions: React.FC = () => {
           name="Event Work Days"
           handleAction={() => {
             if (state.table.eventsTable.selected) {
-              
               loadRoute("event/workDays");
             } else {
               dispatch({

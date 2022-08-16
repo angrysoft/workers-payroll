@@ -6,7 +6,9 @@ export const useGetDaysTableData = () => {
   const {state} = useContext(AppContext);
 
   const dataTable: Array<IRow> = state.workDays.days.filter((day)=>{
-    return new Date(day.start).toLocaleDateString() === state.workDays.selected;
+    return (
+      new Date(day.start).toLocaleDateString() ===
+      new Date(state.workDays.selected).toLocaleDateString());
   }).map((day)=> {
     return {
       id: Number(day.id),

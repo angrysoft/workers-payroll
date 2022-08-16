@@ -29,7 +29,7 @@ const Input = (props: InputProps) => {
                    focus:outline-0 focus:border-gray-500
                    transition-border duration-500"
         required={isRequired}
-        defaultValue={value || props.value || ""}
+        value={value || props.value || ""}
         onChange={(ev) => form.setValue(props.id, ev.target.value)}
         {...props.inputArgs}
       />

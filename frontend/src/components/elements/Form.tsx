@@ -45,7 +45,7 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
   const [requiredFields, setRequiredFields] = useState<Array<string>>([]);
 
   useEffect(() => {
-    setValues(props.formDefaultValues || {});
+    props.formDefaultValues && setValues(props.formDefaultValues);
   }, [props.formDefaultValues]);
 
   useEffect(() => {

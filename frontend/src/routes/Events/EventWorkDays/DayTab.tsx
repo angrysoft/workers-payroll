@@ -9,6 +9,7 @@ interface IDayTabProps {
 const DayTab: React.FC<IDayTabProps> = (props: IDayTabProps) => {
   const { dispatch } = useContext(AppContext);
   const [selectedClasses, setSelectedClasses] = useState<string>("");
+  const date = new Date(props.date).toLocaleDateString();
 
   useEffect(() => {
     props.selected ? setSelectedClasses("bg-gray-500 text-white") :
@@ -25,7 +26,7 @@ const DayTab: React.FC<IDayTabProps> = (props: IDayTabProps) => {
         dispatch({ type: "SELECT_WORK_DAY", payload: props.date})
       }
     >
-      {props.date}
+      {date}
     </div>
   );
 };

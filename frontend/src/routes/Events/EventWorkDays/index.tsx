@@ -36,6 +36,10 @@ const EventWorkDays: React.FC = () => {
             >
               Add Day
             </Button>
+            <Button handleClick={()=> console.log('duplicate day')}
+            >
+              Duplicate Day
+            </Button>
             <Button
               handleClick={() => dispatch({ type: "REMOVE_DAY_DIALOG_SHOW" })}
             >

@@ -24,6 +24,7 @@ const initialState: RootState = {
     event_name: "",
     dates: [],
     days: [],
+    daysToRemove: [],
     selected: "",
     addDayDialogShow: false,
     removeDayDialogShow: false,

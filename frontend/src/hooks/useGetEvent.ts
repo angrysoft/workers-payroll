@@ -24,7 +24,7 @@ const useGetEvent = (eventId: string) => {
     if (data && data.results) {
       const dates: Set<string> = new Set();
       data.results.forEach((day: IDayItem) => {
-        dates.add(new Date(day.start).toLocaleDateString());
+        dates.add(day.start);
       });
       console.log(dates);
       setEvents({

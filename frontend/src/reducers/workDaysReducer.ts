@@ -6,6 +6,7 @@ export type workDaysState = {
   event_name: string;
   dates: Array<string>;
   days : Array<IDayItem>;
+  daysToRemove: Array<IDayItem>;
   selected: string;
   addDayDialogShow: boolean;
   removeDayDialogShow: boolean;
@@ -60,7 +61,6 @@ const workDaysReducer = (
       return {
         ...state,
         dates: [...state.dates, day],
-        days: [],
         selected: day,
         addDayDialogShow: false,
         removeDayDialogShow: false,
@@ -68,16 +68,22 @@ const workDaysReducer = (
       };
     }
 
-    // case "REMOVE_WORK_DAY": {
-    //   return {
-    //     ...state,
-    //     days: state.days.filter((day) => {
-    //       return day.id !== state.selected;
-    //     }),
-    //     selected: (state.days.at(-1)?.id || 1),
-    //     removeDayDialogShow: false,
-    //   };
-    // }
+    case "REMOVE_WORK_DAY": {
+      return {
+        ...state,
+        dates: state.dates.filter((day) => {
+          return day !== state.selected;
+        }),
+        selected: (state.dates.at(-1) || ""),
+        daysToRemove: [
+          ...state.daysToRemove,
+          ...state.days.filter((day) => {
+            return day.start == state.selected;
+          }),
+        ],
+        removeDayDialogShow: false,
+      };
+    }
 
     case "CLEAR_WORK_DAYS": {
       console.log('clear work days');
