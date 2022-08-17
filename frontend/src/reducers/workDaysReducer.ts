@@ -97,6 +97,15 @@ const workDaysReducer = (
       };
     }
 
+    case "ADD_WORKER_WORK_DAY": {
+      console.log("ADD_W_W_DAY", action.payload);
+      return {
+        ...state,
+        days: [...state.days, action.payload],
+        dayItemDialogShow: false,
+      };
+    }
+
     case "SELECT_WORK_DAY": {
       console.log("select", action.payload);
       return {

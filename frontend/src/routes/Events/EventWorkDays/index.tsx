@@ -28,7 +28,7 @@ const EventWorkDays: React.FC = () => {
   return (
     <div className="p-1 md:p-2">
       <div className="grid gap-1 grid-cols-1 p-2 bg-white rounded-lg">
-        <h2 className="text-gray-500 font-bold">Event Name</h2>
+        <h2 className="text-gray-500 font-bold">{events.event_name}</h2>
         <InputGroup>
           <div className="grid gap-05 md:grid-flow-col">
             <Button

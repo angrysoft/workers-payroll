@@ -13,6 +13,7 @@ import { InputGroup } from "../../../components/elements/InputGroup";
 import { Select } from "../../../components/elements/Select";
 import Loader from "../../../components/Loader";
 import { useGetFunctions } from "../../../hooks/useGetFunctions";
+import { useGetUsers } from "../../../hooks/useGetUsers";
 import { AppContext } from "../../../store/store";
 
 interface IDayItemDialogProps {
@@ -24,7 +25,8 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
 ) => {
   const { state, dispatch } = useContext(AppContext);
   const { functionNames, loading } = useGetFunctions();
-
+  const workers = useGetUsers("worker");
+  console.log(workers);
   const cancelAdd = (ev: SyntheticEvent) => {
     dispatch({ type: "DAY_ITEM_DIALOG_HIDE" });
   };
@@ -35,6 +37,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       options: ISubmitOptions,
   ) => {
     ev.preventDefault();
+    dispatch({type: "ADD_WORKER_WORK_DAY", payload: values});
   };
 
   return (
@@ -42,12 +45,20 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       <Form
         handleSubmit={handleSubmit}
         formDefaultValues={{start: "09:00"}}
+        requiredFields={["start", "end", "workers", "function"]}
       >
         <BackButton
           title="Day Item"
           backTo="/event/workDays"
           onClick={cancelAdd}
         />
+        <InputGroup>
+          {workers.loading ? (
+            <Loader />
+          ) : (
+            <Select id="workers" label="Workers" items={workers.users} />
+          )}
+        </InputGroup>
         <InputGroup>
           <Input type="time" label="Start Day Work" id="start" />
           <Input type="datetime-local" label="End Day Work" id="end" />
