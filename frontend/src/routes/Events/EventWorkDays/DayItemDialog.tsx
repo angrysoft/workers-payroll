@@ -26,7 +26,6 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
   const { state, dispatch } = useContext(AppContext);
   const { functionNames, loading } = useGetFunctions();
   const workers = useGetUsers("worker");
-  console.log(workers);
   const cancelAdd = (ev: SyntheticEvent) => {
     dispatch({ type: "DAY_ITEM_DIALOG_HIDE" });
   };
@@ -37,14 +36,16 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       options: ISubmitOptions,
   ) => {
     ev.preventDefault();
-    dispatch({type: "ADD_WORKER_WORK_DAY", payload: values});
+    // prepare data to days state
+    const dayData = {};
+    dispatch({ type: "ADD_WORKER_WORK_DAY", payload: values });
   };
 
   return (
     <Dialog open={state.workDays.dayItemDialogShow}>
       <Form
         handleSubmit={handleSubmit}
-        formDefaultValues={{start: "09:00"}}
+        formDefaultValues={{ start: "09:00" }}
         requiredFields={["start", "end", "workers", "function"]}
       >
         <BackButton
@@ -56,7 +57,11 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
           {workers.loading ? (
             <Loader />
           ) : (
-            <Select id="workers" label="Workers" items={workers.users} />
+            <Select
+              id="workers"
+              label="Workers"
+              items={[{ id: "", name: "" }, ...workers.usersName]}
+            />
           )}
         </InputGroup>
         <InputGroup>
@@ -67,7 +72,11 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
           {loading ? (
             <Loader />
           ) : (
-            <Select id="function" label="Function" items={functionNames} />
+            <Select
+              id="function"
+              label="Function"
+              items={[{ id: "", name: "" }, ...functionNames]}
+            />
           )}
         </InputGroup>
         <Button>Ok</Button>

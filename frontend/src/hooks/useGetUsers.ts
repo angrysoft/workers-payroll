@@ -6,6 +6,7 @@ type UserType = "all" | "worker" | "coordinator" | "account_manager";
 
 const useGetUsers = (userType: UserType) => {
   const [users, setUsers] = useState([]);
+  const [usersName, setUsersName] = useState([]);
   const {data, loading} = useGet(
       `/api/v1/user/list?page=1&account_type=${userType}&items=100`,
   );
@@ -18,11 +19,12 @@ const useGetUsers = (userType: UserType) => {
           name: `${usr.first_name} - ${usr.last_name}`,
         };
       });
-      setUsers(userResult);
+      setUsersName(userResult);
+      setUsers(data.results);
     }
   }, [data]);
 
-  return {users, loading};
+  return {users, usersName, loading};
 };
 
 export { useGetUsers };
