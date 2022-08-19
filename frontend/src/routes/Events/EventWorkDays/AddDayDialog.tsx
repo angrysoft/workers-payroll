@@ -27,7 +27,6 @@ const AddDayDialog: React.FC<IAddDayDialogProps> = (
     setAddError("");
     const date = new Date();
     const lastDay = state.workDays.dates.at(-1);
-    console.log("latday", lastDay);
     if (lastDay) {
       date.setDate(new Date(lastDay).getDate() + 1);
     }
@@ -35,7 +34,6 @@ const AddDayDialog: React.FC<IAddDayDialogProps> = (
     const month = date.toLocaleString("en-GB", { month: "2-digit" });
     const day = date.toLocaleString("en-GB", { day: "2-digit" });
     setInputDate(`${year}-${month}-${day}`);
-    console.log(`${year}-${month}-${day}`);
   };
 
   useEffect(() => {

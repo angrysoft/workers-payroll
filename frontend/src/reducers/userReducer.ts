@@ -10,7 +10,6 @@ export type userState = {
 const userReducer = (state: userState, action: Action): userState => {
   switch (action.type) {
     case 'USER_LOGGED':
-      console.log("reducer", action.payload);
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.results));
       return {user: action.payload.results, isLoading: false};

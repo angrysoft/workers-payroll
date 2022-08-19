@@ -71,7 +71,6 @@ const EventForm: React.FC<IEventForm> = (props: IEventForm) => {
       options: ISubmitOptions,
   ) => {
     ev.preventDefault();
-    console.log("event values", values);
     call(options.action, {
       method: options.method,
       data: values,

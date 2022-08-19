@@ -33,13 +33,11 @@ const useApi = () => {
     fetch(url, fetchOptions).then((response) =>{
       if ([200, 201].includes(response.status)) {
         response.json().then((data) => {
-          console.log("setResults", data);
           setResults(data);
         })
             .catch((err) => setError(err.toString()));
       } else if ([400, 401].includes(response.status)) {
         response.json().then((data) => {
-          console.log("setResults", data);
           setError(data["error"]);
         });
       }

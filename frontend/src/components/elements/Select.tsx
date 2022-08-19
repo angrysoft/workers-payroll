@@ -29,7 +29,6 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
   useEffect(() => {
     const user = form.getValue(props.id);
     if (user && optionItems.length > 0) {
-      console.log("form get", user, optionItems);
       setSelected(user);
     }
   }, [form.getValue, optionItems]);

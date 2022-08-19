@@ -19,7 +19,6 @@ const apiCall = async (url:string, method:string ="GET", data?:any) => {
     console.error(err);
     error = (err as Error).toString();
   }
-  console.log("apiCall", error, results, code);
   return [results, error, code];
 };
 

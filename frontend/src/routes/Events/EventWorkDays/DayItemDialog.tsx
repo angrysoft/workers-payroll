@@ -2,7 +2,6 @@ import React, { SyntheticEvent, useContext, useEffect, useState } from "react";
 import { Dialog } from "../../../components/Dialog";
 import { BackButton } from "../../../components/elements/BackButton";
 import Button from "../../../components/elements/Button";
-import { ErrorMsg } from "../../../components/elements/ErrorMsg";
 import {
   Form,
   IFormValues,
@@ -14,7 +13,9 @@ import { Select } from "../../../components/elements/Select";
 import Loader from "../../../components/Loader";
 import { useGetFunctions } from "../../../hooks/useGetFunctions";
 import { useGetUsers } from "../../../hooks/useGetUsers";
+import { getDateStringList } from "../../../services/dates";
 import { AppContext } from "../../../store/store";
+import { IUserItem } from "../../Workers";
 
 interface IDayItemDialogProps {
   children?: JSX.Element | JSX.Element[];
@@ -36,9 +37,21 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       options: ISubmitOptions,
   ) => {
     ev.preventDefault();
-    // prepare data to days state
-    const dayData = {};
-    dispatch({ type: "ADD_WORKER_WORK_DAY", payload: values });
+    const startDay = new Date(state.workDays.selected);
+    const [hours, minutes] = values.start.split(":");
+    startDay.setHours(Number(hours), Number(minutes));
+    const dayData = {
+      ...values,
+      id: `new-${values.selectedWorker}-${values.start}`,
+      start: startDay.toISOString(),
+      worker: workers.users.filter((item: IUserItem) => {
+        return item.id.toString() === values.selectedWorker;
+      }).at(0),
+      function: functionNames.filter((item: {id:string, name:string}) => {
+        return item.id.toString() === values.function;
+      }).at(0),
+    };
+    dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData });
   };
 
   return (
@@ -46,7 +59,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       <Form
         handleSubmit={handleSubmit}
         formDefaultValues={{ start: "09:00" }}
-        requiredFields={["start", "end", "workers", "function"]}
+        requiredFields={["start", "end", "selectedWorker", "function"]}
       >
         <BackButton
           title="Day Item"
@@ -58,7 +71,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
             <Loader />
           ) : (
             <Select
-              id="workers"
+              id="selectedWorker"
               label="Workers"
               items={[{ id: "", name: "" }, ...workers.usersName]}
             />

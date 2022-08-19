@@ -57,7 +57,6 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
         setValues((vs) => {
           const newValue: IFormValues = { ...vs };
           newValue[filedName] = fieldValue;
-          console.log(newValue);
           return newValue;
         }),
       [setValues],

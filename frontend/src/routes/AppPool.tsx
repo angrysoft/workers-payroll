@@ -6,7 +6,7 @@ const AppPool: React.FC = () => {
     <div className="grid gap-2 grid-flow-col auto-cols-max
                     justify-center content-center justify-items-center
                     h-full w-full p-2">
-      <AppLink name="Events" url="/events/" />
+      <AppLink name="Events" url="/events/1" />
       <AppLink name="Workers" url="/workers/1" />
     </div>
   );

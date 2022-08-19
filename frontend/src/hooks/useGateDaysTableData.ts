@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { IRow } from "../components/elements/Table/TableBody";
+import { formatDateTime } from "../services/dates";
 import { AppContext } from "../store/store";
 
 export const useGetDaysTableData = () => {
@@ -11,11 +12,11 @@ export const useGetDaysTableData = () => {
       new Date(state.workDays.selected).toLocaleDateString());
   }).map((day)=> {
     return {
-      id: Number(day.id),
+      id: day.id,
       cells: [
         `${day.worker.first_name}-${day.worker.last_name}`,
-        day.start,
-        day.end,
+        formatDateTime(day.start),
+        formatDateTime(day.end),
         day.function.name,
         "",
       ],

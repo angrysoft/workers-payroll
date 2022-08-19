@@ -47,7 +47,6 @@ const workDaysReducer = (
     action: Action): workDaysState => {
   switch (action.type) {
     case "LOAD_WORK_DAYS": {
-      console.log("load days", action.payload);
       return {
         ...state,
         ...action.payload,
@@ -86,7 +85,6 @@ const workDaysReducer = (
     }
 
     case "CLEAR_WORK_DAYS": {
-      console.log('clear work days');
       return {
         ...state,
         event_id: "",
@@ -107,7 +105,6 @@ const workDaysReducer = (
     }
 
     case "SELECT_WORK_DAY": {
-      console.log("select", action.payload);
       return {
         ...state,
         selected: action.payload,

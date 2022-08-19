@@ -3,7 +3,7 @@ import { TableContext } from ".";
 import { AppContext } from "../../../store/store";
 
 interface IRow {
-  id: number;
+  id: number | string;
   cells: Array<any>;
 }
 

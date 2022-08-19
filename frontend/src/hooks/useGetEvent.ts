@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { IDayItem } from "../reducers/workDaysReducer";
+import { getDateStringList } from "../services/dates";
 import { useGet } from "./useGet";
 
 interface IEventWorkData {
@@ -26,16 +27,12 @@ const useGetEvent = (eventId: string) => {
 
   useEffect(() => {
     if (data && data.results) {
-      const dates: Set<string> = new Set();
-      data.results.forEach((day: IDayItem) => {
-        dates.add(day.start);
-      });
       // eslint-disable-next-line max-len
       const eventName = (`${data.results.at(0).event.number}-${data.results.at(0).event.name}`);
       setEvents({
         event_id: eventId,
         event_name: eventName,
-        dates: Array.from(dates),
+        dates: getDateStringList(data.results),
         days: data.results,
       });
     }

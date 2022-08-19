@@ -30,11 +30,7 @@ const login = async (
           body: JSON.stringify({username: username, password: password}),
         });
 
-    if (! response.ok) {
-      console.log('fetch response ! ok');
-    }
     Object.assign(results, await response.json());
-    console.log("data", results);
   } catch (error) {
     console.error(error);
     results.error = "Oops something went wrong";

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { BackButton } from "../../../components/elements/BackButton";
 import Button from "../../../components/elements/Button";
 import { InputGroup } from "../../../components/elements/InputGroup";
 import Loader from "../../../components/Loader";
@@ -28,7 +29,7 @@ const EventWorkDays: React.FC = () => {
   return (
     <div className="p-1 md:p-2">
       <div className="grid gap-1 grid-cols-1 p-2 bg-white rounded-lg">
-        <h2 className="text-gray-500 font-bold">{events.event_name}</h2>
+        <BackButton title={events.event_name} backTo="/events/1" />
         <InputGroup>
           <div className="grid gap-05 md:grid-flow-col">
             <Button

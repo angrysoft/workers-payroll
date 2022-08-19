@@ -24,7 +24,6 @@ const Login = () => {
       form.get("password") as string,
     );
 
-    console.log("user", response);
     if (response.error) {
       setError(response.error);
       setLoading(false);
