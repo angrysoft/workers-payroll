@@ -19,6 +19,11 @@ const initialState: RootState = {
     show: false,
     backTo: "",
   },
+  confirmDialog: {
+    msg: "",
+    show: false,
+    command: "",
+  },
   workDays: {
     event_id: "",
     event_name: "",

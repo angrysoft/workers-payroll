@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { BackButton } from "../../../components/elements/BackButton";
 import Button from "../../../components/elements/Button";
 import { InputGroup } from "../../../components/elements/InputGroup";
@@ -52,6 +53,7 @@ const EventWorkDays: React.FC = () => {
         <DayViewList />
         <AddDayDialog />
         <RemoveDayDialog />
+        <ConfirmDialog />
       </div>
     </div>
   );

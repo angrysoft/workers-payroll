@@ -4,20 +4,20 @@ import { Dialog } from "./Dialog";
 import { BackButton } from "./elements/BackButton";
 import Button from "./elements/Button";
 
-interface IConfirmDialogProps {
-  action: string;
-}
-
-const ConfirmDialog: React.FC<IConfirmDialogProps> = (
-    props: IConfirmDialogProps,
-) => {
+const ConfirmDialog: React.FC = () => {
   const { state, dispatch } = useContext(AppContext);
   const handleClickOk = () => {
-    dispatch({ type: props.action });
+    dispatch({ type: state.confirmDialog.command });
+    dispatch({ type: "CONFIRM_DIALOG_HIDE" });
   };
 
   return (
-    <Dialog open={state.dialog.show}>
+    <Dialog open={state.confirmDialog.show}>
+      <BackButton
+        title="Confirm"
+        onClick={() => dispatch({ type: "CONFIRM_DIALOG_HIDE" })}
+        backTo=""
+      />
       <div className="p-1 border-b font-bold text-xl">
         {state.confirmDialog.msg}
       </div>

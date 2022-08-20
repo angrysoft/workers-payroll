@@ -104,6 +104,13 @@ const workDaysReducer = (
       };
     }
 
+    case "REMOVE_WORKER": {
+      console.log("remove worker");
+      return {
+        ...state,
+      };
+    }
+
     case "SELECT_WORK_DAY": {
       return {
         ...state,

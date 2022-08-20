@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import Button from "../../../components/elements/Button";
 import { InputGroup } from "../../../components/elements/InputGroup";
 import Table from "../../../components/elements/Table";
@@ -18,6 +18,20 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
     return <></>;
   }
 
+  const removeWorker = () => {
+    let msg = "Delete Worker ?";
+    let command = "REMOVE_WORKER";
+    if (! state.table.workDayTable.selected) {
+      msg = "Select Worker First";
+      command = "CONFIRM_DIALOG_HIDE";
+    }
+
+    dispatch({ type: "CONFIRM_DIALOG_SHOW", payload: {
+      msg: msg,
+      command: command,
+    } });
+  };
+
   return (
     <div
       className="grid p-05 rounded-b-lg
@@ -30,7 +44,11 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
           >
             Add Worker
           </Button>
-          <Button>Remove Worker</Button>
+          <Button
+            handleClick={removeWorker}
+          >
+            Remove Worker
+          </Button>
         </div>
       </InputGroup>
       <Table
