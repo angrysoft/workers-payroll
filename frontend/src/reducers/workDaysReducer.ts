@@ -105,7 +105,7 @@ const workDaysReducer = (
     }
 
     case "REMOVE_WORKER": {
-      console.log("remove worker");
+      console.log("remove worker", action.payload);
       return {
         ...state,
       };

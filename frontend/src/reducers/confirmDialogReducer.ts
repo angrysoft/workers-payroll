@@ -4,6 +4,7 @@ export type confirmDialogState = {
   show: boolean,
   msg: string,
   command: string,
+  payload: any,
 }
 
 
@@ -23,6 +24,7 @@ const confirmDialogReducer = (
         msg: "",
         show: false,
         command: "",
+        payload: null,
       };
     default:
       return state;

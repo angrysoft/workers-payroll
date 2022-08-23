@@ -23,6 +23,7 @@ const initialState: RootState = {
     msg: "",
     show: false,
     command: "",
+    payload: null,
   },
   workDays: {
     event_id: "",

@@ -44,12 +44,16 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       ...values,
       id: `new-${values.selectedWorker}-${values.start}`,
       start: startDay.toISOString(),
-      worker: workers.users.filter((item: IUserItem) => {
-        return item.id.toString() === values.selectedWorker;
-      }).at(0),
-      function: functionNames.filter((item: {id:string, name:string}) => {
-        return item.id.toString() === values.function;
-      }).at(0),
+      worker: workers.users
+          .filter((item: IUserItem) => {
+            return item.id.toString() === values.selectedWorker;
+          })
+          .at(0),
+      function: functionNames
+          .filter((item: { id: string; name: string }) => {
+            return item.id.toString() === values.function;
+          })
+          .at(0),
     };
     dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData });
   };
@@ -58,7 +62,10 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     <Dialog open={state.workDays.dayItemDialogShow}>
       <Form
         handleSubmit={handleSubmit}
-        formDefaultValues={{ start: "09:00" }}
+        formDefaultValues={{
+          start: "09:00",
+          end: state.workDays.selected.replace("Z", ""),
+        }}
         requiredFields={["start", "end", "selectedWorker", "function"]}
       >
         <BackButton

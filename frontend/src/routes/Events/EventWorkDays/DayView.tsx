@@ -21,7 +21,8 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
   const removeWorker = () => {
     let msg = "Delete Worker ?";
     let command = "REMOVE_WORKER";
-    if (! state.table.workDayTable.selected) {
+    const workDayId = state.table.workDayTable.selected;
+    if (! workDayId) {
       msg = "Select Worker First";
       command = "CONFIRM_DIALOG_HIDE";
     }
@@ -29,6 +30,7 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
     dispatch({ type: "CONFIRM_DIALOG_SHOW", payload: {
       msg: msg,
       command: command,
+      payload: workDayId,
     } });
   };
 
@@ -43,6 +45,11 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
             handleClick={() => dispatch({ type: "DAY_ITEM_DIALOG_SHOW" })}
           >
             Add Worker
+          </Button>
+          <Button
+            handleClick={() => console.log('edit worker')}
+          >
+            Edit Worker
           </Button>
           <Button
             handleClick={removeWorker}
