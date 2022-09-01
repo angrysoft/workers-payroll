@@ -6,6 +6,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/auth";
 import {MaterialIcons} from "../components/elements/MaterialIcons";
 import Loader from "../components/Loader";
+import { Form } from "../components/elements/Form";
 
 
 const Login = () => {
@@ -41,7 +42,7 @@ const Login = () => {
   const showError = () => {
     return (
       <div className="text-red-500 text-center">
-        <MaterialIcons name="error" />
+        {error && <MaterialIcons name="error" />}
         <span>{error}</span>
       </div>
     );
@@ -61,16 +62,12 @@ const Login = () => {
 
   return (
     <div className="flex w-full h-screen justify-center items-center p-2">
-      <form
-        action=""
-        className="p-2 grid gap-1 shadow-md bg-white"
-        onSubmit={handelSubmit}
-      >
-        {error && showError()}
+      <Form handleSubmit={handelSubmit} >
+        {showError()}
         <Input id="username" type="text" label="Login" required />
         <Input id="password" type="password" label="Password" required />
         <Button>Login</Button>
-      </form>
+      </Form>
     </div>
   );
 };

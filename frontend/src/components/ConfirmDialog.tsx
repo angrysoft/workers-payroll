@@ -7,7 +7,10 @@ import Button from "./elements/Button";
 const ConfirmDialog: React.FC = () => {
   const { state, dispatch } = useContext(AppContext);
   const handleClickOk = () => {
-    dispatch({ type: state.confirmDialog.command });
+    dispatch({
+      type: state.confirmDialog.command,
+      payload: state.confirmDialog.payload,
+    });
     dispatch({ type: "CONFIRM_DIALOG_HIDE" });
   };
 

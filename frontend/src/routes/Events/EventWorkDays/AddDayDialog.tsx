@@ -62,7 +62,7 @@ const AddDayDialog: React.FC<IAddDayDialogProps> = (
     if (dayExist) {
       setAddError(
           // eslint-disable-next-line max-len
-          `The date ${newDay.toLocaleDateString()} is already added i am chengeing !`,
+          `The date ${newDay.toLocaleDateString()} is already added, changing !`,
       );
       return;
     }

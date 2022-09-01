@@ -68,16 +68,25 @@ const workDaysReducer = (
     }
 
     case "REMOVE_WORK_DAY": {
+      const dateSelected = new Date(state.selected).toLocaleDateString();
+
       return {
         ...state,
         dates: state.dates.filter((day) => {
           return day !== state.selected;
         }),
         selected: (state.dates.at(-1) || ""),
+        days: [
+          ...state.days.filter((day) => {
+            return new Date(day.start).toLocaleDateString() !==
+            dateSelected;
+          }),
+        ],
         daysToRemove: [
           ...state.daysToRemove,
           ...state.days.filter((day) => {
-            return day.start == state.selected;
+            return new Date(day.start).toLocaleDateString() ===
+            dateSelected;
           }),
         ],
         removeDayDialogShow: false,
@@ -105,7 +114,7 @@ const workDaysReducer = (
     }
 
     case "REMOVE_WORKER": {
-      console.log("remove worker", action.payload);
+      console.log("remove worker", action);
       return {
         ...state,
       };
