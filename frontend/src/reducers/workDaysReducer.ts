@@ -114,9 +114,13 @@ const workDaysReducer = (
     }
 
     case "REMOVE_WORKER": {
-      console.log("remove worker", action);
       return {
         ...state,
+        days: state.days.filter((day) => day.id.toString() !== action.payload),
+        daysToRemove: [
+          ...state.daysToRemove,
+          ...state.days.filter((day) => day.id.toString() === action.payload),
+        ],
       };
     }
 
