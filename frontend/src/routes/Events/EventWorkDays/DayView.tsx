@@ -34,6 +34,19 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
     } });
   };
 
+  const editWorker = () => {
+    const workDayId = state.table.workDayTable.selected;
+    if (! workDayId) {
+      dispatch({ type: "CONFIRM_DIALOG_SHOW", payload: {
+        msg: "Select Worker First",
+        command: "CONFIRM_DIALOG_HIDE",
+        payload: workDayId,
+      } });
+      return;
+    };
+    dispatch({ type: "DAY_ITEM_DIALOG_SHOW", payload: workDayId });
+  };
+
   return (
     <div
       className="grid p-05 rounded-b-lg
@@ -47,7 +60,7 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
             Add Worker
           </Button>
           <Button
-            handleClick={() => console.log('edit worker')}
+            handleClick={editWorker}
           >
             Edit Worker
           </Button>

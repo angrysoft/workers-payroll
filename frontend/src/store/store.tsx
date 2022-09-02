@@ -35,6 +35,7 @@ const initialState: RootState = {
     addDayDialogShow: false,
     removeDayDialogShow: false,
     dayItemDialogShow: false,
+    dayItemDialogEdit: null,
   },
 };
 

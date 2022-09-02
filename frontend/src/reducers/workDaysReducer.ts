@@ -11,6 +11,7 @@ export type workDaysState = {
   addDayDialogShow: boolean;
   removeDayDialogShow: boolean;
   dayItemDialogShow: boolean;
+  dayItemDialogEdit: null | string;
 }
 
 
@@ -163,6 +164,7 @@ const workDaysReducer = (
       return {
         ...state,
         dayItemDialogShow: true,
+        dayItemDialogEdit: action.payload,
       };
     }
 
@@ -170,6 +172,7 @@ const workDaysReducer = (
       return {
         ...state,
         dayItemDialogShow: false,
+        dayItemDialogEdit: null,
       };
     }
 

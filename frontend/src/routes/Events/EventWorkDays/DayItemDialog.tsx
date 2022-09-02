@@ -13,9 +13,9 @@ import { Select } from "../../../components/elements/Select";
 import Loader from "../../../components/Loader";
 import { useGetFunctions } from "../../../hooks/useGetFunctions";
 import { useGetUsers } from "../../../hooks/useGetUsers";
-import { getDateStringList } from "../../../services/dates";
 import { AppContext } from "../../../store/store";
 import { IUserItem } from "../../Workers";
+import { IDayItem } from "../../../reducers/workDaysReducer";
 
 interface IDayItemDialogProps {
   children?: JSX.Element | JSX.Element[];
@@ -27,9 +27,33 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
   const { state, dispatch } = useContext(AppContext);
   const { functionNames, loading } = useGetFunctions();
   const workers = useGetUsers("worker");
+  const [formDefaultValues, setFromDefaultValues] = useState<
+    IDayItem | undefined
+  >();
   const cancelAdd = (ev: SyntheticEvent) => {
     dispatch({ type: "DAY_ITEM_DIALOG_HIDE" });
   };
+
+  useEffect(() => {
+    let values: any = {
+      start: "09:00",
+      end: state.workDays.selected.replace("Z", ""),
+    };
+    if (state.workDays.dayItemDialogEdit) {
+      const day = state.workDays.days
+          .filter((day) => state.workDays.dayItemDialogEdit = day.id.toString())
+          .at(0);
+      values = {
+        ...day,
+        end: day?.end.replace("Z", "") || "",
+        function: day?.function.id ||"",
+        selectedWorker: day?.worker.id || "",
+      };
+    }
+    // TODO: data is not refreshed and start is in improper form.
+    console.log('day', values);
+    setFromDefaultValues(values);
+  }, [state.workDays.dayItemDialogShow]);
 
   const handleSubmit = (
       ev: SyntheticEvent,
@@ -62,10 +86,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     <Dialog open={state.workDays.dayItemDialogShow}>
       <Form
         handleSubmit={handleSubmit}
-        formDefaultValues={{
-          start: "09:00",
-          end: state.workDays.selected.replace("Z", ""),
-        }}
+        formDefaultValues={formDefaultValues}
         requiredFields={["start", "end", "selectedWorker", "function"]}
       >
         <BackButton
