@@ -16,6 +16,7 @@ import { useGetUsers } from "../../../hooks/useGetUsers";
 import { AppContext } from "../../../store/store";
 import { IUserItem } from "../../Workers";
 import { IDayItem } from "../../../reducers/workDaysReducer";
+import { getTimeStringFromDateString } from "../../../services/dates";
 
 interface IDayItemDialogProps {
   children?: JSX.Element | JSX.Element[];
@@ -41,17 +42,20 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     };
     if (state.workDays.dayItemDialogEdit) {
       const day = state.workDays.days
-          .filter((day) => state.workDays.dayItemDialogEdit = day.id.toString())
+          .filter(
+              (_day) => state.workDays.dayItemDialogEdit === _day.id.toString(),
+          )
           .at(0);
+      console.log('day', day);
       values = {
         ...day,
+        start: getTimeStringFromDateString(day?.start),
         end: day?.end.replace("Z", "") || "",
-        function: day?.function.id ||"",
+        function: day?.function.id || "",
         selectedWorker: day?.worker.id || "",
       };
     }
-    // TODO: data is not refreshed and start is in improper form.
-    console.log('day', values);
+    console.log("values", values);
     setFromDefaultValues(values);
   }, [state.workDays.dayItemDialogShow]);
 
@@ -79,6 +83,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
           })
           .at(0),
     };
+    // TODO: edit generate error parsing values is wrong when edited
     dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData });
   };
 
