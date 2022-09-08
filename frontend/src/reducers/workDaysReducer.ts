@@ -114,6 +114,18 @@ const workDaysReducer = (
       };
     }
 
+    case "EDIT_WORKER_WORK_DAY": {
+      console.log("Edit_W_W_DAY", action.payload);
+      return {
+        ...state,
+        days: [
+          ...state.days.filter((day)=> day.id !== action.payload.id),
+          action.payload,
+        ],
+        dayItemDialogShow: false,
+      };
+    }
+
     case "REMOVE_WORKER": {
       return {
         ...state,
