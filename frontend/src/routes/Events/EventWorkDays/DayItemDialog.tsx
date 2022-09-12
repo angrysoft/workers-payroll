@@ -54,7 +54,6 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
         selectedWorker: day?.worker.id || "",
       };
     }
-    state.workDays.dayItemDialogEdit ? console.log("edit") : console.log(" new");
     setFromDefaultValues(values);
   }, [state.workDays.dayItemDialogShow]);
 
@@ -67,10 +66,15 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     const startDay = new Date(state.workDays.selected);
     const [hours, minutes] = values.start.split(":");
     startDay.setHours(Number(hours), Number(minutes));
+
+    const id = state.workDays.dayItemDialogEdit ?
+    values.id :
+    `new-${values.selectedWorker}-${values.start}`;
+
     const dayData = {
       ...values,
-      id: `new-${values.selectedWorker}-${values.start}`,
-      start: startDay.toISOString(),
+      id: id,
+      start: startDay.toISOString().replace("Z", ""),
       worker: workers.users
           .filter((item: IUserItem) => {
             return item.id.toString() === values.selectedWorker.toString();
