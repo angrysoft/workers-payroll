@@ -46,7 +46,6 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
               (_day) => state.workDays.dayItemDialogEdit === _day.id.toString(),
           )
           .at(0);
-      console.log('day', day);
       values = {
         ...day,
         start: getTimeStringFromDateString(day?.start),
@@ -55,7 +54,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
         selectedWorker: day?.worker.id || "",
       };
     }
-    console.log("values", values);
+    state.workDays.dayItemDialogEdit ? console.log("edit") : console.log(" new");
     setFromDefaultValues(values);
   }, [state.workDays.dayItemDialogShow]);
 
@@ -86,8 +85,8 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     console.log("day data", workers.users, functionNames, values.selectedWorker, values.function, state.workDays.dayItemDialogEdit);
     // TODO: edit generate error parsing values is wrong when edited
     state.workDays.dayItemDialogEdit ?
-    dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData }) :
-    dispatch({ type: "EDIT_WORKER_WORK_DAY", payload: dayData });
+    dispatch({ type: "EDIT_WORKER_WORK_DAY", payload: dayData }) :
+    dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData });
   };
 
   return (
