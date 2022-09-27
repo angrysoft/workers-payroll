@@ -9,6 +9,8 @@ reset:
 	rm -f db.sqlite3
 	find . -name "migrations" -exec rm -rf "{}" \;
 
+data:
+	./manage.py shell < gen_data.py
 
 run:
 	./manage.py runserver

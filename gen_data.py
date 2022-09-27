@@ -14,7 +14,17 @@ def add_workers():
             email=u["email"],
             password="test1234",
         )
+        usr.save()
 
+def add_coord():
+    usr = User.objects.create_user(
+            username="coor",
+            first_name="Franek",
+            last_name="Kimono",
+            email="franek@kimono.pl",
+            password="test1234",
+        )
+    usr.save()
 
 def add_events():
     for i in range(1, 100):
@@ -24,5 +34,6 @@ def add_events():
         e.save()
 
 
-add_workers()
+# add_workers()
+add_coord()
 add_events()

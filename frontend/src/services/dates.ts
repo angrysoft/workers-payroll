@@ -13,19 +13,19 @@ const formatDateTime = (dateIn: string) => {
   return date.toLocaleString("en-GB", {
     dateStyle: "short",
     timeStyle: "short",
-  });
+  }).replace("Z", "");
 };
 
 const getTimeStringFromDateString = (dateIn: string | undefined) => {
   if (dateIn) {
     return new Date(dateIn.replace("Z", "")).toLocaleString("en-GB", {
       timeStyle: "short",
-    });
+    }).replace("Z", "");
   }
 
   return new Date().toLocaleString("en-GB", {
     timeStyle: "short",
-  });
+  }).replace("Z", "");
 };
 
 export {getDateStringList, formatDateTime, getTimeStringFromDateString};
