@@ -1,9 +1,32 @@
 from workers.models import User
 from payroll.models import Event, EventDayWork, Function
 import requests
+from random import randint, choice, sample
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 
-def add_workers():
+def add_users():
+    # coordinator
+    User.objects.create_user(
+        username="coor",
+        first_name="Franek",
+        last_name="Kimono",
+        email="franek@kimono.pl",
+        password="test1234",
+        is_coordinator=True,
+    )
+
+    # sales
+    User.objects.create_user(
+        username="salesman",
+        email="salesman_user@example.net",
+        first_name="FooA",
+        last_name="BarA",
+        password="foobar1234",
+        is_account_manager=True,
+    )
+
     r = requests.get("https://randomuser.me/api?results=20")
     results = r.json()["results"]
     for u in results:
@@ -19,39 +42,53 @@ def add_workers():
         usr.functions.add(func_tech)
         usr.functions.add(func_chief)
         usr.save()
+        # TODO add rates
 
 
 def add_events():
-    coordinator = User.objects.create_user(
-            username="coor",
-            first_name="Franek",
-            last_name="Kimono",
-            email="franek@kimono.pl",
-            password="test1234",
-            is_coordinator=True,
-        )
+    coordinator = User.objects.filter(is_coordinator=True).first()
+    account_manager = User.objects.filter(is_account_manager=True).first()
 
-    account_manager = User.objects.create_user(
-        username="salesman",
-        email="salesman_user@example.net",
-        first_name="FooA",
-        last_name="BarA",
-        password="foobar1234",
-        is_account_manager=True,
-    )
     for i in range(1, 100):
         e = Event()
         e.name = f"Event{i}"
-        e.number = f"22-{i:02}"
+        e.number = f"21-{i:02}"
         e.coordinator = coordinator
         e.account_manager = account_manager
         e.save()
 
 
 def gen_workdays():
-    for ev in 
-    day = EventDayWork()
+    workers = list(
+        User.objects.filter(
+            is_coordinator=False, is_account_manager=False, is_superuser=False
+        ).all()
+    )
+    r = requests.get("https://api.lrs.org/random-date-generator?year=2021")
+    dates = r.json()["data"]
+    events_list = Event.objects.all()
+    func = Function.objects.all()
+    for event in events_list:
+        print("Event: ", event)
+        for date in sample(list(dates.values()), k=randint(0, len(dates))):
+            # print("\tDate: ", date)
+            get_days(date["unix"], event, func, workers)  # randint(0, workers_no))
 
 
-add_workers()
+def get_days(date, event, func, workers):
+    gen_for_no_workers = randint(0, len(workers))
+    day_start = datetime.fromtimestamp(date)
+    day_end = day_start + timedelta(hours=randint(0, 24))
+    for worker in sample(workers, k=gen_for_no_workers):
+        day = EventDayWork()
+        day.event = event
+        day.start = timezone.make_aware(day_start)
+        day.end = timezone.make_aware(day_end)
+        day.worker = worker
+        day.function = choice(func)
+        day.save()
+
+
+add_users()
 add_events()
+gen_workdays()

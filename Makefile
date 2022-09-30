@@ -2,7 +2,7 @@ bootstrap:
 	./manage.py makemigrations workers payroll
 	./manage.py migrate
 	./manage.py shell < bootstrap.py
-	./manage.py createsuperuser
+	# ./manage.py shell < gen_data.py
 
 
 reset:
