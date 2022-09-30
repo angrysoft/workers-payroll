@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group
 from payroll.models import Function, AdditionRate
-
+from workers.models import User
 
 def creates_objects(obj, names_list):
     for item in names_list:
@@ -12,3 +12,9 @@ creates_objects(
     Function, ["Technician", "Chief", "Multimedia Designer", "Lighting Designer"]
 )
 creates_objects(AdditionRate, ["Work at height", "Driver", "Follow Spot Operator"])
+
+User.objects.create_superuser(
+    username="admin",
+    email="admin@example.net",
+    password="admin",
+)
