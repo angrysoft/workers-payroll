@@ -15,6 +15,9 @@ creates_objects(AdditionRate, ["Work at height", "Driver", "Follow Spot Operator
 
 User.objects.create_superuser(
     username="admin",
+    first_name="Admin",
+    last_name="Nimda",
     email="admin@example.net",
     password="admin",
+    is_coordinator=True,
 )
