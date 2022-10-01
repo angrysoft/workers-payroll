@@ -68,17 +68,21 @@ def gen_workdays():
     dates = r.json()["data"]
     events_list = Event.objects.all()
     func = Function.objects.all()
+    days_batch = []
     for event in events_list:
-        print("Event: ", event)
+        # print("Event: ", event)
         for date in sample(list(dates.values()), k=randint(0, len(dates))):
-            # print("\tDate: ", date)
-            get_days(date["unix"], event, func, workers)  # randint(0, workers_no))
+            # print("  Date: ", str(datetime.fromtimestamp(date["unix"])))
+            days_batch.extend(get_days(date["unix"], event, func, workers))
+    print("Batch Sizie", len(days_batch))
+    EventDayWork.objects.bulk_create(days_batch)
 
 
 def get_days(date, event, func, workers):
     gen_for_no_workers = randint(0, len(workers))
     day_start = datetime.fromtimestamp(date)
-    day_end = day_start + timedelta(hours=randint(0, 24))
+    day_end = day_start + timedelta(hours=randint(8, 24))
+    batch = []
     for worker in sample(workers, k=gen_for_no_workers):
         day = EventDayWork()
         day.event = event
@@ -86,7 +90,8 @@ def get_days(date, event, func, workers):
         day.end = timezone.make_aware(day_end)
         day.worker = worker
         day.function = choice(func)
-        day.save()
+        batch.append(day)
+    return batch
 
 
 add_users()
