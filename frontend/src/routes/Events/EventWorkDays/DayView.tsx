@@ -14,7 +14,7 @@ const DayView: React.FC<IDayViewProps> = (props: IDayViewProps) => {
   const { state, dispatch } = useContext(AppContext);
   const daysTableData = useGetDaysTableData();
 
-  if (state.workDays.days.length === 0) {
+  if (state.workDays.dates.length === 0) {
     return <></>;
   }
 

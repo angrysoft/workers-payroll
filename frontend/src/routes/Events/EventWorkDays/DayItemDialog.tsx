@@ -36,9 +36,10 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
   };
 
   useEffect(() => {
+    // TODO end set for local time json and on save set it to UTC
     let values: any = {
       start: "09:00",
-      end: state.workDays.selected.replace("Z", ""),
+      end: state.workDays.selected,
     };
     if (state.workDays.dayItemDialogEdit) {
       const day = state.workDays.days
@@ -49,7 +50,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       values = {
         ...day,
         start: getTimeStringFromDateString(day?.start),
-        end: day?.end.replace("Z", "") || "",
+        end: day?.end || "",
         function: day?.function.id || "",
         selectedWorker: day?.worker.id || "",
       };
@@ -66,7 +67,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     const startDay = new Date(state.workDays.selected);
     const [hours, minutes] = values.start.split(":");
     startDay.setHours(Number(hours), Number(minutes));
-
+    console.log(startDay.toISOString());
     const id = state.workDays.dayItemDialogEdit ?
     values.id :
     `new-${values.selectedWorker}-${values.start}`;
@@ -74,7 +75,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     const dayData = {
       ...values,
       id: id,
-      start: startDay.toISOString().replace("Z", ""),
+      start: startDay.toJSON(),
       worker: workers.users
           .filter((item: IUserItem) => {
             return item.id.toString() === values.selectedWorker.toString();

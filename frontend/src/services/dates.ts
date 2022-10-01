@@ -9,23 +9,27 @@ const getDateStringList = (days: Array<IDayItem>) => {
 };
 
 const formatDateTime = (dateIn: string) => {
-  const date = new Date(dateIn.replace("Z", ""));
+  const date = new Date(dateIn);
   return date.toLocaleString("en-GB", {
     dateStyle: "short",
     timeStyle: "short",
-  }).replace("Z", "");
+  });
 };
 
 const getTimeStringFromDateString = (dateIn: string | undefined) => {
   if (dateIn) {
-    return new Date(dateIn.replace("Z", "")).toLocaleString("en-GB", {
+    return new Date(dateIn).toLocaleString("en-GB", {
       timeStyle: "short",
-    }).replace("Z", "");
+    });
   }
 
   return new Date().toLocaleString("en-GB", {
     timeStyle: "short",
-  }).replace("Z", "");
+  });
+};
+
+const toLocalJSON = (dateIn : Date) => {
+  return dateIn.toLocaleString();
 };
 
 export {getDateStringList, formatDateTime, getTimeStringFromDateString};
