@@ -16,7 +16,7 @@ import { useGetUsers } from "../../../hooks/useGetUsers";
 import { AppContext } from "../../../store/store";
 import { IUserItem } from "../../Workers";
 import { IDayItem } from "../../../reducers/workDaysReducer";
-import { getTimeStringFromDateString } from "../../../services/dates";
+import { getTimeStringFromDateString, toLocalJSON } from "../../../services/dates";
 
 interface IDayItemDialogProps {
   children?: JSX.Element | JSX.Element[];
@@ -37,9 +37,14 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
 
   useEffect(() => {
     // TODO end set for local time json and on save set it to UTC
+    console.log("to local json",
+        toLocalJSON(state.workDays.selected),
+        getTimeStringFromDateString(state.workDays.selected),
+        state.workDays.selected);
+
     let values: any = {
       start: "09:00",
-      end: state.workDays.selected,
+      end: toLocalJSON(state.workDays.selected),
     };
     if (state.workDays.dayItemDialogEdit) {
       const day = state.workDays.days
@@ -50,7 +55,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       values = {
         ...day,
         start: getTimeStringFromDateString(day?.start),
-        end: day?.end || "",
+        end: toLocalJSON(day?.end || ""),
         function: day?.function.id || "",
         selectedWorker: day?.worker.id || "",
       };
@@ -76,6 +81,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       ...values,
       id: id,
       start: startDay.toJSON(),
+      end: new Date(values.end).toJSON(),
       worker: workers.users
           .filter((item: IUserItem) => {
             return item.id.toString() === values.selectedWorker.toString();
@@ -87,8 +93,6 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
           })
           .at(0),
     };
-    console.log("day data", workers.users, functionNames, values.selectedWorker, values.function, state.workDays.dayItemDialogEdit);
-    // TODO: edit generate error parsing values is wrong when edited
     state.workDays.dayItemDialogEdit ?
     dispatch({ type: "EDIT_WORKER_WORK_DAY", payload: dayData }) :
     dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData });

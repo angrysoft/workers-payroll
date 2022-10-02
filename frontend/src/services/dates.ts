@@ -28,8 +28,14 @@ const getTimeStringFromDateString = (dateIn: string | undefined) => {
   });
 };
 
-const toLocalJSON = (dateIn : Date) => {
-  return dateIn.toLocaleString();
+const toLocalJSON = (dateIn: string) => {
+  const date = new Date(dateIn);
+  const year = date.getFullYear();
+  const month = new Intl.DateTimeFormat(
+      "en-US", {month: "2-digit"},
+  ).format(date);
+  const day = new Intl.DateTimeFormat("en-US", {day: "2-digit"}).format(date);
+  return `${year}-${month}-${day}T${date.toLocaleTimeString("pl-PL")}`;
 };
 
-export {getDateStringList, formatDateTime, getTimeStringFromDateString};
+export {getDateStringList, formatDateTime, getTimeStringFromDateString, toLocalJSON};
