@@ -5,13 +5,15 @@ export type workDaysState = {
   event_id: string;
   event_name: string;
   dates: Array<string>;
-  days : Array<IDayItem>;
+  days: Array<IDayItem>;
+  daysEdited: Array<number>;
   daysToRemove: Array<IDayItem>;
   selected: string;
   addDayDialogShow: boolean;
   removeDayDialogShow: boolean;
   dayItemDialogShow: boolean;
   dayItemDialogEdit: null | string;
+  touch_days: boolean,
 }
 
 
@@ -22,7 +24,7 @@ interface IWorkDay {
 }
 
 interface IDayItem {
-  id: string;
+  id: number;
   event: IEvent;
   function: IFunction;
   worker: IUserItem;
@@ -52,6 +54,7 @@ const workDaysReducer = (
         ...state,
         ...action.payload,
         selected: action.payload.dates.at(0),
+        touch_days: false,
       };
     }
 
@@ -91,6 +94,7 @@ const workDaysReducer = (
           }),
         ],
         removeDayDialogShow: false,
+        touch_days: true,
       };
     }
 
@@ -102,6 +106,8 @@ const workDaysReducer = (
         days: [],
         dates: [],
         selected: "",
+        daysToRemove: [],
+        touch_days: false,
       };
     }
 
@@ -111,6 +117,8 @@ const workDaysReducer = (
         ...state,
         days: [...state.days, action.payload],
         dayItemDialogShow: false,
+        touch_days: true,
+        daysEdited: [...state.daysEdited, action.payload.id],
       };
     }
 
@@ -123,6 +131,8 @@ const workDaysReducer = (
           action.payload,
         ],
         dayItemDialogShow: false,
+        daysEdited: [...state.daysEdited, action.payload.id],
+        touch_days: true,
       };
     }
 
@@ -134,6 +144,7 @@ const workDaysReducer = (
           ...state.daysToRemove,
           ...state.days.filter((day) => day.id.toString() === action.payload),
         ],
+        touch_days: true,
       };
     }
 

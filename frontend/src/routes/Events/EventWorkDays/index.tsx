@@ -4,23 +4,24 @@ import { BackButton } from "../../../components/elements/BackButton";
 import Button from "../../../components/elements/Button";
 import { InputGroup } from "../../../components/elements/InputGroup";
 import Loader from "../../../components/Loader";
+import { useEventDaysSave } from "../../../hooks/useEventDaysSave";
 import { useGetEvent } from "../../../hooks/useGetEvent";
 import { AppContext } from "../../../store/store";
 import { AddDayDialog } from "./AddDayDialog";
 import { DayViewList } from "./DayViewList";
 import { RemoveDayDialog } from "./RemoveDayDialog";
 
-
 const EventWorkDays: React.FC = () => {
-  const {state, dispatch} = useContext(AppContext);
-  const {events, loading} = useGetEvent(state.table.eventsTable.selected);
+  const { state, dispatch } = useContext(AppContext);
+  const { events, loading } = useGetEvent(state.table.eventsTable.selected);
+  const save = useEventDaysSave();
 
   useEffect(() => {
     dispatch({ type: "CLEAR_WORK_DAYS" });
   }, []);
 
   useEffect(() => {
-    dispatch({type: "LOAD_WORK_DAYS", payload: events});
+    dispatch({ type: "LOAD_WORK_DAYS", payload: events });
   }, [events]);
 
   if (loading) {
@@ -38,16 +39,17 @@ const EventWorkDays: React.FC = () => {
             >
               Add Day
             </Button>
-            <Button handleClick={()=> console.log('duplicate day')}
-            >
-              Duplicate Day
-            </Button>
             <Button
               handleClick={() => dispatch({ type: "REMOVE_DAY_DIALOG_SHOW" })}
             >
               Remove Day
             </Button>
-            <Button>Save</Button>
+            <Button
+              handleClick={save.call}
+              disabled={! state.workDays.touch_days}
+            >
+              Save
+            </Button>
           </div>
         </InputGroup>
         <DayViewList />

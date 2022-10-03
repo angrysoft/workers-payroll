@@ -30,12 +30,14 @@ const initialState: RootState = {
     event_name: "",
     dates: [],
     days: [],
+    daysEdited: [],
     daysToRemove: [],
     selected: "",
     addDayDialogShow: false,
     removeDayDialogShow: false,
     dayItemDialogShow: false,
     dayItemDialogEdit: null,
+    touch_days: false,
   },
 };
 

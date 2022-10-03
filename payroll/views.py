@@ -12,6 +12,81 @@ from WorkersPayroll.defaults import get_default_results
 from django.core.paginator import Page
 
 
+class EventDayWorkBatchView(View):
+    @method_decorator(auth_required)
+    def put(self, request: HttpRequest):
+        data = json.loads(request.body)
+        print(data)
+        if "event_id" not in data or not data["event_id"]:
+            return JsonResponse(
+                get_default_results(error="Event id is not present or is wrong"),
+                status=400,
+            )
+
+        results = get_default_results()
+        results["results"] = {
+            "update_failed": self.update_days(data.get("days", [])),
+            "remove_failed": self.remove_days(data.get("daysToRemove", []))
+        }
+
+        status_code = 201
+        return JsonResponse(results, status=status_code)
+
+    def update_days(self, days):
+        failed = []
+        for day in days:
+            if day["id"] < 0:
+                status, errors = self.__add_day(day.copy())
+            else:
+                status, errors = self.__update_day(day.copy())
+            if not status:
+                failed.append({
+                    "id": status,
+                    "errors": errors
+                })
+
+    def __add_day(self, day):
+        added = True
+        errors = ""
+        del day["id"]
+        event_day_work = EventDayWorkFrom(day)
+
+        if event_day_work.is_valid():
+            event_day_work.save()
+        else:
+            added = False
+            errors = event_day_work.errors.as_text()
+        return added, errors
+
+    def __update_day(self, day):
+        added = True
+        errors = ""
+
+        day_work = EventDayWork.objects.get(pk=day["id"])
+        event_day_work_data = day_work.serialize()
+        event_day_work_data.update(day)
+        event_day_work = EventDayWorkFrom(
+            event_day_work_data, instance=day_work
+        )
+
+        if event_day_work.is_valid():
+            event_day_work.save()
+        else:
+            added = False
+            errors = event_day_work.errors.as_text()
+        return added, errors
+
+    def remove_days(self, days):
+        failed = []
+        for day in days:
+            day = EventDayWork.objects.get(day["id"])
+            try:
+                day.delete()
+            except EventDayWork.DoesNotExist:
+                failed.append(day["id"])
+        return failed
+
+
 class EventDayWorkView(View):
     @method_decorator(auth_required)
     def get(self, request: HttpRequest, event_id: int):
@@ -26,7 +101,7 @@ class EventDayWorkView(View):
             results["error"] = "Permission"
             results["ok"] = False
             status_code = 403
-   
+
         return JsonResponse(results, status=status_code)
 
     @method_decorator(auth_required)

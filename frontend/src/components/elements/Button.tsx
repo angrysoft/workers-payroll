@@ -4,6 +4,7 @@ type ButtonOutlineProps = {
   id?: string;
   children?: React.ReactNode;
   handleClick?: CallableFunction;
+  disabled?: boolean;
 };
 
 const Button = (props: ButtonOutlineProps) => {
@@ -19,9 +20,11 @@ const Button = (props: ButtonOutlineProps) => {
                  text-xl font-bold text-center text-white
                  shadow-md hover:shadow-2xl
                  border border-gray-500
-                 transition-all-500 transition-all duration-500"
+                 transition-all-500 transition-all duration-500
+                 disabled:opacity-50 disabled:hover:shadow-none"
       id={props.id}
       onClick={handleClick}
+      disabled={props.disabled}
     >
       {props.children}
     </button>

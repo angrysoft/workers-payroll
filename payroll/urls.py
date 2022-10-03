@@ -4,6 +4,7 @@ from payroll.views import (
     EventList,
     EventView,
     EventDayWorkView,
+    EventDayWorkBatchView,
     WorkerEventWorkDayMonthReport,
     function_list,
 )
@@ -13,9 +14,12 @@ urlpatterns = [
     path("<int:event_id>", csrf_exempt(EventView.as_view()), name="event_p"),
     path("list", EventList.as_view(), name="event_list"),
     path(
-        "day/<int:event_id>",
-        csrf_exempt(EventDayWorkView.as_view()),
-        name="event_day"
+        "day/<int:event_id>", csrf_exempt(EventDayWorkView.as_view()), name="event_day"
+    ),
+    path(
+        "day_batch",
+        csrf_exempt(EventDayWorkBatchView.as_view()),
+        name="event_day_batch",
     ),
     # path("day/<int:_event_id>", EventDayWorkView.as_view(), name="events_get"),
     path(

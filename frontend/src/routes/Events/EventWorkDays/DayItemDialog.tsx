@@ -9,14 +9,18 @@ import {
 } from "../../../components/elements/Form";
 import Input from "../../../components/elements/Input";
 import { InputGroup } from "../../../components/elements/InputGroup";
-import { Select } from "../../../components/elements/Select";
+import { IOptions, Select } from "../../../components/elements/Select";
 import Loader from "../../../components/Loader";
 import { useGetFunctions } from "../../../hooks/useGetFunctions";
 import { useGetUsers } from "../../../hooks/useGetUsers";
 import { AppContext } from "../../../store/store";
 import { IUserItem } from "../../Workers";
 import { IDayItem } from "../../../reducers/workDaysReducer";
-import { getTimeStringFromDateString, toLocalJSON } from "../../../services/dates";
+import {
+  getTimeStringFromDateString,
+  toLocalJSON,
+} from "../../../services/dates";
+import { ErrorMsg } from "../../../components/elements/ErrorMsg";
 
 interface IDayItemDialogProps {
   children?: JSX.Element | JSX.Element[];
@@ -25,6 +29,7 @@ interface IDayItemDialogProps {
 const DayItemDialog: React.FC<IDayItemDialogProps> = (
     props: IDayItemDialogProps,
 ) => {
+  const [errors, setErrors] = useState<string>("");
   const { state, dispatch } = useContext(AppContext);
   const { functionNames, loading } = useGetFunctions();
   const workers = useGetUsers("worker");
@@ -36,11 +41,12 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
   };
 
   useEffect(() => {
-    // TODO end set for local time json and on save set it to UTC
-    console.log("to local json",
+    console.log(
+        "to local json",
         toLocalJSON(state.workDays.selected),
         getTimeStringFromDateString(state.workDays.selected),
-        state.workDays.selected);
+        state.workDays.selected,
+    );
 
     let values: any = {
       start: "09:00",
@@ -61,7 +67,22 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
       };
     }
     setFromDefaultValues(values);
+    setErrors("");
   }, [state.workDays.dayItemDialogShow]);
+
+  const getDayId = (values: IFormValues) => {
+    if (state.workDays.dayItemDialogEdit) {
+      return values.id;
+    }
+
+    const id = new Date(values.end).getTime() - Number(values.selectedWorker);
+    console.log(values.end, values.selectedWorker);
+    if (id < 0) {
+      return id;
+    } else {
+      return id * -1;
+    }
+  };
 
   const handleSubmit = (
       ev: SyntheticEvent,
@@ -72,14 +93,10 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     const startDay = new Date(state.workDays.selected);
     const [hours, minutes] = values.start.split(":");
     startDay.setHours(Number(hours), Number(minutes));
-    console.log(startDay.toISOString());
-    const id = state.workDays.dayItemDialogEdit ?
-    values.id :
-    `new-${values.selectedWorker}-${values.start}`;
 
     const dayData = {
       ...values,
-      id: id,
+      id: getDayId(values),
       start: startDay.toJSON(),
       end: new Date(values.end).toJSON(),
       worker: workers.users
@@ -93,9 +110,29 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
           })
           .at(0),
     };
+    if (!checkDayData(dayData)) {
+      return;
+    }
     state.workDays.dayItemDialogEdit ?
-    dispatch({ type: "EDIT_WORKER_WORK_DAY", payload: dayData }) :
+    dispatch({ type: "EDIT_WORKER_WORK_DAY", payload: dayData }):
     dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData });
+  };
+
+  const checkDayData = (dayData: {
+    id: any;
+    start: string;
+    end: string;
+    worker: undefined;
+    function: IOptions | undefined;
+  }) => {
+    let ret: Boolean = true;
+    setErrors("");
+    if (new Date(dayData.start).getTime() > new Date(dayData.end).getTime()) {
+      setErrors("End date is earlier than start date");
+      ret = false;
+    }
+    // TODO check if worker is in this day (time range).
+    return ret;
   };
 
   return (
@@ -136,6 +173,7 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
             />
           )}
         </InputGroup>
+        <ErrorMsg error={errors} />
         <Button>Ok</Button>
       </Form>
     </Dialog>

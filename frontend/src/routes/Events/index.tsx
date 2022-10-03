@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Table from "../../components/elements/Table";
 import { IRow } from "../../components/elements/Table/TableBody";
 import Loader from "../../components/Loader";
 import Pagination from "../../components/Pagination";
 import { useApi } from "../../hooks/useApi";
+import { AppContext } from "../../store/store";
 
 const header = ["Event number", "Event name", "Status"];
 
@@ -26,6 +27,7 @@ interface IPageInfo {
 }
 
 const Events: React.FC<IEventProps> = (props: IEventProps) => {
+  const {dispatch} = useContext(AppContext);
   const [eventData, setEventData] = useState<Array<IRow>>([]);
   const [pageInfo, setPageInfo] = useState<IPageInfo>({
     pages: 1,
@@ -35,6 +37,10 @@ const Events: React.FC<IEventProps> = (props: IEventProps) => {
 
   const { pageNo } = useParams();
   const { results, error, loading, call } = useApi();
+
+  useEffect(() => {
+    dispatch({ type: "CLEAR_WORK_DAYS" });
+  }, []);
 
   useEffect(() => {
     call(`/api/v1/event/list?page=${pageNo}`, { method: "GET" });
