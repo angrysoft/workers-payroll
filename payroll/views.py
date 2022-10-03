@@ -17,16 +17,10 @@ class EventDayWorkBatchView(View):
     def put(self, request: HttpRequest):
         data = json.loads(request.body)
         print(data)
-        if "event_id" not in data or not data["event_id"]:
-            return JsonResponse(
-                get_default_results(error="Event id is not present or is wrong"),
-                status=400,
-            )
-
         results = get_default_results()
         results["results"] = {
             "update_failed": self.update_days(data.get("days", [])),
-            "remove_failed": self.remove_days(data.get("daysToRemove", []))
+            "remove_failed": self.remove_days(data.get("daysIdToRemove", [])),
         }
 
         status_code = 201
@@ -35,15 +29,13 @@ class EventDayWorkBatchView(View):
     def update_days(self, days):
         failed = []
         for day in days:
+            print(day)
             if day["id"] < 0:
-                status, errors = self.__add_day(day.copy())
+                status, errors = self.__add_day(dict(**day))
             else:
-                status, errors = self.__update_day(day.copy())
+                status, errors = self.__update_day(dict(**day))
             if not status:
-                failed.append({
-                    "id": status,
-                    "errors": errors
-                })
+                failed.append({"id": status, "errors": errors})
 
     def __add_day(self, day):
         added = True
@@ -65,9 +57,7 @@ class EventDayWorkBatchView(View):
         day_work = EventDayWork.objects.get(pk=day["id"])
         event_day_work_data = day_work.serialize()
         event_day_work_data.update(day)
-        event_day_work = EventDayWorkFrom(
-            event_day_work_data, instance=day_work
-        )
+        event_day_work = EventDayWorkFrom(event_day_work_data, instance=day_work)
 
         if event_day_work.is_valid():
             event_day_work.save()
@@ -78,12 +68,12 @@ class EventDayWorkBatchView(View):
 
     def remove_days(self, days):
         failed = []
-        for day in days:
-            day = EventDayWork.objects.get(day["id"])
+        for day_id in days:
             try:
+                day = EventDayWork.objects.get(pk=day_id)
                 day.delete()
             except EventDayWork.DoesNotExist:
-                failed.append(day["id"])
+                failed.append(day_id)
         return failed
 
 

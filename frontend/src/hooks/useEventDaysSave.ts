@@ -17,14 +17,19 @@ const useEventDaysSave = () => {
     const dataBatch = {
       days: state.workDays.days.filter((el) => {
         return state.workDays.daysEdited.includes(el.id);
+      }).map((day) => {
+        return {
+          ...day,
+          worker: day.worker.id,
+          function: day.function.id,
+          event: day.event.id,
+        };
       }),
-      daysToRemove: state.workDays.daysToRemove.filter((el) => {
+      daysIdToRemove: state.workDays.daysToRemove.filter((el) => {
         return el.id > 0;
-      }),
-      event_id: Number(state.table.eventsTable.selected),
+      }).map((day) => day.id),
     };
 
-    console.log("saving data", dataBatch);
     api.call("/api/v1/event/day_batch", {method: "PUT", data: dataBatch});
   };
   return {call, loading, error};
