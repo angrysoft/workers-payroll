@@ -59,7 +59,8 @@ const Pagination = (props: IPaginationProps) => {
   return (
     <div
       className="grid grid-flow-col justify-center items-center
-                 gap-1 text-2xl p-1"
+                 gap-1 text-2xl p-1
+                 overflow-auto"
     >
       {prev()}
       {pageRange()}

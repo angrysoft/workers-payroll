@@ -2,11 +2,10 @@ import { Action } from ".";
 import { IUserItem } from "../routes/Workers";
 
 export type workDaysState = {
-  event_id: string;
-  event_name: string;
   dates: Array<string>;
   days: Array<IDayItem>;
   daysEdited: Array<number>;
+  event: IEvent;
   daysToRemove: Array<IDayItem>;
   selected: string;
   addDayDialogShow: boolean;
@@ -34,10 +33,13 @@ interface IDayItem {
 }
 
 interface IEvent {
-  id: string;
+  id: number;
   name: string,
   number: string,
   is_readonly: boolean;
+  coordinator: any;
+  account_manager: any;
+
 }
 
 interface IFunction {
@@ -55,6 +57,13 @@ const workDaysReducer = (
         ...action.payload,
         selected: action.payload.dates.at(0),
         touch_days: false,
+      };
+    }
+
+    case "SAVED_WORK_DAYS": {
+      return {
+        ...state,
+        ...action.payload,
       };
     }
 
@@ -101,8 +110,14 @@ const workDaysReducer = (
     case "CLEAR_WORK_DAYS": {
       return {
         ...state,
-        event_id: "",
-        event_name: "",
+        event: {
+          id: -1,
+          name: "",
+          number: "",
+          coordinator: {},
+          account_manager: {},
+          is_readonly: false,
+        },
         days: [],
         dates: [],
         selected: "",
@@ -207,5 +222,5 @@ const workDaysReducer = (
 
 export {workDaysReducer};
 export type workDaysReducerType = typeof workDaysReducer;
-export type { IDayItem, IWorkDay };
+export type { IDayItem, IWorkDay, IEvent };
 

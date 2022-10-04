@@ -115,7 +115,10 @@ const DayItemDialog: React.FC<IDayItemDialogProps> = (
     }
     state.workDays.dayItemDialogEdit ?
     dispatch({ type: "EDIT_WORKER_WORK_DAY", payload: dayData }):
-    dispatch({ type: "ADD_WORKER_WORK_DAY", payload: dayData });
+    dispatch({
+      type: "ADD_WORKER_WORK_DAY",
+      payload: { ...dayData, event: state.workDays.event },
+    });
   };
 
   const checkDayData = (dayData: {

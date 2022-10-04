@@ -23,7 +23,7 @@ class Function(models.Model):
         verbose_name = _("Function")
 
 
-class Event(models.Model):
+class  Event(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("Event name"))
 
     number = models.CharField(

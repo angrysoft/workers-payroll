@@ -6,6 +6,7 @@ import { InputGroup } from "../../../components/elements/InputGroup";
 import Loader from "../../../components/Loader";
 import { useEventDaysSave } from "../../../hooks/useEventDaysSave";
 import { useGetEvent } from "../../../hooks/useGetEvent";
+import { useGetEventDays } from "../../../hooks/useGetEventDays";
 import { AppContext } from "../../../store/store";
 import { AddDayDialog } from "./AddDayDialog";
 import { DayViewList } from "./DayViewList";
@@ -13,7 +14,8 @@ import { RemoveDayDialog } from "./RemoveDayDialog";
 
 const EventWorkDays: React.FC = () => {
   const { state, dispatch } = useContext(AppContext);
-  const { events, loading } = useGetEvent(state.table.eventsTable.selected);
+  const { days, loading } = useGetEventDays(state.table.eventsTable.selected);
+  const event = useGetEvent(state.table.eventsTable.selected);
   const save = useEventDaysSave();
 
   useEffect(() => {
@@ -21,17 +23,20 @@ const EventWorkDays: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    dispatch({ type: "LOAD_WORK_DAYS", payload: events });
-  }, [events]);
+    dispatch({ type: "LOAD_WORK_DAYS", payload: {
+      ...days,
+      event: {...event.event},
+    }});
+  }, [days, event.event]);
 
-  if (loading) {
+  if (loading || save.loading) {
     return <Loader />;
   }
 
   return (
     <div className="p-1 md:p-2">
       <div className="grid gap-1 grid-cols-1 p-2 bg-white rounded-lg">
-        <BackButton title={events.event_name} backTo="/events/1" />
+        <BackButton title={event.event.name} backTo="/events/1" />
         <InputGroup>
           <div className="grid gap-05 md:grid-flow-col">
             <Button

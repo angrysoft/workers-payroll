@@ -26,10 +26,16 @@ const initialState: RootState = {
     payload: null,
   },
   workDays: {
-    event_id: "",
-    event_name: "",
     dates: [],
     days: [],
+    event: {
+      id: -1,
+      name: "",
+      number: "",
+      coordinator: {},
+      account_manager: {},
+      is_readonly: false,
+    },
     daysEdited: [],
     daysToRemove: [],
     selected: "",

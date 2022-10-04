@@ -1,12 +1,18 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../store/store";
 import { useApi } from "./useApi";
 
 const useEventDaysSave = () => {
-  const {state} = useContext(AppContext);
+  const {state, dispatch} = useContext(AppContext);
   const api = useApi();
   const error = api.error;
   const loading = api.loading;
+
+  useEffect(() => {
+    if (api.loading === false && api.code === 201) {
+      dispatch({type: "SAVED_WORK_DAYS", payload: {touch_days: false}});
+    }
+  }, [api.loading]);
 
   const call = () => {
     if (! state.workDays.touch_days) {
@@ -32,6 +38,7 @@ const useEventDaysSave = () => {
 
     api.call("/api/v1/event/day_batch", {method: "PUT", data: dataBatch});
   };
+
   return {call, loading, error};
 };
 

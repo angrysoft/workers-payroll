@@ -1,44 +1,41 @@
 import { useEffect, useState } from "react";
-import { IDayItem } from "../reducers/workDaysReducer";
-import { getDateStringList } from "../services/dates";
 import { useGet } from "./useGet";
 
-interface IEventWorkData {
-  event_id: string;
-  event_name: string;
-  dates: Array<string>;
-  days: Array<IDayItem>;
+interface IEvent {
+  id: number;
+  name: string;
+  number: string;
+  coordinator: any;
+  account_manger: any;
+  is_readonly: boolean;
 }
 
 
 const useGetEvent = (eventId: string) => {
-  const [events, setEvents] = useState<IEventWorkData>(
+  const [event, setEvent] = useState<IEvent>(
       {
-        event_id: "",
-        event_name: "",
-        dates: [],
-        days: [],
+        id: -1,
+        name: "",
+        number: "",
+        coordinator: {},
+        account_manger: {},
+        is_readonly: false,
       },
   );
 
   const {data, loading} = useGet(
-      `/api/v1/event/day/${eventId}`,
+      `/api/v1/event/${eventId}`,
   );
 
   useEffect(() => {
     if (data && data.results) {
-      // eslint-disable-next-line max-len
-      const eventName = (`${data.results.at(0).event.number}-${data.results.at(0).event.name}`);
-      setEvents({
-        event_id: eventId,
-        event_name: eventName,
-        dates: getDateStringList(data.results),
-        days: data.results,
+      setEvent({
+        ...data.results,
       });
     }
   }, [data]);
 
-  return {events, loading};
+  return {event, loading};
 };
 
 export { useGetEvent };
