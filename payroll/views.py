@@ -222,7 +222,7 @@ def function_list(request: HttpRequest):
 
 class EventList(GenericListView):
     def _get_items(self, params: Dict[str, Any]) -> List[Dict[Any, Any]]:
-        event_list: List[Any] = list(Event.objects.all().order_by("number", "name"))
+        event_list: List[Any] = list(Event.objects.all().order_by("-number", "name"))
         return event_list
 
     def _get_current_page(self, current_page: Page) -> List[Dict[str, Any]]:

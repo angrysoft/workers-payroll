@@ -1,10 +1,16 @@
 from workers.models import User
-from payroll.models import Event, EventDayWork, Function
+from payroll.models import Event, EventDayWork, Function, FunctionRate
 import requests
 from random import randint, choice, sample
 from datetime import datetime, timedelta
 from django.utils import timezone
 
+rates = {
+    "Technician": 600,
+    "Chief": 800,
+    "Lighting Designer": 900,
+    "Multimedia Designer": 900,
+}
 
 def add_users():
     # coordinator
@@ -29,9 +35,10 @@ def add_users():
 
     r = requests.get("https://randomuser.me/api?results=20")
     results = r.json()["results"]
+    functions = Function.objects.all()
     for u in results:
-        func_tech = Function.objects.filter(name="Technician").first()
-        func_chief = Function.objects.filter(name="Chief").first()
+        # func_tech = Function.objects.filter(name="Technician").first()
+        # func_chief = Function.objects.filter(name="Chief").first()
         usr = User.objects.create_user(
             username=u["login"]["username"],
             first_name=u["name"]["first"],
@@ -39,10 +46,16 @@ def add_users():
             email=u["email"],
             password="test1234",
         )
-        usr.functions.add(func_tech)
-        usr.functions.add(func_chief)
+        # usr.functions.add(func_tech)
+        # usr.functions.add(func_chief)
         usr.save()
-        # TODO add rates
+
+        for func in functions:
+            usr.functions.add(func)
+            rate = FunctionRate.objects.get(worker=usr, function=func)
+            rate.value = rates.get(func.name, 600)
+            rate.overtime = round(rate.value * 0.1)
+            rate.save()
 
 
 def add_events():

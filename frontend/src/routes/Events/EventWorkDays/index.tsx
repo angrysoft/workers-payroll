@@ -23,10 +23,13 @@ const EventWorkDays: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    dispatch({ type: "LOAD_WORK_DAYS", payload: {
-      ...days,
-      event: {...event.event},
-    }});
+    dispatch({
+      type: "LOAD_WORK_DAYS",
+      payload: {
+        ...days,
+        event: { ...event.event },
+      },
+    });
   }, [days, event.event]);
 
   if (loading || save.loading) {
@@ -51,7 +54,7 @@ const EventWorkDays: React.FC = () => {
             </Button>
             <Button
               handleClick={save.call}
-              disabled={! state.workDays.touch_days}
+              disabled={!state.workDays.touch_days}
             >
               Save
             </Button>

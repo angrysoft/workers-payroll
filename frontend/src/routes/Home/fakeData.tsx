@@ -278,7 +278,7 @@ export const prepareDataToTable = (data: Array<any>) => {
     const dayResult: IRow = {
       id: day.id,
       cells: [
-        day.event.toString(),
+        `${day.event.number}-${day.event.name}`,
         day.start.toString(),
         day.end.toString(),
         day.work_time.toString(),

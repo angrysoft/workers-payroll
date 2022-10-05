@@ -81,7 +81,7 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
   };
 
   return (
-    <div className="p-1 md:p-2">
+    <div className="p-1 md:p-2 w-full">
       <form
         action={props.action || ""}
         onSubmit={(ev: SyntheticEvent) =>

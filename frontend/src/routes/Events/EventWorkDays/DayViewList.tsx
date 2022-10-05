@@ -1,5 +1,4 @@
-import React, { useContext, useMemo } from "react";
-import { getDateStringList } from "../../../services/dates";
+import React, { useContext } from "react";
 import { AppContext } from "../../../store/store";
 import { DayTab } from "./DayTab";
 import { DayView } from "./DayView";

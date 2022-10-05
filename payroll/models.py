@@ -23,7 +23,7 @@ class Function(models.Model):
         verbose_name = _("Function")
 
 
-class  Event(models.Model):
+class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("Event name"))
 
     number = models.CharField(
@@ -169,6 +169,11 @@ class EventDayWork(models.Model):
             overtime = 0
         additions = self.calculate_additions()
         result = {
+            "id": self.pk,
+            "event": self.event.serialize_short(),
+            "function": self.function.serialize(),
+            "start": self.start,
+            "end": self.end,
             "work_time": work_time_hours,
             "rate": user_rate.value,
             "overtime": overtime,

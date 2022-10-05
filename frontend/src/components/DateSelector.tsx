@@ -1,5 +1,6 @@
 import React, { SyntheticEvent } from "react";
 import Button from "./elements/Button";
+import { Form } from "./elements/Form";
 import Input from "./elements/Input";
 
 interface IDateSelectorProps {
@@ -16,10 +17,7 @@ const DateSelector: React.FC<IDateSelectorProps> = (
   };
 
   return (
-    <form onSubmit={handleSubmit}
-      className="grid gap-1 md:grid-cols-3 grid-cols-2 justify-center
-                    w-full
-                  bg-white p-1 rounded-lg"
+    <Form handleSubmit={handleSubmit}
     >
       <Input
         id="year"
@@ -38,7 +36,7 @@ const DateSelector: React.FC<IDateSelectorProps> = (
       <div className="col-span-2 md:col-auto">
         <Button>Change Date</Button>
       </div>
-    </form>
+    </Form>
   );
 };
 

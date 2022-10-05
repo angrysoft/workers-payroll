@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { SyntheticEvent, useContext, useState} from "react";
 import { FormContext } from "./Form";
 
 interface InputProps {
@@ -12,8 +12,18 @@ interface InputProps {
 
 const Input = (props: InputProps) => {
   const form = useContext(FormContext);
-  const value: any = form.getValue(props.id);
+  const [value, setValue] = useState(form.getValue(props.id));
+  // const value: any = form.getValue(props.id);
   const isRequired: boolean = form.isRequired(props.id);
+
+  const handleChange = (ev: SyntheticEvent) => {
+    const input = ev.target as HTMLSelectElement;
+    setValue(input.value);
+    form.setValue(
+        props.id,
+        input.value,
+    );
+  };
 
   return (
     <div className="grid gap-05 grid-cols-1 md:grid-cols-3 items-center">
@@ -30,7 +40,7 @@ const Input = (props: InputProps) => {
                    transition-border duration-500"
         required={isRequired}
         value={value || props.value || ""}
-        onChange={(ev) => form.setValue(props.id, ev.target.value)}
+        onChange={handleChange}
         {...props.inputArgs}
       />
     </div>
