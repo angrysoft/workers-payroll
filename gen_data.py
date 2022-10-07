@@ -12,38 +12,13 @@ RATES = {
     "Multimedia Designer": 900,
 }
 
-DATES = [
-    1610085128,
-    1610699703,
-    1611674166,
-    1612355511,
-    1612530260,
-    1612841906,
-    1614148053,
-    1614757976,
-    1616696705,
-    1617383874,
-    1620269318,
-    1621163232,
-    1621363682,
-    1622776740,
-    1623024608,
-    1624120087,
-    1624201270,
-    1624897464,
-    1626067482,
-    1629942162,
-    1630294981,
-    1632273003,
-    1633957196,
-    1634359368,
-    1634925493,
-    1636425557,
-    1636804272,
-    1637648542,
-    1637711002,
-    1638690208,
-]
+
+def get_dates(no: int):
+    for _ in range(no):
+        try:
+            yield datetime(2021, randint(1, 12), randint(1, 31), randint(0, 23))
+        except ValueError:
+            pass
 
 
 def add_users():
@@ -71,8 +46,6 @@ def add_users():
     results = r.json()["results"]
     functions = Function.objects.all()
     for u in results:
-        # func_tech = Function.objects.filter(name="Technician").first()
-        # func_chief = Function.objects.filter(name="Chief").first()
         usr = User.objects.create_user(
             username=u["login"]["username"],
             first_name=u["name"]["first"],
@@ -80,8 +53,6 @@ def add_users():
             email=u["email"],
             password="test1234",
         )
-        # usr.functions.add(func_tech)
-        # usr.functions.add(func_chief)
         usr.save()
 
         for func in functions:
@@ -95,14 +66,15 @@ def add_users():
 def add_events():
     coordinator = User.objects.filter(is_coordinator=True).first()
     account_manager = User.objects.filter(is_account_manager=True).first()
-
+    event_batch = []
     for i in range(1, 30):
         e = Event()
         e.name = f"Event{i}"
         e.number = f"21-{i:02}"
         e.coordinator = coordinator
         e.account_manager = account_manager
-        e.save()
+        event_batch.append(e)
+    Event.objects.bulk_create(event_batch)
 
 
 def gen_workdays():
@@ -111,38 +83,34 @@ def gen_workdays():
             is_coordinator=False, is_account_manager=False, is_superuser=False
         ).all()
     )
-    # r = requests.get("https://api.lrs.org/random-date-generator?year=2021")
-    # dates = r.json()["data"]
     events_list = Event.objects.all()
     func = Function.objects.all()
     days_batch = []
+    used_dates = []
     for event in events_list:
-        # print("Event: ", event)
-        # TODO for events need individials date for workers
-        dates_list = sample(DATES, k=randint(0, len(DATES)))
-        print(dates_list)
-        for date in DATES:
-            # print("  Date: ", str(datetime.fromtimestamp(date["unix"])))
-            days_batch.extend(get_days(date, event, func, workers))
-    print("Batch Sizie", len(days_batch))
+        print(event)
+        gen_for_no_workers = randint(0, len(workers))
+        workers_list = sample(workers, k=gen_for_no_workers)
+        for date in get_dates(randint(1, 10)):
+            for worker in workers_list:
+                worker_day = f"{worker} {date}"
+                if worker_day not in used_dates:
+                    print(worker_day)
+                    used_dates.append(worker_day)
+                    days_batch.append(get_days(date, event, func, worker))
+    print("Batch Size", len(days_batch))
     EventDayWork.objects.bulk_create(days_batch)
 
 
-def get_days(date, event, func, workers):
-    gen_for_no_workers = randint(0, len(workers))
-    day_start = datetime.fromtimestamp(date)
+def get_days(day_start, event, func, worker):
     day_end = day_start + timedelta(hours=randint(8, 24))
-    batch = []
-    workers_list = sample(workers, k=gen_for_no_workers)
-    for worker in workers_list:
-        day = EventDayWork()
-        day.event = event
-        day.start = timezone.make_aware(day_start)
-        day.end = timezone.make_aware(day_end)
-        day.worker = worker
-        day.function = choice(func)
-        batch.append(day)
-    return batch
+    day = EventDayWork()
+    day.event = event
+    day.start = timezone.make_aware(day_start)
+    day.end = timezone.make_aware(day_end)
+    day.worker = worker
+    day.function = choice(func)
+    return day
 
 
 add_users()
