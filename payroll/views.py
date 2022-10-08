@@ -191,7 +191,7 @@ class WorkerEventWorkDayMonthReport(View):
                 start__month=month,
                 end__month=month,
             )
-            .order_by("start", "event")
+            .order_by("event", "start")
             .all()
         )
         work_days_report = self.get_report(work_days)

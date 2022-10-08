@@ -3,6 +3,16 @@ import { IRow } from "../components/elements/Table/TableBody";
 import { formatDateTime } from "../services/dates";
 import { useApi } from "./useApi";
 
+export const header = [
+  "Event",
+  "Start",
+  "End",
+  "Work Time",
+  "Rate",
+  "Overtime Rate",
+  "Additions",
+  "Total",
+];
 
 const useGetWorkerReport = () => {
   const [report, setReport] = useState<IRow[]>([]);

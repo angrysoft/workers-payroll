@@ -20,26 +20,27 @@ const Select: React.FC<ISelectProps> = (props: ISelectProps) => {
 
   const optionItems = props.items.map((item) => {
     return (
-      <option value={item.id} key={item.id} >
+      <option id={item.id} value={item.id} key={item.id} >
         {item.name}
       </option>
     );
   });
 
   useEffect(() => {
-    const user = form.getValue(props.id);
-    if (user && optionItems.length > 0) {
-      setSelected(user);
+    const _value = form.getValue(props.id);
+    if (_value && optionItems.length > 0) {
+      setSelected(_value);
     }
   }, [form.getValue, optionItems]);
 
   const handleChange = (ev: SyntheticEvent) => {
     const select = ev.target as HTMLSelectElement;
-    setSelected(select.value);
+    console.log("select", select.value);
     form.setValue(
         props.id,
         select.value,
     );
+    setSelected(select.value);
   };
 
   return (

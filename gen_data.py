@@ -4,6 +4,7 @@ import requests
 from random import randint, choice, sample
 from datetime import datetime, timedelta
 from django.utils import timezone
+from pytz.exceptions import AmbiguousTimeError, NonExistentTimeError
 
 RATES = {
     "Technician": 600,
@@ -67,7 +68,7 @@ def add_events():
     coordinator = User.objects.filter(is_coordinator=True).first()
     account_manager = User.objects.filter(is_account_manager=True).first()
     event_batch = []
-    for i in range(1, 30):
+    for i in range(1, 100):
         e = Event()
         e.name = f"Event{i}"
         e.number = f"21-{i:02}"
@@ -94,10 +95,15 @@ def gen_workdays():
         for date in get_dates(randint(1, 10)):
             for worker in workers_list:
                 worker_day = f"{worker} {date}"
-                if worker_day not in used_dates:
-                    print(worker_day)
-                    used_dates.append(worker_day)
-                    days_batch.append(get_days(date, event, func, worker))
+                try:
+                    if worker_day not in used_dates:
+                        used_dates.append(worker_day)
+                        days_batch.append(get_days(date, event, func, worker))
+                except AmbiguousTimeError:
+                    print(f"{worker_day} => AmbiguousTimeError")
+                except NonExistentTimeError:
+                    # change time form summer to winter
+                    print(f"{worker_day} => NonExistentTimeError")
     print("Batch Size", len(days_batch))
     EventDayWork.objects.bulk_create(days_batch)
 

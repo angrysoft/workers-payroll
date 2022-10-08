@@ -61,7 +61,7 @@ const Login = () => {
   }
 
   return (
-    <div className="flex w-full h-screen justify-center items-center p-2">
+    <div className="flex h-screen justify-center items-center p-2">
       <Form handleSubmit={handelSubmit} >
         {showError()}
         <Input id="username" type="text" label="Login" required />
