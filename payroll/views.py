@@ -157,7 +157,7 @@ class EventView(View):
         event_data.update(data)
         print("event data", event_data)
         update_event_form = ManageEventForm(event_data, instance=event)
-        status_code = 200
+        status_code = 201
         results = get_default_results()
         if update_event_form.is_valid():
             update_event_form.save()

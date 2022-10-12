@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useContext, useState} from "react";
+import React, { SyntheticEvent, useContext, useEffect, useState} from "react";
 import { FormContext } from "./Form";
 
 interface InputProps {
@@ -13,8 +13,11 @@ interface InputProps {
 const Input = (props: InputProps) => {
   const form = useContext(FormContext);
   const [value, setValue] = useState(form.getValue(props.id));
-  // const value: any = form.getValue(props.id);
   const isRequired: boolean = form.isRequired(props.id);
+
+  useEffect(() => {
+    setValue(form.getValue(props.id));
+  }, [form.getValue]);
 
   const handleChange = (ev: SyntheticEvent) => {
     const input = ev.target as HTMLSelectElement;

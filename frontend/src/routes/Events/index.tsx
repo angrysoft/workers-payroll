@@ -43,7 +43,7 @@ const Events: React.FC<IEventProps> = (props: IEventProps) => {
   }, []);
 
   useEffect(() => {
-    call(`/api/v1/event/list?page=${pageNo}`, { method: "GET" });
+    call(`/api/v1/event/list?page=${pageNo}&items=20`, { method: "GET" });
   }, [pageNo]);
 
   useEffect(() => {
