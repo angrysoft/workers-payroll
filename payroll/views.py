@@ -183,17 +183,14 @@ class EventView(View):
 class WorkerEventWorkDayMonthReport(View):
     @method_decorator(auth_required)
     def get(self, request: HttpRequest, month: str, year: str):
-        work_days = (
-            EventDayWork.objects.filter(
-                worker=request.user,
-                start__year=year,
-                end__year=year,
-                start__month=month,
-                end__month=month,
-            )
-            .order_by("event", "start")
-            .all()
+        work_days = EventDayWork.objects.filter(
+            worker=request.user,
+            start__year=year,
+            end__year=year,
+            start__month=month,
+            end__month=month,
         )
+
         work_days_report = self.get_report(work_days)
         results = get_default_results()
         results["results"] = work_days_report

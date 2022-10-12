@@ -197,4 +197,4 @@ class EventDayWork(models.Model):
         return result
 
     class Meta:
-        ordering = ["start", "worker"]
+        ordering = ["start__day", "event"]

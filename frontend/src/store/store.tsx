@@ -45,6 +45,10 @@ const initialState: RootState = {
     dayItemDialogEdit: null,
     touch_days: false,
   },
+  report: {
+    year: new Date().getFullYear().toString(),
+    month: new Date().getMonth().toString(),
+  },
 };
 
 interface IProviderProps {
