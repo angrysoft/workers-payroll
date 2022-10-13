@@ -3,11 +3,10 @@ import {MaterialIcons} from "../../components/elements/MaterialIcons";
 import { AppContext } from "../../store/store";
 
 interface IUserPanelProps {
-  handleMenuClick: CallableFunction;
 }
 
 const UserPanel = (props: IUserPanelProps) => {
-  const { state } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
 
   return (
     <div
@@ -17,8 +16,8 @@ const UserPanel = (props: IUserPanelProps) => {
                     flex justify-between items-center"
     >
       <div
-        className="cursor-pointer md:invisible"
-        onClick={() => props.handleMenuClick()}
+        className="cursor-pointer lg:invisible"
+        onClick={() => dispatch({type: "MENU_TOGGLE"})}
       >
         <MaterialIcons name="menu" />
       </div>

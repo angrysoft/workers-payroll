@@ -12,8 +12,7 @@ const initialState: RootState = {
     },
     isLoading: false,
   },
-  table: {
-  },
+  table: {},
   dialog: {
     msg: "",
     show: false,
@@ -48,6 +47,9 @@ const initialState: RootState = {
   report: {
     year: new Date().getFullYear().toString(),
     month: new Date().getMonth().toString(),
+  },
+  menu: {
+    open: false,
   },
 };
 

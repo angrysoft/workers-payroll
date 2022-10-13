@@ -14,6 +14,7 @@ interface IFormProps {
   requiredFields?: Array<string>;
   children?: JSX.Element | JSX.Element[];
   action?: string;
+  fluid?: boolean;
 }
 
 interface IFormValues {
@@ -81,7 +82,7 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
   };
 
   return (
-    <div className="p-1 md:p-2">
+    <div className={`p-1 md:p-2${props.fluid && " w-full"}`}>
       <form
         action={props.action || ""}
         onSubmit={(ev: SyntheticEvent) =>

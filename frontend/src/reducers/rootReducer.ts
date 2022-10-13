@@ -5,6 +5,7 @@ import { dialogErrorState, dialogReducer } from "./dialogReducer";
 import { workDaysReducer, workDaysState } from "./workDaysReducer";
 import {confirmDialogReducer, confirmDialogState} from "./confirmDialogReducer";
 import { reportReducer, reportState } from "./reportReducer";
+import { menuReducer, menuState } from "./menuReducer";
 
 export type RootState = {
   users: userState,
@@ -13,13 +14,15 @@ export type RootState = {
   workDays: workDaysState,
   confirmDialog: confirmDialogState,
   report: reportState,
+  menu: menuState,
 }
 
 export type State = userState |
                     tableState |
                     dialogErrorState |
                     workDaysState |
-                    reportState;
+                    reportState |
+                    menuState;
 
 const combineReducers = () => {
   return (state: RootState, action: Action) => {
@@ -31,6 +34,7 @@ const combineReducers = () => {
       workDays: workDaysReducer(state["workDays"], action),
       confirmDialog: confirmDialogReducer(state["confirmDialog"], action),
       report: reportReducer(state["report"], action),
+      menu: menuReducer(state["menu"], action),
     };
   };
 };

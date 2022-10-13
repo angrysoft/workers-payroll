@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useContext, useEffect } from "react";
+import React, { SyntheticEvent, useContext } from "react";
 import { AppContext } from "../store/store";
 import Button from "./elements/Button";
 import { Form } from "./elements/Form";
@@ -49,6 +49,7 @@ const DateSelector: React.FC<IDateSelectorProps> = (
         month: state.report.month,
       }}
       requiredFields={["year", "month"]}
+      fluid
     >
       <InputGroup>
         <Input id="year" label="Year" type="number" />
