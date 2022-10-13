@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-from os import environ
 from pathlib import Path
+from WorkersPayroll.keys import JWTKEY, SECRET_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,8 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-+yfy7ts)bdcdbt(bwb=jpe#90zma0^c18)$)5ca&k99@^bm53j"
-
+# SECRET_KEY = "django-insecure-+yfy7ts)bdcdbt(bwb=jpe#90zma0^c18)$)5ca&k99@^bm53j"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -131,4 +130,3 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-JWTKEY = environ["JWTKEY"]
