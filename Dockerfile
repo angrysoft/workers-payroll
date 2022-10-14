@@ -1,4 +1,4 @@
-FROM node:18 as builder
+FROM node:latest as builder
 WORKDIR /react
 COPY frontend /react
 RUN pwd && ls -a .
