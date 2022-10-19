@@ -18,7 +18,7 @@ const EditEvent: React.FC<IEditWorkerProps> = (props: IEditWorkerProps) => {
   });
   const { state } = useContext(AppContext);
   const eventEditUri = `/api/v1/event/${state.table.eventsTable.selected}`;
-  const { code, data, loading, error } = useGet(eventEditUri);
+  const { code, data, loading } = useGet(eventEditUri);
 
   useEffect(() => {
     if (code === 200 && data && data.results !== undefined) {

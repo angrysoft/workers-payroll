@@ -16,7 +16,7 @@ const EditWorker:React.FC<IEditWorkerProps> = (props:IEditWorkerProps) => {
   const [values, setValues] = useState({});
   const { state } = useContext(AppContext);
   const userEditUri = `/api/v1/user/${state.table.workersTable.selected}`;
-  const {code, data, loading, error} = useGet(
+  const {code, data, loading} = useGet(
       userEditUri,
   );
 

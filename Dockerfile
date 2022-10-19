@@ -31,5 +31,10 @@ RUN python ./gen_token.py
 RUN ./manage.py makemigrations workers payroll
 RUN	./manage.py migrate
 RUN	./manage.py shell < bootstrap.py
-# COPY --from=builder /react/build .
-# CMD ["./app"]  
+RUN	./manage.py shell < gen_data.py
+COPY --from=builder /react/build/static /code/frontend/static/
+COPY --from=builder /react/build/index.html /code/frontend/templates/
+RUN ls /code/frontend/static
+EXPOSE 8000
+ENTRYPOINT [ "python" ]
+CMD ["manage.py", "runserver", "0.0.0.0:8000"]

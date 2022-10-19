@@ -2,7 +2,6 @@ import React, {
   SyntheticEvent,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import { FormContext } from "./Form";

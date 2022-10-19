@@ -38,4 +38,9 @@ const toLocalJSON = (dateIn: string) => {
   return `${year}-${month}-${day}T${date.toLocaleTimeString("pl-PL")}`;
 };
 
-export {getDateStringList, formatDateTime, getTimeStringFromDateString, toLocalJSON};
+export {
+  getDateStringList,
+  formatDateTime,
+  getTimeStringFromDateString,
+  toLocalJSON
+};
