@@ -10,7 +10,6 @@ export const header = [
   "Work Time",
   "Rate",
   "Overtime Rate",
-  "Additions",
   "Total",
 ];
 
@@ -42,7 +41,6 @@ const useGetWorkerReport = () => {
             day.work_time.toString(),
             day.rate.toString(),
             day.overtime_rate.toString(),
-            day.additions.toString(),
             day.total.toString(),
           ],
         };
@@ -57,7 +55,6 @@ const useGetWorkerReport = () => {
           " ",
           " ",
           totalWorkTime.toString(),
-          " ",
           " ",
           " ",
           total.toString(),
