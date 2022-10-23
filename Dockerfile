@@ -16,7 +16,7 @@ COPY api /code/api
 RUN mkdir /code/payroll
 COPY payroll /code/payroll
 RUN mkdir /code/user_auth
-COPY user_auth /code/user_auth
+# COPY user_auth /code/user_auth
 RUN mkdir /code/workers
 COPY workers /code/workers
 RUN mkdir /code/WorkersPayroll

@@ -202,6 +202,6 @@ def user_rate_update(request: HttpRequest, userid: int):
                 for _name, _value in rate_fields.items():
                     setattr(rate, _name, _value)
                 rate.save()
-                results["results"].append(rate_id)  # type: ignore
+                results["results"].append(rate_id)
         results["ok"] = results["results"] == list(data.keys())
         return JsonResponse(results, safe=False)

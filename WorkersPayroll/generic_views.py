@@ -9,7 +9,7 @@ from WorkersPayroll.decorators import auth_required
 
 
 class GenericListView(View):
-    # @method_decorator(auth_required)
+    @method_decorator(auth_required)
     def get(self, request: HttpRequest) -> HttpResponse:
         params: Dict[str, Any] = self._get_parameters(request)
 
