@@ -6,7 +6,7 @@
   <h1 align="center">Workers Payroll</h1>
 </div>
 
-[![Workers Payroll][product-screenshot]](screens/screen_1.png)
+![screens/screen_1.png](screens/screen_1.png)
 
 ## Distinctiveness and Complexity
 
@@ -15,7 +15,7 @@ Applications for support payroll management in event/rental company. App has two
 ### Worker View:
 
 * Report - display worker month report
-    - Worker can display current month report or display any other
+    - Worker can display current month report or display any other date
     - Print report
 
 ### Admin View:
@@ -58,23 +58,36 @@ On frontend application utilize javascript
 
 ## Files - Folders
 
-- api - django app for application api utilized by frontend
+- **api** - django app for application api utilized by frontend
     - api/tests.py - tests for api endpoints
     - api/urls.py - main api endpoints
-- frontend - django app for react frontend
-    - frontend/src - source files for react frontend part.
-- payroll - django app responsible for manage event / event work days
-- screens - application screenshots
-- workers - django application responsible for managing workers / users
-- WorkersPayroll - 
+- **frontend** - django app for react frontend
+    - frontend/src/ - source files for react frontend part.
+        - components/
+           - ConfirmDialog.tsx - generic component for confirm actions
+           - DateSelector.tsx - component for choosing date of worker month report
+           - Dialog.tsx - component for dialog elements
+           - Loader.tsx - preloader component
+           - Pagination.tsx - component for page pagination
+           - elements/ - small component used multiple times
+        - hooks/ - react hooks used in components ( helpers for getting / sending data )
+        - reducers/ - react reducers for managing global state of application
+        - routes - client side routing
+        - services/ - helpers services
+        - store/ - default values and storage for global app global state
+
+- **payroll** - django app responsible for manage event / event work days
+- **screens** - application screenshots
+- **workers** - django application responsible for managing workers / users
+- **WorkersPayroll** - 
     - backends.py - Simple Json Web Tokens authorization backend
     - decorators.py - view decorators 
         - auth_required - for checking authorization
     - defaults.py - response object for views
     - generic_views.py - GenericListView inherited by other view
-- bootstrap.py - Create default groups, Functions 
-- gen_data.py - Generate random users, events ... data for manual testing
-- gen_token.py - Generate tokens used for jwt and django secrets
+- **bootstrap.py** - Create default groups, Functions 
+- **gen_data.py** - Generate random users, events ... data for manual testing
+- **gen_token.py** - Generate tokens used for jwt and django secrets
 
 ## Install Instructions
 
@@ -152,8 +165,4 @@ python manage.py runserver 0.0.0.0:8000
 ```
 
 then in your browser go to url [http://0.0.0.0:8000](http://0.0.0.0:8000)
-
-
-[product-screenshot]: screens/screen_1.png
-[logo]: frontend/public/favicon.ico
 
