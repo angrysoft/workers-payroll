@@ -34,6 +34,8 @@ RUN	./manage.py shell < bootstrap.py
 RUN	./manage.py shell < gen_data.py
 COPY --from=builder /react/build/static /code/frontend/static/
 COPY --from=builder /react/build/index.html /code/frontend/templates/
+COPY --from=builder /react/build/favicon.ico /code/frontend/templates/
+COPY --from=builder /react/build/manifest.json /code/frontend/templates/
 RUN ls /code/frontend/static
 EXPOSE 8000
 ENTRYPOINT [ "python" ]
